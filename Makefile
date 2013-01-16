@@ -8,8 +8,8 @@ SRCROOT := $(shell pwd)
 #
 PERL        ?= /usr/bin/perl
 PREFIX      ?= /usr/local/netdot
-APACHEUSER  ?= apache
-APACHEGROUP ?= apache
+APACHEUSER  ?= apache2
+APACHEGROUP ?= apache2
 MAKE        ?= make
 SED         ?= sed
 usage:
