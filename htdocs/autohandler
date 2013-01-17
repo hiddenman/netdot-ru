@@ -5,7 +5,7 @@ Works as a wrapper for the different sections
 </%doc>
 <%attr>
 title      => "Network Documentation Tool"
-section    => "Main"
+section    => "Главная"
 showheader => 1
 </%attr>
 %
