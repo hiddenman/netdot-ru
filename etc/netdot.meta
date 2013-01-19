@@ -734,7 +734,7 @@ $meta = {
           table => 'Closet'
         },
         nullable => 0,
-        tag => 'Destination Closet',
+        tag => 'Конечный шкаф',
         type => 'bigint'
       },
       id => {
@@ -750,7 +750,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       installdate => {
@@ -758,7 +758,7 @@ $meta = {
         description => 'Date when this Cable was first installed (YYYY-MM-DD)',
         length => '',
         nullable => 1,
-        tag => 'Installed on',
+        tag => 'Дата установки',
         type => 'date'
       },
       length => {
@@ -766,7 +766,7 @@ $meta = {
         description => 'The physical length of this cable',
         length => '32',
         nullable => 1,
-        tag => 'Length',
+        tag => 'Длина',
         type => 'varchar'
       },
       name => {
@@ -774,7 +774,7 @@ $meta = {
         description => 'A name given to this cable.',
         length => '64',
         nullable => 0,
-        tag => 'Cable ID',
+        tag => 'Идентификатор кабеля',
         type => 'varchar'
       },
       owner => {
@@ -787,7 +787,7 @@ $meta = {
           table => 'Entity'
         },
         nullable => 1,
-        tag => 'Owned by',
+        tag => 'Собственник',
         type => 'bigint'
       },
       start_closet => {
@@ -800,7 +800,7 @@ $meta = {
           table => 'Closet'
         },
         nullable => 0,
-        tag => 'Origin Closet',
+        tag => 'Начальный шкаф',
         type => 'bigint'
       },
       type => {
@@ -813,7 +813,7 @@ $meta = {
           table => 'CableType'
         },
         nullable => 0,
-        tag => 'Cable Type',
+        tag => 'Тип кабеля',
         type => 'bigint'
       }
     },
@@ -871,7 +871,7 @@ $meta = {
           table => 'BackboneCable'
         },
         nullable => 0,
-        tag => 'Cable ID',
+        tag => 'Идентификатор кабеля',
         type => 'bigint'
       },
       circuit_id => {
@@ -884,7 +884,7 @@ $meta = {
           table => 'Circuit'
         },
         nullable => 1,
-        tag => 'Circuit',
+        tag => 'Логический канал',
         type => 'bigint'
       },
       description => {
@@ -892,7 +892,7 @@ $meta = {
         description => 'A text description of this strand',
         length => '128',
         nullable => 1,
-        tag => 'Description',
+        tag => 'Описание',
         type => 'varchar'
       },
       fiber_type => {
@@ -921,7 +921,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -929,7 +929,7 @@ $meta = {
         description => 'A name for this strand',
         length => '64',
         nullable => 0,
-        tag => 'Strand ID',
+        tag => 'Идентификатор волокна',
         type => 'varchar'
       },
       number => {
@@ -937,7 +937,7 @@ $meta = {
         description => 'The numeric order of this strand',
         length => '',
         nullable => 0,
-        tag => 'Number',
+        tag => 'Номер',
         type => 'integer'
       },
       status => {
@@ -950,7 +950,7 @@ $meta = {
           table => 'StrandStatus'
         },
         nullable => 0,
-        tag => 'Status',
+        tag => 'Статус',
         type => 'bigint'
       }
     },
@@ -1015,7 +1015,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -1023,7 +1023,7 @@ $meta = {
         description => 'The name of this cable type',
         length => '64',
         nullable => 0,
-        tag => 'Name',
+        tag => 'Название',
         type => 'varchar'
       }
     },
@@ -1058,7 +1058,7 @@ $meta = {
         description => 'ID of this circuit.',
         length => '128',
         nullable => 0,
-        tag => 'Circuit ID',
+        tag => 'Логический канал',
         type => 'varchar'
       },
       linkid => {
@@ -1071,7 +1071,7 @@ $meta = {
           table => 'SiteLink'
         },
         nullable => 1,
-        tag => 'Site Link',
+        tag => 'Соединение зданий',
         type => 'bigint'
       },
       datetested => {
@@ -1079,7 +1079,7 @@ $meta = {
         description => 'Date that this circuit was last tested (YYYY-MM-DD)',
         length => '',
         nullable => 1,
-        tag => 'Date Tested',
+        tag => 'Дата тестирования',
         type => 'date'
       },
       id => {
@@ -1095,7 +1095,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       installdate => {
@@ -1103,7 +1103,7 @@ $meta = {
         description => 'Date when this circuit was installed (YYYY-MM-DD)',
         length => '',
         nullable => 1,
-        tag => 'Installed on',
+        tag => 'Дата установки',
         type => 'date'
       },
       loss => {
@@ -1111,7 +1111,7 @@ $meta = {
         description => 'Tested loss (dbm)',
         length => '32',
         nullable => 1,
-        tag => 'Loss',
+        tag => 'Потери',
         type => 'varchar'
       },
       speed => {
@@ -1119,7 +1119,7 @@ $meta = {
         description => 'The speed of this circuit (Mbps)',
         length => '32',
         nullable => 1,
-        tag => 'Speed',
+        tag => 'Скорость',
         type => 'varchar'
       },
       status => {
@@ -1132,7 +1132,7 @@ $meta = {
           table => 'CircuitStatus'
         },
         nullable => 0,
-        tag => 'Status',
+        tag => 'Статус',
         type => 'bigint'
       },
       type => {
@@ -1145,7 +1145,7 @@ $meta = {
           table => 'CircuitType'
         },
         nullable => 1,
-        tag => 'Type',
+        tag => 'Тип',
         type => 'bigint'
       },
       vendor => {
@@ -1158,7 +1158,7 @@ $meta = {
           table => 'Entity'
         },
         nullable => 1,
-        tag => 'Provider',
+        tag => 'Провайдер',
         type => 'bigint'
       }
     },
@@ -1218,7 +1218,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -1226,7 +1226,7 @@ $meta = {
         description => 'Circuit Status',
         length => '128',
         nullable => 0,
-        tag => 'Status',
+        tag => 'Статус',
         type => 'varchar'
       }
     },
@@ -1269,7 +1269,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -1277,7 +1277,7 @@ $meta = {
         description => 'Circuit Type',
         length => '128',
         nullable => 0,
-        tag => 'Type',
+        tag => 'Тип',
         type => 'varchar'
       }
     },
@@ -1312,7 +1312,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => '110 Blocks',
+        tag => 'Блоков типа 110',
         type => 'varchar'
       },
       ss_blocks => {
@@ -1320,7 +1320,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => '66 Blocks',
+        tag => 'Блоков типа 66',
         type => 'varchar'
       },
       access_key_type => {
@@ -1328,7 +1328,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => 'Access Key Type',
+        tag => 'Тип ключа доступа',
         type => 'varchar'
       },
       asbestos_tiles => {
@@ -1336,7 +1336,7 @@ $meta = {
         description => '',
         length => '',
         nullable => 0,
-        tag => 'Asbestos Tiles',
+        tag => 'Асбестовое покрытие',
         type => 'bool'
       },
       catv_taps => {
@@ -1352,7 +1352,7 @@ $meta = {
         description => '',
         length => '',
         nullable => 0,
-        tag => 'Converted Patch Panels',
+        tag => 'Converted патч-панели',
         type => 'bool'
       },
       dimensions => {
@@ -1360,7 +1360,7 @@ $meta = {
         description => '',
         length => '64',
         nullable => 1,
-        tag => 'Dimensions (")',
+        tag => 'Размеры (в дюймах)',
         type => 'varchar'
       },
       ground_buss => {
@@ -1368,7 +1368,7 @@ $meta = {
         description => '',
         length => '',
         nullable => 0,
-        tag => 'Ground Buss',
+        tag => 'Заземление',
         type => 'bool'
       },
       hvac_type => {
@@ -1376,7 +1376,7 @@ $meta = {
         description => '',
         length => '255',
         nullable => 1,
-        tag => 'HVAC Type',
+        tag => 'Тип HVAC',
         type => 'varchar'
       },
       id => {
@@ -1392,7 +1392,7 @@ $meta = {
         description => '',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -1400,7 +1400,7 @@ $meta = {
         description => 'An identifier for this Closet within a Site',
         length => '32',
         nullable => 0,
-        tag => 'Name',
+        tag => 'Название',
         type => 'varchar'
       },
       room => {
@@ -1413,7 +1413,7 @@ $meta = {
           table => 'Room'
         },
         nullable => 0,
-        tag => 'Room',
+        tag => 'Помещение',
         type => 'bigint'
       },
       outlets => {
@@ -1421,7 +1421,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => 'Outlets',
+        tag => 'Розетки',
         type => 'varchar'
       },
       pair_count => {
@@ -1429,7 +1429,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => 'Pair Count',
+        tag => 'Количество пар',
         type => 'varchar'
       },
       patch_panels => {
@@ -1437,7 +1437,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => 'Патчпанелей',
+        tag => 'Патч-панелей',
         type => 'varchar'
       },
       rack_type => {
@@ -1445,7 +1445,7 @@ $meta = {
         description => '',
         length => '255',
         nullable => 1,
-        tag => 'Rack Type',
+        tag => 'Тип стойки',
         type => 'varchar'
       },
       racks => {
@@ -1453,7 +1453,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => 'Racks',
+        tag => 'Стоек',
         type => 'varchar'
       },
       ru_avail => {
@@ -1461,7 +1461,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => 'Rack Units Available',
+        tag => 'Количество доступных юнитов',
         type => 'varchar'
       },
       shared_with => {
@@ -1469,7 +1469,7 @@ $meta = {
         description => '',
         length => '255',
         nullable => 1,
-        tag => 'Shared With',
+        tag => 'Совместно используется с',
         type => 'varchar'
       },
       work_needed => {
@@ -1477,7 +1477,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => 'Work Needed',
+        tag => 'Требуется работы',
         type => 'varchar'
       }
     },
@@ -1530,7 +1530,7 @@ $meta = {
           table => 'Entity'
         },
         nullable => 1,
-        tag => 'Entity',
+        tag => 'Организация',
         type => 'bigint'
       },
       farend => {
@@ -1543,7 +1543,7 @@ $meta = {
           table => 'Site'
         },
         nullable => 0,
-        tag => 'Destination (Site)',
+        tag => 'Конечное здание',
         type => 'bigint'
       },
       id => {
@@ -1559,7 +1559,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -1567,7 +1567,7 @@ $meta = {
         description => 'A name for this Link',
         length => '128',
         nullable => 0,
-        tag => 'Name',
+        tag => 'Название',
         type => 'varchar'
       },
       nearend => {
@@ -1580,7 +1580,7 @@ $meta = {
           table => 'Site'
         },
         nullable => 0,
-        tag => 'Origin (Site)',
+        tag => 'Начальное здание',
         type => 'bigint'
       }
     },
@@ -1626,7 +1626,7 @@ $meta = {
           table => 'ContactList'
         },
         nullable => 0,
-        tag => 'Contact List',
+        tag => 'Список контактов',
         type => 'bigint'
       },
       contacttype => {
@@ -1639,7 +1639,7 @@ $meta = {
           table => 'ContactType'
         },
         nullable => 0,
-        tag => 'Type of Contact',
+        tag => 'Тип контакта',
         type => 'bigint'
       },
       escalation_level => {
@@ -1647,7 +1647,7 @@ $meta = {
         description => 'This level defines when this contact will be notified when monitoring devices or services.  Notifications usually escalate to a different set of contacts when the problem is not resolved in a certain amount of time.  This logic is implemented by the chosen external monitoring tool, not Netdot.',
         length => '',
         nullable => 0,
-        tag => 'Escalation Level',
+        tag => 'Уровень эскалации',
         type => 'integer'
       },
       id => {
@@ -1663,7 +1663,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       notify_email => {
@@ -1676,7 +1676,7 @@ $meta = {
           table => 'Availability'
         },
         nullable => 1,
-        tag => 'Email Notifications',
+        tag => 'Уведомление по email',
         type => 'bigint'
       },
       notify_pager => {
@@ -1689,7 +1689,7 @@ $meta = {
           table => 'Availability'
         },
         nullable => 1,
-        tag => 'Pager Notifications',
+        tag => 'Уведомление по пейджеру',
         type => 'bigint'
       },
       notify_voice => {
@@ -1702,7 +1702,7 @@ $meta = {
           table => 'Availability'
         },
         nullable => 1,
-        tag => 'Voice Notifications',
+        tag => 'Голосовое уведомление',
         type => 'bigint'
       },
       person => {
@@ -1770,7 +1770,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -1778,7 +1778,7 @@ $meta = {
         description => 'Name for this group',
         length => '64',
         nullable => 0,
-        tag => 'Name',
+        tag => 'Название',
         type => 'varchar'
       }
     },
@@ -1822,7 +1822,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -1830,7 +1830,7 @@ $meta = {
         description => 'The name for this Contact Type',
         length => '64',
         nullable => 0,
-        tag => 'Name',
+        tag => 'Название',
         type => 'varchar'
       }
     },
@@ -1923,14 +1923,14 @@ $meta = {
           method => 'devices',
         },
         type => 'bigint',
-	tag => 'Asset',
+	tag => 'Устройство',
       },
       aliases => {
         default => '',
         description => 'Other names by which this Device is known',
         length => '255',
         nullable => 1,
-        tag => 'Aliases',
+        tag => 'Псевдонимы',
         type => 'varchar'
       },
       auto_dns => {
@@ -1938,7 +1938,7 @@ $meta = {
         description => 'Whether a DNS name should be auto generated for each IP address in this device',
         length => '',
         nullable => 0,
-        tag => 'Auto DNS?',
+        tag => 'Авто DNS?',
         type => 'bool'
       },
       bgpid => {
@@ -1946,7 +1946,7 @@ $meta = {
         description => 'Border Gateway Protocol ID.  This usually has the form of an IP address',
         length => '64',
         nullable => 1,
-        tag => 'BGP ID',
+        tag => 'Идентификатор BGP',
         type => 'varchar'
       },
       bgplocalas => {
@@ -1954,7 +1954,7 @@ $meta = {
         description => 'Border Gateway Protocol Local Autonomous System number',
         length => '',
         nullable => 1,
-        tag => 'BGP Local AS',
+        tag => 'Номер автономной системы BGP',
         type => 'integer'
       },
       canautoupdate => {
@@ -1962,7 +1962,7 @@ $meta = {
         description => 'If SNMP updates are automated, this value determines whether this Device should be included',
         length => '',
         nullable => 0,
-        tag => 'Auto Update?',
+        tag => 'Автообновление?',
         type => 'bool'
       },
       collect_arp => {
@@ -1970,7 +1970,7 @@ $meta = {
         description => 'Whether Netdot should collect ARP cache data from this Device.  Notice that this is mostly intended for Routers, though not necessarily',
         length => '',
         nullable => 0,
-        tag => 'Collect ARP?',
+        tag => 'Хранить ARP кэш?',
         type => 'bool'
       },
       collect_fwt => {
@@ -1978,7 +1978,7 @@ $meta = {
         description => 'Whether Netdot should collect bridge Forwarding Table (FWT) data from this Device',
         length => '',
         nullable => 0,
-        tag => 'Collect FWT?',
+        tag => 'Хранить таблицу форвардинга?',
         type => 'bool'
       },
       collect_stp => {
@@ -1986,7 +1986,7 @@ $meta = {
         description => 'Enable or Disable querying device for Spanning Tree information',
         length => '',
         nullable => 0,
-        tag => 'Collect STP Info?',
+        tag => 'Хранить информацию STP?',
         type => 'bool'
       },
       community => {
@@ -2002,7 +2002,7 @@ $meta = {
         description => 'Does the operation of this Device fall into the responsibility of the customer (or "user" Entity)?',
         length => '',
         nullable => 0,
-        tag => 'Managed by Customer?',
+        tag => 'Обслуживается клиентом?',
         type => 'bool'
       },
       date_installed => {
@@ -2010,7 +2010,7 @@ $meta = {
         description => 'Date that this Device was installed, or first seen in the network',
         length => '',
         nullable => 1,
-        tag => 'First Discovered',
+        tag => 'Первое обнаружение',
         type => 'timestamp'
       },
       down_from => {
@@ -2018,7 +2018,7 @@ $meta = {
         description => 'Device in down time from this date (YYYY-MM-DD)',
         length => '',
         nullable => 1,
-        tag => 'Down From',
+        tag => 'Недоступно с',
         type => 'date'
       },
       down_until => {
@@ -2026,7 +2026,7 @@ $meta = {
         description => 'Device in down time until this date (YYYY-MM-DD)',
         length => '',
         nullable => 1,
-        tag => 'Down Until',
+        tag => 'Недоступно до',
         type => 'date'
       },
       extension => {
@@ -2050,7 +2050,7 @@ $meta = {
         description => 'Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       ipforwarding => {
@@ -2058,7 +2058,7 @@ $meta = {
         description => 'Whether this device has IP forwarding enabled (IP-MIB::ipForwarding.0)',
         length => '',
         nullable => 0,
-        tag => 'IP Forward?',
+        tag => 'IP форвардинг включен?',
         type => 'bool'
       },
       layers => {
@@ -2066,7 +2066,7 @@ $meta = {
         description => 'Each digit represents a layer of the OSI model served by the device',
         length => '8',
         nullable => 1,
-        tag => 'OSI Layers',
+        tag => 'Уровни OSI',
         type => 'varchar'
       },
       last_arp => {
@@ -2074,7 +2074,7 @@ $meta = {
         description => 'Last time ARP cache data was collected from this Device',
         length => '',
         nullable => 1,
-        tag => 'Last ARP',
+        tag => 'Последний ARP кэш',
         type => 'timestamp'
       },
       last_fwt => {
@@ -2082,7 +2082,7 @@ $meta = {
         description => 'Last time Forwarding Tables (FWT) were collected from this Device',
         length => '',
         nullable => 1,
-        tag => 'Last FWT',
+        tag => 'Последняя таблица форвардинга',
         type => 'timestamp'
       },
       last_updated => {
@@ -2090,7 +2090,7 @@ $meta = {
         description => 'Date that this Device was last updated',
         length => '',
         nullable => 1,
-        tag => 'Last Updated',
+        tag => 'Последнее обновление',
         type => 'timestamp'
       },
       monitor_config => {
@@ -2098,7 +2098,7 @@ $meta = {
         description => 'Indicates whether this Device should be included in configuration management tools (i.e. RANCID)',
         length => '',
         nullable => 0,
-        tag => 'Monitor Config?',
+        tag => 'Хранение конфигураций?',
         type => 'bool'
       },
       monitor_config_group => {
@@ -2106,7 +2106,7 @@ $meta = {
         description => 'Configuration Management group (i.e. RANCID group)',
         length => '64',
         nullable => 1,
-        tag => 'Config Group?',
+        tag => 'Группа конфигураций?',
         type => 'varchar'
       },
       monitored => {
@@ -2114,7 +2114,7 @@ $meta = {
         description => 'Determines if this Device should be included in the configurations for monitoring software',
         length => '',
         nullable => 0,
-        tag => 'Monitored?',
+        tag => 'Мониторится?',
         type => 'bool'
       },
       monitoring_path_cost => {
@@ -2122,7 +2122,7 @@ $meta = {
         description => 'Netdot uses a variant of the Dijkstra algorithm to determine monitoring dependencies. Results can be affected adversely, for instance, by passive devices with connections that are not actually passing traffic.  This value allows the administrator to set a higher cost for those devices, for the purpose of influencing the determination of monitoring paths.',
         length => '',
         nullable => 1,
-        tag => 'Path Cost',
+        tag => 'Метрика маршрута',
         type => 'integer'
       },
       monitorstatus => {
@@ -2135,7 +2135,7 @@ $meta = {
           table => 'MonitorStatus'
         },
         nullable => 1,
-        tag => 'Monitored Status',
+        tag => 'Статус по мониторингу',
         type => 'bigint'
       },
       name => {
@@ -2148,7 +2148,7 @@ $meta = {
           table => 'RR'
         },
         nullable => 0,
-        tag => 'Name',
+        tag => 'Имя',
         type => 'bigint'
       },
       oobname => {
@@ -2156,7 +2156,7 @@ $meta = {
         description => 'A name or command used to connect to this Device via an Out of Band connection, such as a Console Server',
         length => '255',
         nullable => 1,
-        tag => 'Out-of-Band Hostname',
+        tag => 'Имя для внешнего подключения',
         type => 'varchar'
       },
       oobnumber => {
@@ -2164,7 +2164,7 @@ $meta = {
         description => 'A phone number used to connect to this Device via an Out of Band modem',
         length => '32',
         nullable => 1,
-        tag => 'Out-of-Band Tel Number',
+        tag => 'Номер телефона для внешнего подключения',
         type => 'varchar'
       },
       owner => {
@@ -2177,7 +2177,7 @@ $meta = {
           table => 'Entity'
         },
         nullable => 1,
-        tag => 'Owner',
+        tag => 'Собственник',
         type => 'bigint'
       },
       os => {
@@ -2185,7 +2185,7 @@ $meta = {
         description => 'Operating System name and version',
         length => '128',
         nullable => 1,
-        tag => 'OS',
+        tag => 'ОС',
         type => 'varchar'
       },
       rack => {
@@ -2193,7 +2193,7 @@ $meta = {
         description => 'Rack ID where this Device is physically installed',
         length => '32',
         nullable => 1,
-        tag => 'Rack',
+        tag => 'Стойка',
         type => 'varchar'
       },
       room => {
@@ -2206,7 +2206,7 @@ $meta = {
           table => 'Room'
         },
         nullable => 1,
-        tag => 'Room',
+        tag => 'Помещение',
         type => 'bigint'
       },
       site => {
@@ -2219,7 +2219,7 @@ $meta = {
           table => 'Site'
         },
         nullable => 1,
-        tag => 'Site',
+        tag => 'Здание',
         type => 'bigint'
       },
       snmp_authkey => {
@@ -2227,7 +2227,7 @@ $meta = {
         description => 'SNMPv3 Authentication Key',
         length => '255',
         nullable => 1,
-        tag => 'AuthKey',
+        tag => 'Ключ аутентификации SNMP',
         type => 'varchar'
       },
       snmp_authprotocol => {
@@ -2235,7 +2235,7 @@ $meta = {
         description => 'SNMPv3 Authentication Protocol (MD5|SHA)',
         length => '32',
         nullable => 1,
-        tag => 'AuthProtocol',
+        tag => 'Протокол аутентификации',
         type => 'varchar'
       },
       snmp_bulk => {
@@ -2243,7 +2243,7 @@ $meta = {
         description => 'Enable or Disable SNMP BULK operations for this device',
         length => '',
         nullable => 0,
-        tag => 'SNMP Bulk?',
+        tag => 'Включено множественное обновление по SNMP?',
         type => 'bool'
       },
       snmp_managed => {
@@ -2251,7 +2251,7 @@ $meta = {
         description => 'Enable or Disable SNMP operations on this device',
         length => '',
         nullable => 0,
-        tag => 'SNMP Managed?',
+        tag => 'Управляется по SNMP?',
         type => 'bool'
       },
       snmp_polling => {
@@ -2259,7 +2259,7 @@ $meta = {
         description => 'Enable or Disable SNMP polling from management tools which get their configurations from Netdot',
         length => '',
         nullable => 0,
-        tag => 'SNMP Polling?',
+        tag => 'Опросы по SNMP?',
         type => 'bool'
       },
       snmp_privkey => {
@@ -2312,7 +2312,7 @@ $meta = {
         description => 'Simple Network Management Protocol Version (1|2|3)',
         length => '',
         nullable => 1,
-        tag => 'SNMP Version',
+        tag => 'Версия SNMP',
         type => 'integer'
       },
       snmp_conn_attempts => {
@@ -2320,7 +2320,7 @@ $meta = {
         description => 'How many times Netdot has attempted, and failed, to contact this device via SNMP',
         length => '',
         nullable => 1,
-        tag => 'SNMP Failed Attempts',
+        tag => 'Неудачный попыток подключения по SNMP',
         type => 'integer'
       },
       snmp_down => {
@@ -2328,7 +2328,7 @@ $meta = {
         description => 'Whether Netdot has tried more than MAX_SNMP_CONNECTION_ATTEMPTS times to update this device via SNMP',
         length => '',
         nullable => 0,
-        tag => 'SNMP Down',
+        tag => 'SNMP недоступно',
         type => 'bool'
       },
       stp_enabled => {
@@ -2336,7 +2336,7 @@ $meta = {
         description => 'Whether some version of the Spanning Tree Protocol is enabled on this switch',
         length => '',
         nullable => 0,
-        tag => 'STP Enabled?',
+        tag => 'Включен STP?',
         type => 'bool'
       },
       stp_mst_digest => {
@@ -2368,7 +2368,7 @@ $meta = {
         description => 'Spanning Tree Protocol Type (802.1d, MST, PVST, etc)',
         length => '128',
         nullable => 1,
-        tag => 'STP Type',
+        tag => 'Тип STP',
         type => 'varchar'
       },
       sysdescription => {
@@ -2376,7 +2376,7 @@ $meta = {
         description => 'System Description.  Meanto be populated by SNMP',
         length => '255',
         nullable => 1,
-        tag => 'System Description',
+        tag => 'Описание (информация от SNMP)',
         type => 'varchar'
       },
       syslocation => {
@@ -2384,7 +2384,7 @@ $meta = {
         description => 'System Location.  Meant to be populated by SNMP.',
         length => '255',
         nullable => 1,
-        tag => 'System Location',
+        tag => 'Расположение (информация от SNMP)',
         type => 'varchar'
       },
       sysname => {
@@ -2392,7 +2392,7 @@ $meta = {
         description => 'System Name.  Meant to be populated by SNMP.',
         length => '255',
         nullable => 1,
-        tag => 'System Name',
+        tag => 'Имя (информация от SNMP)',
         type => 'varchar'
       },
       used_by => {
@@ -2405,7 +2405,7 @@ $meta = {
           table => 'Entity'
         },
         nullable => 1,
-        tag => 'Used by',
+        tag => 'Кем используется',
         type => 'bigint'
       }
     },
@@ -7137,7 +7137,7 @@ $meta = {
         description => 'Alternative names for this site',
         length => '255',
         nullable => 1,
-        tag => 'Aliases',
+        tag => 'Псевдонимы',
         type => 'varchar'
       },
       availability => {
@@ -7150,7 +7150,7 @@ $meta = {
           table => 'Availability'
         },
         nullable => 1,
-        tag => 'Availability',
+        tag => 'Доступность',
         type => 'bigint'
       },
       city => {
@@ -7158,7 +7158,7 @@ $meta = {
         description => 'City where this Site is located',
         length => '64',
         nullable => 1,
-        tag => 'City',
+        tag => 'Город',
         type => 'varchar'
       },
       contactlist => {
@@ -7171,7 +7171,7 @@ $meta = {
           table => 'ContactList'
         },
         nullable => 1,
-        tag => 'Contact List',
+        tag => 'Список контактов',
         type => 'bigint'
       },
       country => {
@@ -7179,7 +7179,7 @@ $meta = {
         description => 'Country where this Site is located',
         length => '64',
         nullable => 1,
-        tag => 'Country',
+        tag => 'Страна',
         type => 'varchar'
       },
       gsf => {
@@ -7187,7 +7187,7 @@ $meta = {
         description => 'Gross Square Footage of this site',
         length => '',
         nullable => 1,
-        tag => 'GSF',
+        tag => 'Общая площадь',
         type => 'integer'
       },
       id => {
@@ -7203,7 +7203,7 @@ $meta = {
         description => 'User Comments',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -7211,7 +7211,7 @@ $meta = {
         description => 'Name given to this site',
         length => '64',
         nullable => 0,
-        tag => 'Name',
+        tag => 'Название',
         type => 'varchar'
       },
       number => {
@@ -7219,7 +7219,7 @@ $meta = {
         description => 'A unique identifier for this Site within the organization',
         length => '64',
         nullable => 1,
-        tag => 'Site ID',
+        tag => 'Идентификатор здания',
         type => 'varchar'
       },
       pobox => {
@@ -7227,7 +7227,7 @@ $meta = {
         description => 'Post Office Box',
         length => '32',
         nullable => 1,
-        tag => 'P.O. Box',
+        tag => 'Почтовый ящик',
         type => 'varchar'
       },
       state => {
@@ -7235,7 +7235,7 @@ $meta = {
         description => 'State where this Site is located',
         length => '32',
         nullable => 1,
-        tag => 'State',
+        tag => 'Область',
         type => 'varchar'
       },
       street1 => {
@@ -7243,7 +7243,7 @@ $meta = {
         description => 'Street 1st line',
         length => '128',
         nullable => 1,
-        tag => 'Street (1)',
+        tag => 'Улица (первая строка)',
         type => 'varchar'
       },
       street2 => {
@@ -7251,7 +7251,7 @@ $meta = {
         description => 'Street 2nd line',
         length => '128',
         nullable => 1,
-        tag => 'Street (2)',
+        tag => 'Улица (вторая строка)',
         type => 'varchar'
       },
       zip => {
@@ -7259,7 +7259,7 @@ $meta = {
         description => 'ZIP/Postal Code',
         length => '16',
         nullable => 1,
-        tag => 'Zip/Postal Code',
+        tag => 'Индекс',
         type => 'varchar'
       }
     },

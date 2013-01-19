@@ -17,7 +17,7 @@ function toggleLayer(whichLayer) {
 function toggleTasks() {
     var display;
     display = toggleLayer('tasks');
-    document.getElementById('tasks_link').innerHTML = (display=='none'?'[show]':'[hide]');
+    document.getElementById('tasks_link').innerHTML = (display=='none'?'[показать]':'[скрыть]');
     jsrsExecute( "../generic/user_pref.html", emptyfunction, "set_value", Array('SHOW_TASKS', (display=='none'?'hide':'show')) );
 
 }

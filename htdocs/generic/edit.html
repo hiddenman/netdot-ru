@@ -26,7 +26,7 @@ edit.html - present a form to either insert a new object or update an existing o
 
 
 <%attr>
-title   => 'Edit' 
+title   => 'Редактирование' 
 section => 'Generic'
 </%attr>
 
@@ -268,16 +268,16 @@ my $title = "$table " . $ui->table_descr_link($table, "[?]");
 %     if( $id ) {
 %         $m->comp('form.mhtml', table=>$table, id=>$id, view=>$view, dowindow=>$dowindow);
           <br>
-          <input name="submit" type="submit" value="Update">
+          <input name="submit" type="submit" value="Обновить">
 %     }else{
 %       $m->comp('form.mhtml', table=>$table, session=>\%args, dowindow=>$dowindow);
         <br>
-        <input name="submit" type="submit" value="Insert">
+        <input name="submit" type="submit" value="Добавить">
 %     }
 %     if ( $dowindow ){
-	<input name="cancel" value="Cancel" onClick="window.close()" type="button">
+	<input name="cancel" value="Отмена" onClick="window.close()" type="button">
 %     }else{
-    	<input name="cancel" value="Cancel" onClick="history.go(-1)" type="button">
+    	<input name="cancel" value="Отмена" onClick="history.go(-1)" type="button">
 %     }
       </form>
     </div>
@@ -348,10 +348,10 @@ $lbl = $obj->get_label;
     </div>
     <div class="containerbody">
     <br>
-    New <% $table %>: <% $lbl %> inserted.
+    Новый <% $table %>: <% $lbl %> добавлен.
     <br>
     <center>
-    <a class="hand" onClick="<% $onload_action %>">[close]</a>
+    <a class="hand" onClick="<% $onload_action %>">[закрыть]</a>
     </center>
     </div>
 </div>
