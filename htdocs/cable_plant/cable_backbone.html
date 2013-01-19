@@ -23,8 +23,8 @@ $user           => $ui->get_current_user($r)
 </%args>
 
 <%attr>
-title   => 'Backbone Cable' 
-section => 'Plant'
+title   => 'Магистральный кабель' 
+section => 'Planet'
 </%attr>
 
 <%init>
@@ -234,7 +234,7 @@ function suggestName()
 
     if (!start || !end)
     {
-        alert("Please specify both a start and end closet.");
+        alert("Пожалуйста, укажите начальный и конечный шкафы.");
         return;
     }
 
@@ -270,20 +270,20 @@ function suggestName()
     <form name="netdotform" action="cable_backbone.html" method="POST">
       <input type="hidden" name="_action" value="UPDATE">
 	<div class="containerheadleft">
-	  Backbone Cable
+	  Магистральный кабель
 	</div>
 	<div class="containerheadright">
 %         if ($editBackbone) {
-	    <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);" /> 
+	    <input type="button" name="cancel_button" value="отмена" onClick="history.go(-1);" /> 
 	    &nbsp;&nbsp; 
-	    <input name="submit" value="save" type="submit" />
+	    <input name="submit" value="сохранить" type="submit" />
 %         } else {
-              <a href="cable_backbone.html?id=<% $id %>">[refresh]</a> 
+              <a href="cable_backbone.html?id=<% $id %>">[обновить]</a> 
 %             if ( $manager && $manager->can($user, 'edit', $o) ){
-	          <a href="cable_backbone.html?id=<% $id %>&edit=cableinfo">[edit]</a> 
+	          <a href="cable_backbone.html?id=<% $id %>&edit=cableinfo">[редактировать]</a> 
 %             }
 %             if ( $manager && $manager->can($user, 'delete', $o) ){
-	          <a href="delete.html?table=BackboneCable&id=<% $id %>">[delete]</a>
+	          <a href="delete.html?table=BackboneCable&id=<% $id %>">[удалить]</a>
 %             }
 %         }
 	</div>
@@ -317,7 +317,7 @@ function suggestName()
     my $name_tmp = $tmp{value};
     if ($editBackbone) {                
 	$name_tmp .= '&nbsp;&nbsp;&nbsp;<input type="button" name="suggest_name"'
-	    . 'value="Suggest Name" onClick="suggestName();" />';
+	    . 'value="Сгенерировать название" onClick="suggestName();" />';
     }
     push( @field_headers, $tmp{label} );
     push( @cell_data, $name_tmp );
@@ -412,22 +412,22 @@ function editSelected(id)
 %    }
 % my $strand_count = scalar $o->strands;
 <div class="containerheadleft">
-	Cable Strands (<% $strand_count %>)
+	Волокна кабеля (<% $strand_count %>)
 </div>
 <div class="containerheadright">
 %	 if ($editStrand) {	 
-            <input type="button" name="cancel_st_button" value="cancel" onClick="history.go(-1);" /> 
+            <input type="button" name="cancel_st_button" value="отмена" onClick="history.go(-1);" /> 
 	    &nbsp;&nbsp; 
-	    <input name="submit" value="save" type="submit" />
+	    <input name="submit" value="сохранить" type="submit" />
 %	 }else {
 %             if ( $manager && $manager->can($user, 'access_admin_section', 'cable_backbone:new') ){
-                  <a href="cable_strand.html?id=NEW&backbone_id=<% $o->id %>">[new]</a>
+                  <a href="cable_strand.html?id=NEW&backbone_id=<% $o->id %>">[новое]</a>
 %             }
 %             if ( $manager && $manager->can($user, 'edit', $o) ){
-                  <a href="#" onClick="editSelected(<% $id %>);">[edit]</a>
+                  <a href="#" onClick="editSelected(<% $id %>);">[редактировать]</a>
 %             }
 %             if ( $manager && $manager->can($user, 'edit', $o) ){
-                  <a href="cable_backbone.html?id=<% $id %>&edit=strandinfo#cable_strand">[edit all]</a>
+                  <a href="cable_backbone.html?id=<% $id %>&edit=strandinfo#cable_strand">[редактировать всё]</a>
 %             }
            
 %	 }
@@ -453,17 +453,17 @@ function editSelected(id)
 	(@headers, @rows) = ();
 
 	@headers = ( 
-		     '<a href="cable_backbone.html?id=' . $id . '&strand_sort=name#cable_strand">Name</a>',
-		     '<a href="cable_backbone.html?id=' . $id . '&strand_sort=type#cable_strand">Type</a>',
-		     '<a href="cable_backbone.html?id=' . $id . '&strand_sort=status#cable_strand">Status</a>',
+		     '<a href="cable_backbone.html?id=' . $id . '&strand_sort=name#cable_strand">Название</a>',
+		     '<a href="cable_backbone.html?id=' . $id . '&strand_sort=type#cable_strand">Тип</a>',
+		     '<a href="cable_backbone.html?id=' . $id . '&strand_sort=status#cable_strand">Статус</a>',
 	             'Spliced With',
 		     );
 
 	if (!$editStrand) {        
-	    push( @headers, 'Part of Sequence' );
-	    push(@headers, '<a href="cable_backbone.html?id=' . $id . '&strand_sort=circuit#cable_strand">Circuit</a>');
+	    push( @headers, 'Часть последовательности' );
+	    push(@headers, '<a href="cable_backbone.html?id=' . $id . '&strand_sort=circuit#cable_strand">Логический канал</a>');
             if ( $manager && $manager->can($user, 'edit', $o) ){
-	        push( @headers, '<B>Edit?</B>' );
+	        push( @headers, '<B>Редактировать?</B>' );
 	    }
 	}
 	</%perl>
@@ -497,7 +497,7 @@ function editSelected(id)
 		  &{sub{
 		      my $ac = "";
 		      if ($editStrand) {
-			  $ac .= '<input type="checkbox" name="' . "CableStrand__" . $st->id . "__delete" . '">[del]';
+			  $ac .= '<input type="checkbox" name="' . "CableStrand__" . $st->id . "__delete" . '">[удалить]';
 			  my %tmp = $ui->form_field(object=>$st, column=>"name", edit=>$editStrand);            
 			  $ac .= $tmp{value};
 		      } else {
@@ -552,7 +552,7 @@ HERE
                           $ac .= '<SELECT NAME="backbone_list_srch1_' 
 			  . $st->id . '" onChange="lookupStrands(this.value, \'__splice1_' 
 			  . $st->id . '\', \'cable_strand_form\');">';
-			  $ac .= '<OPTION VALUE="">Lookup by Backbone</OPTION>';
+			  $ac .= '<OPTION VALUE="">Поиск магистрали</OPTION>';
 
 			  my @splices = $st->splices;
 			  my %stored = ();
@@ -565,7 +565,7 @@ HERE
 
 			  $ac .= '</SELECT> &nbsp; ';
 			  $ac .= '<select name="__splice1_' . $st->id . '">';
-			  $ac .= '<option value="">-- Make your selection --</option>';
+			  $ac .= '<option value="">-- Выберите --</option>';
 			  if (scalar(@splices)) {
 			      $ac .= '<option value="' . $splices[0]->strand2->id . '" SELECTED>' 
 				  . $splices[0]->strand2->name . '</option>';
@@ -577,7 +577,7 @@ HERE
 			  $ac .= '<SELECT NAME="backbone_list_srch2_' . $st->id 
 			      . '" onChange="lookupStrands(this.value, \'__splice2_' . $st->id 
 			      . '\', \'cable_strand_form\');">';
-			  $ac .= '<OPTION VALUE="">Lookup by Backbone</OPTION>';
+			  $ac .= '<OPTION VALUE="">Просмотр по магистрали</OPTION>';
 
 
 			  %stored = ();
@@ -590,12 +590,12 @@ HERE
 
 			  $ac .= '</SELECT> &nbsp; ';
 			  $ac .= '<select name="__splice2_' . $st->id . '">';
-			  $ac .= '<option value="">-- Make your selection --</option>';
+			  $ac .= '<option value="">-- Выберите --</option>';
 			  if (scalar(@splices) == 2) {
 			      $ac .= '<option value="' . $splices[1]->strand2->id . '" SELECTED>' 
 				  . $splices[1]->strand2->name . '</option>';
 			  }
-			  $ac .= '<option value="">[null]</option>';
+			  $ac .= '<option value="">[ничего]</option>';
 			  $ac .= '</select>';
 		      }
 		      $ac;
@@ -632,28 +632,28 @@ HERE
   <div class="container">
     
     <div class="containerhead">
-       Edit Strand Range
+       Редактирование набора волокон
     </div>
 
     <div class="containerbody">
       <form action="cable_backbone.html" method="POST">
 	<input type="hidden" name="id" value="<% $id %>" />
 	<input type="hidden" name="_action" value="EDIT_RANGE" />
-	Range (i.e. 1-12)&nbsp; <input type="text" name="strand_range" value="" size="5" />
-      Type:
+	Набор (например: 1-12)&nbsp; <input type="text" name="strand_range" value="" size="5" />
+      Тип:
 	<select name="fiber_type">
-	  <option value="null" selected>Select Type</option>
-	  <option value="1">Multimode</option>
-	  <option value="2">Singlemode</option>
+	  <option value="null" selected>Выберите тип</option>
+	  <option value="1">Многомод</option>
+	  <option value="2">Одномод</option>
         </select>
-      Status:
+      Статус:
 	<select name="status">
-        <option value="null" selected>Select Status</option>
+        <option value="null" selected>Выберите статус</option>
 %       foreach my $st ( StrandStatus->retrieve_all() ){
             <option value="<% $st %>"><% $st->name %></option>
 %       }
         </select>
-	&nbsp;<input type="submit" name="edit_range" value="Save" />&nbsp;
+	&nbsp;<input type="submit" name="edit_range" value="Сохранить" />&nbsp;
       </form>
     </div>
   </div>
@@ -667,17 +667,17 @@ HERE
   <div class="container">
     
     <div class="containerhead">
-      Manually Add Strands
+      Ручное добавление волокон
     </div>
 
     <div class="containerbody">
       <form action="cable_backbone.html" method="POST">
 	<input type="hidden" name="id" value="<% $id %>" />
 	<input type="hidden" name="_action" value="ADD_STRANDS" />
-	Add <input type="text" name="number_strands" value="0" size="3" /> strands of type 
+	Добавить <input type="text" name="number_strands" value="0" size="3" /> волокон типа
 	<select name="fiber_type">
-	  <option value="1">Multimode</option>
-	  <option value="2">Singlemode</option>
+	  <option value="1">Многомод</option>
+	  <option value="2">Одномод</option>
         </select>
 	&nbsp;<input type="submit" name="strand_add" value="Go" />&nbsp;
       </form>
@@ -696,7 +696,7 @@ HERE
 % if ( $o->strands && @bbones ){
   <div class="container">
     <div class="containerhead">
-      Splice/Unsplice Strand Range
+      Соединить/Разъединить набор волокон
     </div>
     
     <div class="containerbody">
@@ -704,14 +704,14 @@ HERE
 	<input type="hidden" name="id" value="<% $id %>" />
 	<input type="hidden" name="_action" value="SPLICE_RANGE" />
 	<SELECT NAME="splice_action">
-	  <OPTION VALUE="add">Splice</OPTION>
-	  <OPTION VALUE="delete">Unsplice</OPTION>
+	  <OPTION VALUE="add">Соединить</OPTION>
+	  <OPTION VALUE="delete">Разъединить</OPTION>
 	</SELECT>
-	Strands (i.e. 1-12)
+	Волокна (например: 1-12)
 	<input type="text" name="range1" value="" size="4">&nbsp;from this backbone, and strands &nbsp;
 	<input type="text" name="range2" value="" size="4">&nbsp;from 
 	<SELECT NAME="splice_bb_end">
-	  <OPTION VALUE="">Backbone...</OPTION>
+	  <OPTION VALUE="">Магистраль...</OPTION>
 	  <%perl>
 	  my %stored = ();
           foreach my $bb (sort { $a->name cmp $b->name } @bbones) {
@@ -721,7 +721,7 @@ HERE
 	  }
 	  </%perl>
 	</SELECT>
-	&nbsp;<input type="submit" name="splice_update" value="Go">
+	&nbsp;<input type="submit" name="splice_update" value="Сохранить">
       </form>
     </div>
   </div>

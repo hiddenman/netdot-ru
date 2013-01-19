@@ -43,7 +43,7 @@ print "closets is <pre>", Dumper(@closets), "</pre><br>" if $DEBUG;
 	      Closets
 	    </div>
 	    <div class="containerbody">
-	      <b>Over <% $MAX_SELECTION %> rows were returned. Please refine your criteria.</b>
+	      <b>Более <% $MAX_SELECTION %> значений было найдено. Пожалуйста, уточните критерии поиска.</b>
 	    </div>
 
 %         } else {
@@ -53,10 +53,10 @@ print "closets is <pre>", Dumper(@closets), "</pre><br>" if $DEBUG;
 	    </div>
 	    <div class="containerheadright">
 %             if ($edit eq "cableinfo"){	 
-                <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="save" type="submit">
+                <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="сохранить" type="submit">
 %             } else {
-                <a href="closet.html?id=NEW&site_id=<% $id %>">[new]</a> &nbsp;
-		<a href="cable_plant.html?id=<% $id %>&page_type=<% $page_type %>&edit=cableinfo">[edit]</a>
+                <a href="closet.html?id=NEW&site_id=<% $id %>">[новый]</a> &nbsp;
+		<a href="cable_plant.html?id=<% $id %>&page_type=<% $page_type %>&edit=cableinfo">[редактировать]</a>
 %             }
             </div>
 	    <div class="containerbody">
@@ -85,9 +85,9 @@ print "closets is <pre>", Dumper(@closets), "</pre><br>" if $DEBUG;
 	    <%perl>
 	    (@headers, @rows) = ();
 
-	    push( @headers, '<a href="cable_plant.html?id=' . $id . '&cable_sort=name&page_type=' . $page_type . '">Name</a>' );
-	    push( @headers, '<a href="cable_plant.html?id=' . $id . '&cable_sort=room&page_type=' . $page_type . '">Room</a>' );
-            push( @headers, '<a href="cable_plant.html?id=' . $id . '&cable_sort=floor&page_type=' . $page_type. '">Floor</a>');
+	    push( @headers, '<a href="cable_plant.html?id=' . $id . '&cable_sort=name&page_type=' . $page_type . '">Название</a>' );
+	    push( @headers, '<a href="cable_plant.html?id=' . $id . '&cable_sort=room&page_type=' . $page_type . '">Помещение</a>' );
+            push( @headers, '<a href="cable_plant.html?id=' . $id . '&cable_sort=floor&page_type=' . $page_type. '">Этаж</a>');
 
 	    foreach my $closet (@sorted_closets) {
 		my $site = $closet->room->floor->site if ($closet->room->floor->site);

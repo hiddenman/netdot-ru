@@ -17,7 +17,7 @@ $user       => $ui->get_current_user($r)
 </%flags>
 
 <%attr>
-title   => 'Closet' 
+title   => 'Шкаф' 
 section => 'Plant'
 </%attr>
 
@@ -101,21 +101,21 @@ if ( defined($ARGS{_action}) && $ARGS{_action} eq "ADD_PICTURE" && defined($ARGS
     <input type="hidden" name="_action" value="1">
 
     <div class="containerheadleft">
-        Closet
+        Шкаф
     </div>
     <div class="containerheadright">
 %       if ($editCloset) {
-            <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="save" type="submit">
+            <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="сохранить" type="submit">
 %       } else {
             &nbsp;
 %           if ( $manager && $manager->can($user, 'access_admin_section', 'closet:new') ){
-                <a href="closet.html?id=NEW">[new]</a> 
+                <a href="closet.html?id=NEW">[новый]</a> 
 %           }
 %           if ( $manager && $manager->can($user, 'edit', $o) ){
-                <a href="closet.html?id=<% $id %>&edit=closetinfo">[edit]</a> 
+                <a href="closet.html?id=<% $id %>&edit=closetinfo">[редактировать]</a> 
 %           }
 %           if ( $manager && $manager->can($user, 'delete', $o) ){
-                <a href="delete.html?table=Closet&id=<% $id %>">[delete]</a>
+                <a href="delete.html?table=Closet&id=<% $id %>">[удалить]</a>
 %           }
 %       }
     </div>
@@ -172,14 +172,14 @@ if ( defined($ARGS{_action}) && $ARGS{_action} eq "ADD_PICTURE" && defined($ARGS
 %   }
 
     <div class="containerheadleft">
-        Closet Pictures
+        Фотографии шкафа
     </div>
     <div class="containerheadright">
 %   if ($editPictures) {	 
-        <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="save" type="submit">
+        <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="сохранить" type="submit">
 %   } else {
 %       if ( $manager && $manager->can($user, 'edit', $o) ){
-            <a href="closet.html?id=<% $id %>&edit=closetpictures#pics">[edit]</a>
+            <a href="closet.html?id=<% $id %>&edit=closetpictures#pics">[редактировать]</a>
 %       }else{
             &nbsp;
 % 	}
@@ -198,10 +198,10 @@ if ( defined($ARGS{_action}) && $ARGS{_action} eq "ADD_PICTURE" && defined($ARGS
     <%perl>
     (@headers, @rows) = ();
 
-    push( @headers, '<a href="closet.html?id=' . $id . '&pic_sort=filename#pics">File Name</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&pic_sort=filesize#pics">Size</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&o_sort=filetype#pics">File Type</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&strand_sort=info#pics">Comments</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&pic_sort=filename#pics">Имя файла</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&pic_sort=filesize#pics">Размер</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&o_sort=filetype#pics">Тип файла</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&strand_sort=info#pics">Комментарии</a>' );
     </%perl>
     
     <%perl>
@@ -240,7 +240,7 @@ if ( defined($ARGS{_action}) && $ARGS{_action} eq "ADD_PICTURE" && defined($ARGS
 %   if (!$editPictures) {
 %       if ( $manager && $manager->can($user, 'access_admin_section', 'closet:add_picture') ){
             Add New Picture: &nbsp;<input type="file" name="__picture" size="30" value="">
-	        &nbsp;<input type="submit" name="__picture_add" value="Add">
+	        &nbsp;<input type="submit" name="__picture_add" value="Добавить">
 %       }
 %   }
 
@@ -261,7 +261,7 @@ if ( defined($ARGS{_action}) && $ARGS{_action} eq "ADD_PICTURE" && defined($ARGS
 
     <div class="containerheadright">
 %       if ( $manager && $manager->can($user, 'access_admin_section', 'closet:new_device') ){
-            <a href= "../management/device_tasks.html?view=new">[new]</a>
+            <a href= "../management/device_tasks.html?view=new">[новый]</a>
 %       }else{
             &nbsp;
 %       }
@@ -306,14 +306,14 @@ if ($editBackbones) {
     <input type="hidden" name="_action" value="UPDATE">
 
     <div class="containerheadleft">
-        Backbone Cable
+        Магистральный кабель
     </div>
     <div class="containerheadright">
 %       if ($editBackbones) {	 
-            <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="save" type="submit">
+            <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="сохранить" type="submit">
 %       } else {
 %           if ( $manager && $manager->can($user, 'access_admin_section', 'closet:new_backbone') ){
-                <a href="cable_backbone.html?id=NEW&start_closet=<% $o->id %>">[new]</a>
+                <a href="cable_backbone.html?id=NEW&start_closet=<% $o->id %>">[новый]</a>
 %           }else{
                 &nbsp;
 %           }
@@ -325,11 +325,11 @@ if ($editBackbones) {
     <%perl>
     (@headers, @rows) = ();
     
-    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=name#backbones">Name</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=type#backbones">Type</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=start_closet#backbones">Start Closet</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=end_closet#backbones">End Closet</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=owner#backbones">Owner</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=name#backbones">Название</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=type#backbones">Тип</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=start_closet#backbones">Начальный шкаф</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=end_closet#backbones">Конечный шкаф</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&bb_sort=owner#backbones">Собственник</a>' );
     </%perl>
 
     <%perl>
@@ -355,7 +355,7 @@ if ($editBackbones) {
 
     <&| "/generic/HERE.mhtml" &>
 %       if ($editBackbones) {
-            <input type="checkbox" name="<% "BackboneCable__" . $bb->id . "__delete" %>">[del]
+            <input type="checkbox" name="<% "BackboneCable__" . $bb->id . "__delete" %>">[удалить]
 %           $ui->text_field(object=>$bb, table=>"BackboneCable", column=>"name",
 %                          edit=>$editBackbones);
 %       } else {
@@ -378,7 +378,7 @@ if ($editBackbones) {
             -->
             </script>
             <SELECT NAME="start_site_list<% $bb->id %>_srch" onChange="startClosetList_<% $bb->id %>.doIt();">
-            <OPTION VALUE="">Lookup by Site</OPTION>
+            <OPTION VALUE="">Просмотр по зданию</OPTION>
             <%perl>
             foreach my $s (@sites)
             {
@@ -406,7 +406,7 @@ if ($editBackbones) {
             -->
             </script>
             <SELECT NAME="end_site_list<% $bb->id %>_srch" onChange="endClosetList_<% $bb->id %>.doIt();">
-            <OPTION VALUE="">Lookup by Site</OPTION>
+            <OPTION VALUE="">Просмотр по зданию</OPTION>
             <%perl>
             foreach my $s (@sites)
             {
@@ -450,14 +450,14 @@ if ($editBackbones) {
     <input type="hidden" name="_action" value="UPDATE">
 
     <div class="containerheadleft">
-        Horizontal Cable
+        Горизонтальный кабель
     </div>
     <div class="containerheadright">
 %   if ($editHorizontal) {
-        <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="save" type="submit">
+        <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="сохранить" type="submit">
 %   } else {
 %       if ( $manager && $manager->can($user, 'access_admin_section', 'closet:new_horizontal') ){
-            <a href="edit.html?table=HorizontalCable">[new]</a>
+            <a href="edit.html?table=HorizontalCable">[новый]</a>
 %	}else{
             &nbsp;
 %       }
@@ -483,9 +483,9 @@ if ($editBackbones) {
     <%perl>
     (@headers, @rows) = ();
 
-    push( @headers, '<a href="closet.html?id=' . $id . '&cable_sort=jackid#horizontal">Jack ID</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&cable_sort=type#horizontal">Type</a>' );
-    push( @headers, '<a href="closet.html?id=' . $id . '&cable_sort=room#horizontal">Room</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&cable_sort=jackid#horizontal">Идентификатор порта</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&cable_sort=type#horizontal">Тип</a>' );
+    push( @headers, '<a href="closet.html?id=' . $id . '&cable_sort=room#horizontal">Помещение</a>' );
 
     foreach my $cable (@sorted_cables) {
     my @row = ();
@@ -493,7 +493,7 @@ if ($editBackbones) {
 
     <&| "/generic/HERE.mhtml" &>
 %       if ($editHorizontal) {
-            <input type="checkbox" name="<% "HorizontalCable__" . $cable->id . "__delete" %>">[del]
+            <input type="checkbox" name="<% "HorizontalCable__" . $cable->id . "__delete" %>">[удалить]
 %           $ui->text_field(object=>$cable, table=>"HorizontalCable", column=>"jackid",
 %                          edit=>$editHorizontal);
 %       } else {

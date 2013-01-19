@@ -1437,7 +1437,7 @@ $meta = {
         description => '',
         length => '128',
         nullable => 1,
-        tag => 'Patch Panels',
+        tag => 'Патчпанелей',
         type => 'varchar'
       },
       rack_type => {

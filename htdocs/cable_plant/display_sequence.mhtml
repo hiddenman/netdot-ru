@@ -31,13 +31,13 @@ my $manager   = $ui->get_permission_manager($r);
 
 % if ( $table_view ){
 <div class="container">
-    <div class="containerheadleft">Cable Strand Sequences</div>
+    <div class="containerheadleft">Последовательность волокон кабеля</div>
     <div class="containerheadright">
 %    if ( $add ){
          &nbsp;
 %    }else{
 %       if ( $manager && $manager->can($user, 'access_admin_section', 'circuit:add_strand_sequences') ){
-             <a href="circuit.html?id=<% $id %>&add_strands=1">[add]</a>
+             <a href="circuit.html?id=<% $id %>&add_strands=1">[добавить]</a>
 %       }else{
              &nbsp;
 %       }
@@ -90,7 +90,7 @@ my $manager   = $ui->get_permission_manager($r);
 </%perl>
 % }
 %if ( $table_view && $strands && @$strands ) {
-     <div align="left"><input type="submit" name="submit_seq" value="Unassign"></div>
+     <div align="left"><input type="submit" name="submit_seq" value="Отменить назначение"></div>
 %}    
 
 % if ( $id ){
@@ -115,7 +115,7 @@ function getStrandList()
     
     if (!start_id || !end_id)
     {
-	alert("You must select a start and end site.");
+	alert("Вы должны выбрать начальное и конечное здания.");
 	return false;
     }
     
@@ -133,7 +133,7 @@ function getStrandList()
 %       if ( $manager && $manager->can($user, 'access_admin_section', 'circuit:add_strand_sequences') ){
             <p>
             <div class="container">
-            <div class="containerhead">Add Strand Sequences</div>
+            <div class="containerhead">Добавить последовательность волокна</div>
             <div class="containerbody">
             <form name="add_strand_form" action="circuit.html" method="POST">
             <input type="hidden" name="id" value="<% $id %>">
@@ -147,7 +147,7 @@ function getStrandList()
             <input type="hidden" name="page_type" value="BACKBONE">
             Backbones from
             <select name="start_id" style="width: 225px">
-            <option value="">-- Select --</option>
+            <option value="">-- Выберите --</option>
 <%perl>
 	    foreach my $site (@sites) {
 	        printf("<option value=\"%s\">%s</option>\n", $site->id, $site->name);
@@ -155,7 +155,7 @@ function getStrandList()
 </%perl>
             </select> to
             <select name="end_id" style="width: 225px;">
-            <option value="">-- Select --</option>
+            <option value="">-- Выберите --</option>
 <%perl>
             foreach my $site (@sites) {
                 printf("<option value=\"%s\">%s</option>\n", $site->id, $site->name);
@@ -164,9 +164,9 @@ function getStrandList()
             </select>
             <input type="button" name="get_bb_list" value="Get Strand List" onClick="getStrandList();">
             <p><br>
-            Available Strand Sequence(s):<br>
+            Доступные последовательности волокон:<br>
             <select name="sequence_list" style="width: 500px;" multiple size="10"></select>
-            <input type="submit" name="strand_add" value="Add">&nbsp;
+            <input type="submit" name="strand_add" value="Добавить">&nbsp;
             </form>
         </div> <!-- close containerbody -->
     </div> <!-- close container -->

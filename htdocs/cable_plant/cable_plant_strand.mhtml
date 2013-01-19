@@ -26,29 +26,29 @@ my (@field_headers, @cell_data, @headers, @rows);
 %         if (scalar(@strands) > $MAX_SELECTION) {
 
             <div class="containerhead">
-	      Cable Strands
+	      Волокна кабеля
 	    </div>
 	    <div class="containerbody">
-	      <b>Over <% $MAX_SELECTION %> rows were returned. Please refine your criteria.</b>
+	      <b>Более <% $MAX_SELECTION %> значений было найдено. Пожалуйста, уточните критерии поиска.</b>
 	    </div>
 %         } else {
 
             <div class="containerheadleft">
-	      Cable Strands
+	      Волокна кабеля
 	    </div>
 	    <div class="containerheadright">
 %	      if ($edit eq "cableinfo"){	 
-                <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="save" type="submit">
+                <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="сохранить" type="submit">
 %	      } else {
-                <a href="cable_strand.html?id=NEW">[new]</a> &nbsp;
-		<a href="cable_plant.html?backbone_id_srch=<% $backbone_id_srch %>&page_type=<% $page_type %>&edit=cableinfo">[edit]</a>
+                <a href="cable_strand.html?id=NEW">[новый]</a> &nbsp;
+		<a href="cable_plant.html?backbone_id_srch=<% $backbone_id_srch %>&page_type=<% $page_type %>&edit=cableinfo">[редактировать]</a>
 %             }
             </div>
 	    <div class="containerbody">
 
 %         }      
 
-          <% scalar(@strands) %> row(s) returned.
+          <% scalar(@strands) %> значения(-ий) найдено.
 
 %	  if (scalar(@strands) && scalar(@strands) <= $MAX_SELECTION) {
             <%perl>
@@ -86,12 +86,12 @@ my (@field_headers, @cell_data, @headers, @rows);
 	    <%perl>
 	    (@headers, @rows) = ();
 
-	    push( @headers, '<a href="cable_plant.html?backbone_id_srch=' . $backbone_id_srch . '&cable_sort=name&page_type=' . $page_type . '">Name</a>' );
-	    push( @headers, '<a href="cable_plant.html?backbone_id_srch=' . $backbone_id_srch . '&cable_sort=status&page_type=' . $page_type . '">Status</a>' );
-	    push( @headers, '<a href="cable_plant.html?backbone_id_srch=' . $backbone_id_srch . '&cable_sort=direction&page_type=' . $page_type . '">Direction</a>' );
-	    push( @headers, 'Spliced with' );
+	    push( @headers, '<a href="cable_plant.html?backbone_id_srch=' . $backbone_id_srch . '&cable_sort=name&page_type=' . $page_type . '">Название</a>' );
+	    push( @headers, '<a href="cable_plant.html?backbone_id_srch=' . $backbone_id_srch . '&cable_sort=status&page_type=' . $page_type . '">Статус</a>' );
+	    push( @headers, '<a href="cable_plant.html?backbone_id_srch=' . $backbone_id_srch . '&cable_sort=direction&page_type=' . $page_type . '">Направление</a>' );
+	    push( @headers, 'Соединено с' );
 	    if ($edit ne "cableinfo") {
-		push( @headers, 'Part of Sequence' );
+		push( @headers, 'Часть последовательности' );
 	    }        
 
 	    foreach my $strand (@sorted_strands) {
@@ -100,7 +100,7 @@ my (@field_headers, @cell_data, @headers, @rows);
 		      &{sub{
 			  my $ac = "";
 			  if ($edit eq "cableinfo") {
-			      $ac .= '<input type="checkbox" name="' . "CableStrand__" . $strand->id . "__delete" . '">[del]';
+			      $ac .= '<input type="checkbox" name="' . "CableStrand__" . $strand->id . "__delete" . '">[удалить]';
 			      $ac .= $ui->form_field(object=>$strand, column=>"name", edit=>($edit eq "cableinfo"), returnValOnly=>1);            
 			  } else {
 			      $ac .= '<a href="cable_strand.html?id=' . $strand->id . '">' . $strand->name . '</a>';
@@ -143,7 +143,7 @@ my (@field_headers, @cell_data, @headers, @rows);
                 {
                     if (!bb_id)
                     {
-                        alert("You must select a backbone.");
+                        alert("Вы должны выбрать магистраль.");
                     }
                     
                     var url = "strand_backbone_list_query.html?bb_id=";
@@ -160,7 +160,7 @@ HERE
 
                               $ac .= '<select name="backbone_list_srch1_' . $strand->id . '" onChange="lookupStrands(this.value, \'__splice1_' 
 			          . $strand->id . '\', \'netdotform\');">';
-			      $ac .= '<option value="">Lookup by Backbone</option>';
+			      $ac .= '<option value="">Просмотр по магистрали</option>';
 
 
 			      my @splices = $strand->splices;
@@ -174,16 +174,16 @@ HERE
 
 			      $ac .= '</select> &nbsp; ';
 			      $ac .= '<select name="__splice1_' . $strand->id . '">';
-			      $ac .= '<option value="">-- Make your selection --</option>';
+			      $ac .= '<option value="">-- Выберите --</option>';
 			      if (scalar(@splices)) {
 				  $ac .= '<option value="' . $splices[0]->strand2->id . '" SELECTED>' . $splices[0]->strand2->name . '</option>';
 			      }
-			      $ac .= '<option value="">[null]</option>';
+			      $ac .= '<option value="">[ничего]</option>';
 			      $ac .= '</select>';
 			      $ac .= '<br>';
 			      $ac .= '<select name="backbone_list_srch2_' . $strand->id . '" onChange="lookupStrands(this.value, \'__splice2_' 
 				  . $strand->id . '\', \'netdotform\');">';
-			      $ac .= '<optino value="">Lookup by Backbone</option>';
+			      $ac .= '<optino value="">Просмотр по магистрали</option>';
 
 			      %stored = ();
 			      foreach my $bb (sort { $a->name cmp $b->name } @backbones)
@@ -195,11 +195,11 @@ HERE
 
 			      $ac .= '</select> &nbsp; ';
 			      $ac .= '<select name="__splice2_' . $strand->id . '">';
-			      $ac .= '<option value="">-- Make your selection --</option>';
+			      $ac .= '<option value="">-- Выберите --</option>';
 			      if (scalar(@splices) == 2) {
 				  $ac .= '<option value="' . $splices[1]->strand2->id . '" SELECTED>' . $splices[1]->strand2->name . '</option>';
 			      }
-			      $ac .= '<option value="">[null]</option>';
+			      $ac .= '<option value="">[ничего]</option>';
 			      $ac .= '</select>';
 			  }
 			  $ac;
