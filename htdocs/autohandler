@@ -130,7 +130,7 @@ if ( defined $user && !defined $user->getAttribute('USER_TYPE') ){
 		$request_vars .= "$key=$value&";
 	    }
 	}
-	print '<a href="javascript:toggleTasks()" id="tasks_link">['.($show_tasks eq "show"?"hide":"show").']</a>';
+	print '<a href="javascript:toggleTasks()" id="tasks_link">['.($show_tasks eq "show"?"скрыть":"показать").']</a>';
     };
     </%init>
 </%method>

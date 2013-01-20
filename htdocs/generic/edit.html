@@ -132,7 +132,7 @@ if ( $table ){
 	    $m->comp('/generic/error.mhtml', error=>"You don't have permission to edit this object");
 	}
 	
-	if ( $submit eq "Update" ){
+	if ( $submit eq "Обновить" ){
 	    $ui->localize_newlines($table, \%args);
 	    my $new_digest = $obj->get_digest();
 	    eval {
@@ -155,7 +155,7 @@ if ( $table ){
 		     showheader=>$showheader, select_id=>$select_id, selected=>$selected, dowindow=>$dowindow );
         }
     }else{
-	if ( $submit eq "Insert" ){
+	if ( $submit eq "Добавить" ){
 	    $ui->localize_newlines($table, \%args);
 	    my $new;
 	    eval{
