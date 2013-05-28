@@ -313,11 +313,13 @@ sub print_to_file{
 
     $class->_print($fh, $self->id, $data);
 
+    print $fh "\n#### EOF ####\n";
     close($fh);
 
     my $end = time;
     $logger->info(sprintf("DHCPD Scope %s exported to %s, in %s", 
 			  $self->name, $path, $class->sec2dhms($end-$start) ));
+
 }
 
 
@@ -722,8 +724,9 @@ sub _print {
     
     # Print free-form text
     if ( $data->{$id}->{text} ){
-	chomp $data->{$id}->{text};
-	print $fh $indent.$data->{$id}->{text}, "\n" ;
+ 	chomp (my $text = $data->{$id}->{text});
+ 	$text =~ s/\n/\n$indent/g  ;
+ 	print $fh $indent.$text, "\n" ;
     }
     
     # Print attributes

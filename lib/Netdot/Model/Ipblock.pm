@@ -546,13 +546,13 @@ sub is_multicast{
     my ($netaddr, $version);
     if ( ref($self) ){
 	# Called as object method
-	$netaddr = $self->_netaddr;
+	$netaddr = $self->netaddr;
 	$version = $self->version;
     }else{
 	# Called as class method
 	$self->throw_fatal("Missing required arguments when called as class method: address")
 	    unless ( defined $address );
-	if ( !($netaddr = NetAddr::IP->new($address, $prefix))){
+	if ( !($netaddr = Ipblock->netaddr($address, $prefix))){
 	    my $str = ( $address && $prefix ) ? (join '/', $address, $prefix) : $address;
 	    $self->throw_user("Invalid IP: $str");
 	}
@@ -1650,6 +1650,11 @@ sub update {
 	if ( $self->address ne $bak{address} || $self->prefix ne $bak{prefix} ){
 	    my $scope = ($self->dhcp_scopes)[0];
 	    $scope->update({ipblock=>$self});
+	}
+	if ( $bak{status} != $self->status ){
+	    if ( $self->status->name ne 'Subnet' ){
+		$self->throw_user("Subnet cannot change status while DHCP scope exists");
+	    }
 	}
     }
 
@@ -3065,6 +3070,20 @@ sub _validate {
 	    $self->throw_user($self->get_label.": Available addresses cannot have A records or DHCP scopes");
 	}
     }
+
+    if ( $args->{monitored} ){
+	unless ( $self->is_address($self) ){
+	    $self->throw_user($self->get_label.": The monitored flag is only for addresses.");
+	}	
+    }
+
+    if ( my $rir = $args->{rir} ){
+	my $re = $self->config->get('VALID_RIR_REGEX');
+	unless ( $rir =~ /$re/ ){
+	    $self->throw_user("Invalid RIR: $rir");
+	}
+    }
+
     return 1;
 }
 

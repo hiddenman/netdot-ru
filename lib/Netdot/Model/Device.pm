@@ -712,8 +712,8 @@ sub get_snmp_info {
 
     $logger->debug("Device::get_snmp_info: SNMP target is $dev{snmp_target}");
     
-    $dev{community}    = $sinfo->snmp_comm;
     $dev{snmp_version} = $sinfo->snmp_ver;
+    $dev{community}    = $sinfo->snmp_comm if ( defined $sinfo->snmp_ver && $sinfo->snmp_ver != 3 );
 
     my $name_src = ( $self->config->get('IFNAME_SHORT') eq '1' )? 
 	'orig_i_name' : 'i_description';
@@ -846,7 +846,7 @@ sub get_snmp_info {
 									   'sclass'      => $sinfo->class);
 
 				    return unless $vsinfo;
-  
+				    
 				    $stp_p_info = $class->_exec_timeout( 
 					$args{host}, 
 					sub{  return $self->_get_stp_info(sinfo=>$vsinfo) } 
@@ -892,9 +892,9 @@ sub get_snmp_info {
 								       'communities' => [$comm],
 								       'version'     => $sinfo->snmp_ver,
 								       'sclass'      => $sinfo->class);
-				
+
 				return unless $vsinfo;
-				
+
 				my $stp_p_info = $class->_exec_timeout( 
 				    $args{host}, 
 				    sub{  return $self->_get_stp_info(sinfo=>$vsinfo) } );
@@ -925,10 +925,10 @@ sub get_snmp_info {
 	}
     }
 
-    # Set some defaults specific to device types
+    # Set some values specific to device types
     if ( $dev{ipforwarding} ){
-	$dev{bgplocalas}  =  $sinfo->bgp_local_as();
-	$dev{bgpid}       =  $sinfo->bgp_id();
+	$dev{bgplocalas} =  $sinfo->bgp_local_as();
+	$dev{bgpid}      =  $sinfo->bgp_id();
     }
 
     ################################################################
@@ -990,7 +990,6 @@ sub get_snmp_info {
 		}
 	    }
 	}
-	
     }
 
 
@@ -1133,10 +1132,16 @@ sub get_snmp_info {
 	if ( $key =~ /^.+\.((?:\d+\.){15}\d+)$/o ) {
 	    $addr = $self->_octet_string_to_v6($1);
 	}
-	if ( $val =~ /^(\d+)\.\d+\.\d+\.([\d\.]+)\.(\d+)$/o ) {
+	if ( $val =~ /^(\d+)\.(\d+)\.\d+\.([\d\.]+)\.(\d+)$/o ) {
 	    # ifIndex, type, size, prefix length
-	    $iid = $1; $len = $3;
-	    $pfx = $self->_octet_string_to_v6($2);
+	    if ( ($1 == 1)  && ($2 > 150000000)) {
+		# It seems that for nexus the ifIndex id is always greater than 150000000
+                $iid=$2;
+            } else {
+                $iid=$1;
+            }
+	    $len = $4;
+	    $pfx = $self->_octet_string_to_v6($3);
 	}
 	if ( $iid && $addr && $pfx && $len ){
 	    next unless (defined $dev{interface}{$iid});
@@ -1185,20 +1190,20 @@ sub get_snmp_info {
 	##############################################
 	# for each BGP Peer discovered...
 	foreach my $peer ( keys %{$hashes{'bgp_peers'}} ) {
-	    $dev{bgppeer}{$peer}{address} = $peer;
-	    unless ( $dev{bgppeer}{$peer}{bgppeerid} = $hashes{'bgp_peer_id'}->{$peer} ){
+	    $dev{bgp_peer}{$peer}{address} = $peer;
+	    unless ( $dev{bgp_peer}{$peer}{bgppeerid} = $hashes{'bgp_peer_id'}->{$peer} ){
 		$logger->warn("Could not determine BGP peer id of peer $peer");
 	    }
 	    if ( my $asn = $hashes{'bgp_peer_as'}->{$peer} ){
-		$dev{bgppeer}{$peer}{asnumber} = $asn;
-		$dev{bgppeer}{$peer}{asname}   = "AS $asn";
-		$dev{bgppeer}{$peer}{orgname}  = "AS $asn";
+		$dev{bgp_peer}{$peer}{asnumber} = $asn;
+		$dev{bgp_peer}{$peer}{asname}   = "AS $asn";
+		$dev{bgp_peer}{$peer}{orgname}  = "AS $asn";
 		
 		if ( Netdot->config->get('DO_WHOISQ') ){
 		    # We enabled whois queries in config
 		    if ( my $as_info = $self->_get_as_info($asn) ){
-			$dev{bgppeer}{$peer}{asname}  = $as_info->{asname};
-			$dev{bgppeer}{$peer}{orgname} = $as_info->{orgname};
+			$dev{bgp_peer}{$peer}{asname}  = $as_info->{asname};
+			$dev{bgp_peer}{$peer}{orgname} = $as_info->{orgname};
 		    }
 		}
 	    }else{
@@ -1442,6 +1447,7 @@ sub discover {
 						   auth_pass   => $argv{auth_pass},
 						   priv_proto  => $argv{priv_proto},
 						   priv_pass   => $argv{priv_pass},
+						   sqe         => $argv{sqe},
 		    );
 
 		return unless $sinfo;
@@ -1548,7 +1554,8 @@ sub discover {
     my %uargs;
     foreach my $field ( qw(communities version timeout retries 
                            sec_name sec_level auth_proto auth_pass priv_proto priv_pass
-                           add_subnets subs_inherit bgp_peers pretend do_info do_fwt do_arp timestamp) ){
+                           add_subnets subs_inherit bgp_peers pretend do_info do_fwt do_arp timestamp
+			   sqe) ){
 	$uargs{$field} = $argv{$field} if defined ($argv{$field});
     }
     $uargs{session}       = $sinfo if $sinfo;
@@ -2548,56 +2555,54 @@ sub update {
       asnumber
       orgname
       bgppeerid
-    oldpeerings - Hash ref containing old peering objects
+    old_peerings - Hash ref containing old peering objects
   Returns:
     BGPPeering object or undef if error
   Example:
-    foreach my $peer ( keys %{$info->{bgppeer}} ){
-	$self->update_bgp_peering(peer        => $info->{bgppeer}->{$peer},
-				  oldpeerings => \%oldpeerings);
+    foreach my $peer ( keys %{$info->{bgp_peer}} ){
+	$self->update_bgp_peering(peer         => $info->{bgp_peer}->{$peer},
+				  old_peerings => \%old_peerings);
     }
 
 =cut
 
 sub update_bgp_peering {
     my ($self, %argv) = @_;
-    my ($peer, $oldpeerings) = @argv{"peer", "oldpeerings"};
+    my ($peer, $old_peerings) = @argv{"peer", "old_peerings"};
     $self->isa_object_method('update_bgp_peering');
 
-    $self->throw_fatal("Model::Device::update_bgp_peering: Missing required arguments: peer, oldpeerings")
-	unless ( $peer && $oldpeerings );
+    $self->throw_fatal('Model::Device::update_bgp_peering: '.
+		       'Missing required arguments: peer, old_peerings')
+	unless ( $peer && $old_peerings );
+
     my $host = $self->fqdn;
-
     my $p; # bgppeering object
-
+    
     # Check if we have basic Entity info
     my $entity;
-    if ( exists ($peer->{asname}) || 
-	 exists ($peer->{orgname})|| 
-	 exists ($peer->{asnumber}) ){
+    if ( $peer->{asname}  || $peer->{orgname} || $peer->{asnumber} ){
 	
 	my $entityname = $peer->{orgname} || $peer->{asname};
-	$entityname .= " ($peer->{asnumber})";
+	$entityname .= " ($peer->{asnumber})" if $peer->{asnumber};
 	
-	# Check if Entity exists
-	#
-	if ( $entity = Entity->search(asnumber => $peer->{asnumber})->first ||
-	     Entity->search(asname => $peer->{asname})->first               ||
-	     Entity->search(name   => $peer->{orgname})->first
-	     ){
+	# Check if Entity exists (notice it's an OR search)
+	my @where;
+	push @where, { asnumber => $peer->{asnumber} } if $peer->{asnumber};
+	push @where, { asname   => $peer->{asname}   } if $peer->{asname};
+	push @where, { name     => $entityname       };
+	
+	if ( $entity = Entity->search_where(\@where)->first ){
 	    # Update AS stuff
 	    $entity->update({asname   => $peer->{asname},
 			     asnumber => $peer->{asnumber}});
 	}else{
 	    # Doesn't exist. Create Entity
-	    #
 	    # Build Entity info
-	    #
 	    my %etmp = ( name     => $entityname,
 			 asname   => $peer->{asname},
 			 asnumber => $peer->{asnumber},
 		);
-	
+	    
 	    $logger->info(sprintf("%s: Peer Entity %s not found. Inserting", 
 				  $host, $entityname ));
 	    
@@ -2622,8 +2627,8 @@ sub update_bgp_peering {
     }else{
 	$logger->warn( sprintf("%s: Missing peer info. Cannot associate peering %s with an entity", 
 			       $host, $peer->{address}) );
+	$entity = Entity->search(name=>"Unknown")->first;
     }
-    $entity ||= 0;
     
     # Create a hash with the peering's info for update or insert
     my %pstate = (device      => $self,
@@ -2632,16 +2637,16 @@ sub update_bgp_peering {
 		  bgppeeraddr => $peer->{address});
 	
     # Check if peering exists
-    foreach my $peerid ( keys %{ $oldpeerings } ){
+    foreach my $peerid ( keys %{ $old_peerings } ){
 
-	my $oldpeer = $oldpeerings->{$peerid};
-	if ( $oldpeer->bgppeeraddr eq $peer->{address} ){
+	my $old_peer = $old_peerings->{$peerid};
+	if ( $old_peer->bgppeeraddr eq $peer->{address} ){
 	    
 	    # Peering Exists.  
-	    $p = $oldpeer;
+	    $p = $old_peer;
 	    
 	    # Delete from list of old peerings
-	    delete $oldpeerings->{$peerid};
+	    delete $old_peerings->{$peerid};
 	    last;
 	}
     }
@@ -2651,11 +2656,18 @@ sub update_bgp_peering {
 	$logger->debug(sub{ sprintf("%s: Updated Peering with: %s. ", $host, $entity->name)}) if $r;
 	
     }else{
-	# Peering Doesn't exist.  Create.
+	# Peering doesn't exist.  Create.
 	# 
-	$pstate{monitored} = 1;
+	if ( $self->config->get('MONITOR_BGP_PEERINGS') ){
+	    $pstate{monitored} = 1;
+	}else{
+	    $pstate{monitored} = 0;
+	}
 	$p = BGPPeering->insert(\%pstate);
-	my $peer_label = $entity ? $entity->name : $peer->address;
+	my $peer_label;
+	$peer_label = $entity->name  if ($entity && ref($entity)) ;
+	$peer_label = $peer->{address} if ($peer && ref($peer));
+	$peer_label ||= "n\a";
 	$logger->info(sprintf("%s: Inserted new Peering with: %s. ", $host, $peer_label));
     }
     return $p;
@@ -2719,6 +2731,7 @@ sub snmp_update {
 					  auth_pass   => $argv{auth_pass},
 					  priv_proto  => $argv{priv_proto},
 					  priv_pass   => $argv{priv_pass},
+					  sqe         => $argv{sqe},
 	    );
 
 	return unless $sinfo;
@@ -2944,6 +2957,7 @@ sub info_update {
 	my $val = $self->_assign_device_monitored($asset->product_id);
 	$devtmp{monitored}    = $val;
 	$devtmp{snmp_polling} = $val;
+	$devtmp{snmp_target}->update({monitored => $val});
     }
 
     ##############################################################
@@ -2978,7 +2992,10 @@ sub info_update {
 	$argv{bgp_peers} : $self->config->get('ADD_BGP_PEERS');
     
     if ( $update_bgp ){
-	$self->_update_bgp_info($info, \%devtmp);
+	$self->_update_bgp_info(bgp_local_as => $info->{bgplocalas}, 
+				bgp_id       => $info->{bgpid},
+				peers        => $info->{bgp_peer},
+				newdev       => \%devtmp);
     }
 
     ##############################################################
@@ -3554,7 +3571,7 @@ sub bgppeers_by_id {
 
 sub bgppeers_by_entity {
     my ( $self, $peers, $sort ) = @_;
-    $self->isa_object_method('bgppeers_by_id');
+    $self->isa_object_method('bgppeers_by_entity');
 
     $sort ||= "name";
     unless ( $sort =~ /^name|asnumber|asname$/o ){
@@ -3563,7 +3580,7 @@ sub bgppeers_by_entity {
     my $sortsub = ($sort eq "asnumber") ? 
 	sub{$a->entity->$sort <=> $b->entity->$sort} :
 	sub{$a->entity->$sort cmp $b->entity->$sort};
-    my @peers = sort $sortsub @$peers;
+    my @peers = sort $sortsub grep { defined $_->entity } @$peers;
     
     return unless scalar @peers;
     return \@peers;
@@ -3611,9 +3628,9 @@ sub get_bgp_peers {
 	@peers = grep { $_->asnumber eq $argv{as} } $self->bgppeers;	
     }elsif ( $argv{type} ){
 	if ( $argv{type} eq "internal" ){
-	    @peers = grep { $_->entity->asnumber == $self->bgplocalas } $self->bgppeers;
+	    @peers = grep { defined $_->entity && $_->entity->asnumber == $self->bgplocalas } $self->bgppeers;
 	}elsif ( $argv{type} eq "external" ){
-	    @peers = grep { $_->entity->asnumber != $self->bgplocalas } $self->bgppeers;
+	    @peers = grep { defined $_->entity && $_->entity->asnumber != $self->bgplocalas } $self->bgppeers;
 	}elsif ( $argv{type} eq "all" ){
 	    @peers = $self->bgppeers();
 	}else{
@@ -3745,7 +3762,7 @@ sub _validate_args {
 	    if ( defined $self ){
 		if ( $self->id != $otherdev->id ){
 		    my $msg = sprintf("%s: Existing device: %s uses S/N %s, MAC %s", 
-				      $self->fqdn, $otherdev->fqdn, $asset->serial_number, 
+				      $self->fqdn, $otherdev->fqdn, $asset->serial_number,
 				      $asset->physaddr);
 		    if ( Netdot->config->get('ENFORCE_DEVICE_UNIQUENESS') ){
 			$self->throw_user($msg); 
@@ -3822,6 +3839,16 @@ sub _layer_active {
 #     my $session = Device->get_snmp_session(host=>$hostname, communities=>['public']);
 #
 
+sub _make_sinfo_object
+{
+    my ($self, $sclass, %sinfoargs) = @_;
+    if ($sinfoargs{sqe}) {
+	$sinfoargs{Session} = Netdot::FakeSNMPSession->new(%sinfoargs);
+	$logger->debug(sub{"Device::_make_sinfo_object: with SQE" });
+    }
+    return $sclass->new( %sinfoargs );
+}
+
 sub _get_snmp_session {
     my ($self, %argv) = @_;
 
@@ -3890,10 +3917,11 @@ sub _get_snmp_session {
 	BulkWalk    => (defined $argv{bulkwalk}) ? $argv{bulkwalk} :  $self->config->get('DEFAULT_SNMPBULK'),
 	BulkRepeaters => $self->config->get('DEFAULT_SNMPBULK_MAX_REPEATERS'),
 	MibDirs       => \@MIBDIRS,
+	sqe           => $argv{sqe},
 	);
 
     # Turn off bulkwalk if we're using Net-SNMP 5.2.3 or 5.3.1.
-    if ( $sinfoargs{BulkWalk} == 1  && ($SNMP::VERSION eq '5.0203' || $SNMP::VERSION eq '5.0301') 
+    if ( !$sinfoargs{sqe} && $sinfoargs{BulkWalk} == 1  && ($SNMP::VERSION eq '5.0203' || $SNMP::VERSION eq '5.0301') 
 	&& !$self->config->get('IGNORE_BUGGY_SNMP_CHECK')) {
 	$logger->info("Turning off bulkwalk due to buggy Net-SNMP $SNMP::VERSION");
 	$sinfoargs{BulkWalk} = 0;
@@ -3932,7 +3960,7 @@ sub _get_snmp_session {
 	$logger->debug(sub{ sprintf("Device::get_snmp_session: Trying SNMPv%d session with %s",
 				    $sinfoargs{Version}, $argv{host})});
 	
-	$sinfo = $sclass->new( %sinfoargs );
+	$sinfo = $self->_make_sinfo_object($sclass, %sinfoargs);
 
 	if ( defined $sinfo ){
 	    # Check for errors
@@ -3959,14 +3987,14 @@ sub _get_snmp_session {
 	    $logger->debug(sub{ sprintf("Device::_get_snmp_session: Trying SNMPv%d session with %s, ".
 					"community %s",
 					$sinfoargs{Version}, $argv{host}, $sinfoargs{Community})});
-	    $sinfo = $sclass->new( %sinfoargs );
+	    $sinfo = $self->_make_sinfo_object($sclass, %sinfoargs);
 	    
 	    # If v2 failed, try v1
  	    if ( !defined $sinfo && $sinfoargs{Version} == 2 ){
  		$logger->debug(sub{ sprintf("Device::_get_snmp_session: %s: SNMPv%d failed. Trying SNMPv1", 
  					    $argv{host}, $sinfoargs{Version})});
  		$sinfoargs{Version} = 1;
- 		$sinfo = $sclass->new( %sinfoargs );
+		$sinfo = $self->_make_sinfo_object($sclass, %sinfoargs);
  	    }
 	    
 	    if ( defined $sinfo ){
@@ -4314,9 +4342,65 @@ sub _fork_end {
 #   Returns: 
 #     Device count
 #
+sub async (&@);
 sub _snmp_update_parallel {
     my ($class, %argv) = @_;
     $class->isa_class_method('_snmp_update_parallel');
+    my $use_sqe = Netdot->config->get('USE_SNMP_QUERY_ENGINE');
+    my $sqe;
+    if ($use_sqe && !$Netdot::Model::Device::_sqe_module_loaded) {
+	$logger->info("SQE is requested, trying to load relevant modules");
+	eval {
+	    require Coro; Coro->import;
+	    require AnyEvent; AnyEvent->import;
+	    require Coro::AnyEvent; Coro::AnyEvent->import;
+	    require Netdot::FakeSNMPSession; Netdot::FakeSNMPSession->import;
+	    require Net::SNMP::QueryEngine::AnyEvent; Net::SNMP::QueryEngine::AnyEvent->import;
+	    $Netdot::Model::Device::_sqe_module_loaded = 1;
+	    $logger->info("SQE-related modules loaded succesfully");
+	};
+	unless ($Netdot::Model::Device::_sqe_module_loaded) {
+	    $logger->info("Failure loading SQE-related modules, disabling SQE: $@");
+	    $use_sqe = "";
+	}
+    }
+    if ($use_sqe) {
+	my @conn = split /:/, $use_sqe;
+	my $check_done = AnyEvent->condvar;
+	eval {
+	    $sqe = Net::SNMP::QueryEngine::AnyEvent->new(connect => \@conn,
+		on_connect => sub { $check_done->send },
+		on_error   => sub { $sqe = undef; $check_done->send },
+	    );
+	    $check_done->recv;
+	    if ($sqe) {
+		$sqe->info(sub { my ($h,$ok,$r) = @_; $sqe = undef unless $ok });
+		$sqe->wait;
+	    }
+	};
+    }
+    if ($sqe) {
+	$logger->info("SQE is requested and available, using it for SNMP collection");
+	$logger->debug("$class\::_snmp_update_parallel: Loading dummy SNMP::Info object");
+	my $dummy = SNMP::Info->new( DestHost    => 'localhost',
+				     Version     => 1,
+				     AutoSpecify => 0,
+				     Debug       => ( $logger->is_debug() )? 1 : 0,
+				     MibDirs     => \@MIBDIRS,
+				   );
+	$class->_snmp_update_parallel_sqe(%argv, sqe => $sqe);
+    } else {
+	if ($use_sqe) {
+	    $logger->info("SQE daemon is NOT available, using traditional method for SNMP collection");
+	} else {
+	    $logger->info("Using traditional method for SNMP collection");
+	}
+	$class->_snmp_update_parallel_traditional(%argv);
+    }
+}
+
+sub _snmp_update_parallel_args_check {
+    my ($class, %argv) = @_;
 
     my ($hosts, $devs);
     if ( defined $argv{hosts} ){
@@ -4331,16 +4415,143 @@ sub _snmp_update_parallel {
 	$class->throw_fatal("Model::Device::_snmp_update_parallel: Missing required parameters: ".
 			    "hosts or devs");
     }
-    
+
     my %uargs;
     foreach my $field ( qw(version timeout retries sec_name sec_level auth_proto auth_pass 
                            priv_proto priv_pass add_subnets subs_inherit bgp_peers pretend 
-                           do_info do_fwt do_arp) ){
+                           do_info do_fwt do_arp sqe) ){
 	$uargs{$field} = $argv{$field} if defined ($argv{$field});
     }
 
     $uargs{no_update_tree} = 1;
     $uargs{timestamp}      = $class->timestamp;
+
+    return ($hosts, $devs, %uargs);
+}
+
+sub _snmp_update_get_device_args {
+    my ($class, $dev, %args) = @_;
+
+    if ( $args{do_info} ){
+	unless ( $dev->canautoupdate ){
+	    $logger->debug(sub{ sprintf("%s: Auto Update option off", $dev->fqdn) });
+	    $args{do_info} = 0;
+	}
+    }
+    if ( $args{do_fwt} ){
+	unless ( $dev->collect_fwt ){
+	    $logger->debug(sub{ sprintf("%s: Collect FWT option off", $dev->fqdn) });
+	    $args{do_fwt} = 0;
+	}
+    }
+    if ( $args{do_arp} ){
+	unless ( $dev->collect_arp ){
+	    $logger->debug(sub{ sprintf("%s: Collect ARP option off", $dev->fqdn) });
+	    $args{do_arp} = 0;
+	}
+    }
+
+    return %args;
+}
+
+sub _snmp_update_parallel_sqe {
+    my ($class, %argv) = @_;
+    $class->isa_class_method('_snmp_update_parallel_sqe');
+
+    my ($hosts, $devs, %uargs) = $class->_snmp_update_parallel_args_check(%argv);
+    
+    my %do_devs;
+    
+    my $device_count = 0;
+    my $n_polling_devices = 0;
+    my $start = time;
+
+    if ( $devs ){
+	foreach my $dev ( @$devs ){
+	    # Put in list
+	    $do_devs{$dev->id} = $dev;
+	}
+    }elsif ( $hosts ){
+	foreach my $host ( keys %$hosts ){
+	    # Give preference to the community associated with the host
+	    if ( my $commstr = $hosts->{$host} ){
+		$uargs{communities} = [$commstr];
+	    }else{
+		$uargs{communities} = $argv{communities};
+	    }
+	    # If the device exists in the DB, we add it to the list
+	    my $dev;
+	    if ( $dev = $class->search(name=>$host)->first ){
+		$do_devs{$dev->id} = $dev;
+		$logger->debug(sub{ sprintf("%s exists in DB.", $dev->fqdn) });
+	    }else{
+		$device_count++;
+		$n_polling_devices++;
+		async {
+		    eval { $class->discover(name=> $host, %uargs); };
+		    if ( my $e = $@ ){
+			$logger->error($e);
+			exit 1;
+		    }
+		    $n_polling_devices--;
+		};
+	    }
+	}
+    }
+    
+    # Go over list of existing devices
+    while ( my ($id, $dev) = each %do_devs ){
+
+	if ( my $regex = $argv{matching} ){
+	    unless ( $dev->fqdn =~ /$regex/o ){
+		next;
+	    }
+	}
+	# Make sure we don't launch a process unless necessary
+	if ( $dev->is_in_downtime() ){
+	    $logger->debug(sub{ sprintf("Model::Device::_snmp_update_parallel_sqe: %s in downtime.  Skipping", $dev->fqdn) });
+	    next;
+	}
+
+	my %args = $class->_snmp_update_get_device_args($dev, %uargs);
+	unless ( $args{do_info} || $args{do_fwt} || $args{do_arp} ){
+	    next;
+	}
+
+	$device_count++;
+	$n_polling_devices++;
+	async {
+	    eval { $dev->snmp_update(%args); };
+	    if ( my $e = $@ ){
+		$logger->error($e);
+		exit 1;
+	    }
+	    $n_polling_devices--;
+	};
+    }
+
+    while ($n_polling_devices > 0) {
+	Coro::AnyEvent::idle_upto(5);
+	Coro::AnyEvent::sleep(0.05);
+    }
+
+    # Rebuild the IP tree if ARP caches were updated
+    if ( $argv{do_arp} ){
+	Ipblock->build_tree(4);
+	Ipblock->build_tree(6);
+    }
+    my $runtime = time - $start;
+    $class->_update_poll_stats($uargs{timestamp}, $runtime);
+    
+    return $device_count;
+}
+
+sub _snmp_update_parallel_traditional {
+    my ($class, %argv) = @_;
+    $class->isa_class_method('_snmp_update_parallel_traditional');
+
+    my ($hosts, $devs, %uargs) = $class->_snmp_update_parallel_args_check(%argv);
+    
     my %do_devs;
     
     my $device_count = 0;
@@ -4394,33 +4605,16 @@ sub _snmp_update_parallel {
 	}
 	# Make sure we don't launch a process unless necessary
 	if ( $dev->is_in_downtime() ){
-	    $logger->debug(sub{ sprintf("Model::Device::_snmp_update_parallel: %s in downtime. Skipping", 
+	    $logger->debug(sub{ sprintf("Model::Device::_snmp_update_parallel_traditional: %s in downtime. Skipping", 
 					$dev->fqdn) });
 	    next;
 	}
-	my %args = %uargs;
 
-	if ( $args{do_info} ){
-	    unless ( $dev->canautoupdate ){
-		$logger->debug(sub{ sprintf("%s: Auto Update option off", $dev->fqdn) });
-		$args{do_info} = 0;
-	    }
-	}
-	if ( $args{do_fwt} ){
-	    unless ( $dev->collect_fwt ){
-		$logger->debug(sub{ sprintf("%s: Collect FWT option off", $dev->fqdn) });
-		$args{do_fwt} = 0;
-	    }
-	}
-	if ( $args{do_arp} ){
-	    unless ( $dev->collect_arp ){
-		$logger->debug(sub{ sprintf("%s: Collect ARP option off", $dev->fqdn) });
-		$args{do_arp} = 0;
-	    }
-	}
+	my %args = $class->_snmp_update_get_device_args($dev, %uargs);
 	unless ( $args{do_info} || $args{do_fwt} || $args{do_arp} ){
 	    next;
 	}
+
 	$device_count++;
 	# FORK
 	$pm->start and next;
@@ -5115,6 +5309,8 @@ sub _get_as_info{
 	$results{orgname} = $descr;
 	$logger->debug(sub{"Device::_get_as_info:: $server: Found orgname: $descr"});
     }
+    $results{orgname} ||= $asn;
+    $results{asname}  ||= $results{orgname};
     return \%results if %results;
     return;
 }
@@ -5289,7 +5485,7 @@ sub _assign_base_mac {
 	# OK
     }else{
 	$logger->debug(sub{"$host did not return base MAC. Using first available interface MAC."});
-	foreach my $iid ( sort keys %{$info->{interface}} ){
+	foreach my $iid ( sort { $a <=> $b}  keys %{$info->{interface}} ){
 	    if ( my $addr = $info->{interface}->{$iid}->{physaddr} ){
 		next unless ($address = PhysAddr->validate($addr));
 		last;
@@ -5743,24 +5939,24 @@ sub _update_interfaces {
 	if ( $int_thold <= 0 || $int_thold >= 1 ){
 	    $self->throw_fatal('Incorrect value for IF_COUNT_THRESHOLD in config file');
 	}
-	
+
 	my %old_snmp_ifs;
 	map { $old_snmp_ifs{$_->id} = $_ } 
 	grep { $_->doc_status eq 'snmp' } values %oldifs;
-	
+
 	my $ifs_old = scalar(keys(%old_snmp_ifs));
 	my $ifs_new = scalar(keys(%{$info->{interface}}));
-	
+
 	$logger->debug("$host: Old Ifs: $ifs_old, New Ifs: $ifs_new");
 
-	if ( ($ifs_old && !$ifs_new) || ($ifs_new && ($ifs_new < $ifs_old) && 
+	if ( ($ifs_old && !$ifs_new) || ($ifs_new && ($ifs_new < $ifs_old) &&
 					 ($ifs_new / $ifs_old) <= $int_thold) ){
 	    $logger->warn(sprintf("%s: new/old interface ratio: %.2f is below INT_COUNT_THRESHOLD".
 				  "Skipping interface update. Re-discover manually if needed.",
 				  $host, $ifs_new/$ifs_old));
 	    return;
 	}
-	
+
 	# Do the same for IP addresses
 	my $ips_old = scalar(keys(%old_ips));
 	my $ips_new = 0;
@@ -5771,17 +5967,16 @@ sub _update_interfaces {
 		$ips_new++;
 	    }
 	}
-	
+
 	$logger->debug("$host: Old IPs: $ips_old, New IPs: $ips_new");
 
-	if ( ($ips_old && !$ips_new) || ($ips_new && ($ips_new < $ips_old) && 
+	if ( ($ips_old && !$ips_new) || ($ips_new && ($ips_new < $ips_old) &&
 					 ($ips_new / $ips_old) <= $int_thold) ){
 	    $logger->warn(sprintf("%s: new/old IP ratio: %.2f is below INT_COUNT_THRESHOLD".
 				  "Skipping interface update. Re-discover manually if needed.",
 				  $host, $ips_new/$ips_old));
 	    return;
 	}
-	
     }
 
     # Index by interface name (ifDescr) and number (ifIndex)
@@ -5948,9 +6143,9 @@ sub _update_interfaces {
 	}
 
 	# Don't delete snmp_target address unless updating via UI
-	if ( $ENV{REMOTE_USER} eq 'netdot' && 
+	if ( $ENV{REMOTE_USER} eq 'netdot' &&
 	     $self->snmp_target->id == $obj->id ){
-	    $logger->debug(sub{sprintf("%s: IP %s is snmp target. Skipping delete", 
+	    $logger->debug(sub{sprintf("%s: IP %s is snmp target. Skipping delete",
 				       $host, $obj->address)});
 	    next;
 	}
@@ -5999,42 +6194,70 @@ sub _update_interfaces {
 # Add/Update/Delete BGP Peerings
 #
 # Arguments
-#   snmp info hashref
-#   Device object arguments hashref
+#   Hash with following keys:
+#      bgp_local_as - Local AS to this device
+#      bgp_id       - BGP ID of this device
+#      peers        - Hashref of peering info
+#      newdev       - Device object arguments hashref
 # Returns
 #   Nothing
 #
 
 sub _update_bgp_info {
-    my ($self, $info, $devtmp) = @_;
+    my ($self, %argv) = @_;
 
     my $host = $self->fqdn;
+    my $devtmp = $argv{newdev};
 
     # Set Local BGP info
-    if( defined $info->{bgplocalas} ){
-	$logger->debug(sub{ sprintf("%s: BGP Local AS is %s", $host, $info->{bgplocalas}) });
-	$devtmp->{bgplocalas} = $info->{bgplocalas};
+    if( defined $argv{bgp_local_as} ){
+	$logger->debug(sub{ sprintf("%s: BGP Local AS is %s", $host, $argv{bgp_local_as}) });
+	$devtmp->{bgplocalas} = $argv{bgp_local_as};
     }
-    if( defined $info->{bgpid} ){
-	$logger->debug(sub{ sprintf("%s: BGP ID is %s", $host, $info->{bgpid})});
-	$devtmp->{bgpid} = $info->{bgpid};
+    if( defined $argv{bgp_id} ){
+	$logger->debug(sub{ sprintf("%s: BGP ID is %s", $host, $argv{bgp_id})});
+	$devtmp->{bgpid} = $argv{bgp_id};
     }
     
     # Get current BGP peerings
     #
-    my %oldpeerings;
-    map { $oldpeerings{ $_->id } = $_ } $self->bgppeers();
+    my %old_peerings;
+    map { $old_peerings{ $_->id } = $_ } $self->bgppeers();
     
+    if ( $ENV{REMOTE_USER} eq 'netdot' ){
+	
+	# Avoid deleting all peerings in cases where we fail to fetch the SNMP data
+	# We compare the number of old and the number of new, and stop if 
+	# the difference is > threshold. We only do this if the user is 'netdot'
+	# to allow a real user to manually update it
+	
+	my $p_old = scalar(keys(%old_peerings));
+	my $p_new = scalar(keys(%{$argv{peers}}));
+	
+	$logger->debug("$host: Old peerings: $p_old, New peerings: $p_new");
+	
+	# Threshold hard set for now
+	my $p_thold = 0.5;
+	
+	if ( ($p_old && !$p_new) || ($p_new && ($p_new < $p_old) && 
+				     ($p_new / $p_old) <= $p_thold) ){
+	    $logger->warn(sprintf("%s: new/old interface ratio: %.2f is below threshold (%s) ".
+				  "Skipping BGP peerings update. Re-discover manually if needed.",
+				  $host, $p_new/$p_old, $p_thold));
+	    return;
+	}
+    }
+
     # Update BGP Peerings
     #
-    foreach my $peer ( keys %{$info->{bgppeer}} ){
-	$self->update_bgp_peering(peer        => $info->{bgppeer}->{$peer},
-				  oldpeerings => \%oldpeerings);
+    foreach my $peer ( keys %{$argv{peers}} ){
+	$self->update_bgp_peering(peer         => $argv{peers}->{$peer},
+				  old_peerings => \%old_peerings);
     }
     # remove each BGP Peering that no longer exists
     #
-    foreach my $peerid ( keys %oldpeerings ) {
-	my $p = $oldpeerings{$peerid};
+    foreach my $peerid ( keys %old_peerings ) {
+	my $p = $old_peerings{$peerid};
 	$logger->info(sprintf("%s: BGP Peering with %s (%s) no longer exists.  Removing.", 
 			      $host, $p->entity->name, $p->bgppeeraddr));
 	$p->delete();

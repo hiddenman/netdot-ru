@@ -503,16 +503,12 @@ sub snmp_update {
 	    $vdata{vid}   = $vid;
 	    $vdata{name}  = $vname if defined $vname;
 	    if ( $vo = Vlan->search(vid => $vid)->first ){
-		# update in case named changed
-		# (ignore default vlan 1)
-		if ( defined $vdata{name} && $vo->vid ne "1" ){
-		    if ( !(defined $vo->name) || 
-			 (defined $vo->name && $vdata{name} ne $vo->name) ){
-			my $r = $vo->update(\%vdata);
-			$logger->debug(sub{ sprintf("%s: VLAN %s name updated: %s", 
-						    $label, $vo->vid, $vo->name) })
-			    if $r;
-		    }
+		# update if name wasn't set (ignore default vlan 1)
+		if ( !defined $vo->name && defined $vdata{name} && $vo->vid ne "1" ){
+		    my $r = $vo->update(\%vdata);
+		    $logger->debug(sub{ sprintf("%s: VLAN %s name updated: %s", 
+						$label, $vo->vid, $vo->name) })
+			if $r;
 		}
 	    }else{
 		# create
@@ -683,15 +679,21 @@ sub update_ip {
 		
 		# Skip validation for speed, since the block already exists
 		$iargs{validate} = 0;
+		
+		# Add description from interface if not set
+		$iargs{description} = $self->description 
+		    if ( $subnetobj->description eq "" );
+
 		$subnetobj->update(\%iargs); # Makes sure that the status is set to subnet
 		
 	    }else{
 		$logger->debug(sub{ sprintf("Subnet %s/%s does not exist.  Inserting.", 
 					    $subnetaddr, $subnetprefix) });
 		
-		$iargs{address} = $subnet_netaddr->addr;
-		$iargs{prefix}  = $subnet_netaddr->masklen;
-		$iargs{version} = $version;
+		$iargs{address}     = $subnet_netaddr->addr;
+		$iargs{prefix}      = $subnet_netaddr->masklen;
+		$iargs{version}     = $version;
+		$iargs{description} = $self->description;
 		
 		# Check if subnet should inherit device info
 		if ( $args{subs_inherit} ){

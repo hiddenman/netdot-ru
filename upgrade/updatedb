@@ -33,15 +33,22 @@ if ( $schema_version eq '1.0.1' ){
     &upg_101_102();
     &upg_102_103();
     &upg_103_104();
+    &upg_104_105();
     
 }elsif ( $schema_version eq '1.0.2' ){
     
     &upg_102_103();
     &upg_103_104();
+    &upg_104_105();
     
 }elsif ( $schema_version eq '1.0.3' ){
     
     &upg_103_104();
+    &upg_104_105();
+
+}elsif ( $schema_version eq '1.0.4' ){
+    
+    &upg_104_105();
     
 }else{
     die "Unsupported version for this upgrade: $schema_version\n";
@@ -157,5 +164,45 @@ sub upg_103_104 {
     }
     
     push @statements, "UPDATE schemainfo SET version='1.0.4' WHERE id=1;";
+
+}
+
+#########################################################################
+sub upg_104_105 {
+
+    if ( $dbms eq 'mysql' ) {
+
+	push @statements, "ALTER TABLE device ADD COLUMN oobname_2 varchar(255);";
+	push @statements, "ALTER TABLE device ADD COLUMN oobnumber_2 varchar(32);";
+	push @statements, "ALTER TABLE device ADD COLUMN power_outlet varchar(255);";
+	push @statements, "ALTER TABLE device ADD COLUMN power_outlet_2 varchar(255);";
+
+	push @statements, "ALTER TABLE device_history ADD COLUMN oobname_2 varchar(255);";
+	push @statements, "ALTER TABLE device_history ADD COLUMN oobnumber_2 varchar(32);";
+	push @statements, "ALTER TABLE device_history ADD COLUMN power_outlet varchar(255);";
+	push @statements, "ALTER TABLE device_history ADD COLUMN power_outlet_2 varchar(255);";
+
+	push @statements, "ALTER TABLE ipblock ADD COLUMN monitored bool NOT NULL;";
+	push @statements, "ALTER TABLE ipblock ADD COLUMN rir varchar(255);";
+	push @statements, "ALTER TABLE ipblock ADD COLUMN asn varchar(255);";
+
+    }elsif ( $dbms eq 'Pg' ){
+
+	push @statements, "ALTER TABLE device ADD COLUMN oobname_2 character varying(255);";
+	push @statements, "ALTER TABLE device ADD COLUMN oobnumber_2 character varying(32);";
+	push @statements, "ALTER TABLE device ADD COLUMN power_outlet character varying(255);";
+	push @statements, "ALTER TABLE device ADD COLUMN power_outlet_2 character varying(255);";
+
+	push @statements, "ALTER TABLE device_history ADD COLUMN oobname_2 character varying(255);";
+	push @statements, "ALTER TABLE device_history ADD COLUMN oobnumber_2 character varying(32);";
+	push @statements, "ALTER TABLE device_history ADD COLUMN power_outlet character varying(255);";
+	push @statements, "ALTER TABLE device_history ADD COLUMN power_outlet_2 character varying(255);";
+
+	push @statements, "ALTER TABLE ipblock ADD COLUMN monitored bool NOT NULL;";
+	push @statements, "ALTER TABLE ipblock ADD COLUMN rir character varying(255);";
+	push @statements, "ALTER TABLE ipblock ADD COLUMN asn character varying(255);";
+    }
+    
+    push @statements, "UPDATE schemainfo SET version='1.0.5' WHERE id=1;";
 
 }

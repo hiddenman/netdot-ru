@@ -41,7 +41,9 @@ sub new{
 
     foreach my $key ( qw /NMS_DEVICE NAGIOS_CHECKS NAGIOS_TIMEPERIODS NAGIOS_DIR 
                           NAGIOS_FILE NAGIOS_NOTIF_FIRST NAGIOS_NOTIF_LAST 
-                          NAGIOS_NOTIF_INTERVAL NAGIOS_TRAPS NAGIOS_STRIP_DOMAIN/ ){
+                          NAGIOS_NOTIF_INTERVAL NAGIOS_TRAPS NAGIOS_STRIP_DOMAIN
+                          NAGIOS_TEMPLATES NAGIOS_HOSTGROUP_NAME_FIELD 
+                          NAGIOS_HOSTGROUP_ALIAS_FIELD/ ){
 	$self->{$key} = Netdot->config->get($key);
     }
      
@@ -82,20 +84,21 @@ sub new{
 sub generate_configs {
     my ($self) = @_;
     
-    my ( %hosts, %groups, %contacts, %contactlists, %services, %servicegroups );
+    my ( %hostnames, %hosts, %groups, %contacts, %contactlists, %servicegroups );
 
     # Get Subnet info
     my %subnet_info;
     my $subnetq = $self->{_dbh}->selectall_arrayref("
-                  SELECT    ipblock.id, ipblock.description, entity.name
+                  SELECT    ipblock.id, ipblock.description, entity.name, entity.aliases
                   FROM      ipblockstatus, ipblock
                   LEFT JOIN entity ON (ipblock.used_by=entity.id)
                   WHERE     ipblock.status=ipblockstatus.id 
                         AND (ipblockstatus.name='Subnet' OR ipblockstatus.name='Container')
                  ");
     foreach my $row ( @$subnetq ){
-	my ($id, $descr, $entity) = @$row;
-	$subnet_info{$id}{entity}      = $entity if defined $entity;
+	my ($id, $descr, $entity_name, $entity_alias) = @$row;
+	$subnet_info{$id}{entity_name} = $entity_name if defined $entity_name;
+	$subnet_info{$id}{entity_alias} = $entity_alias if defined $entity_alias;
 	$subnet_info{$id}{description} = $descr;
     }
 
@@ -116,6 +119,7 @@ sub generate_configs {
 	my ($clid, $clname, $contid, $esc_level,
 	    $person_first, $person_last, $email, $pager, 
 	    $email_period, $pager_period) = @$row;
+	$clname =~ s/\s+/_/g;
 	$contact_info{$clid}{name} = $clname;
 	my $contname;
 	$contname = $person_first if defined $person_first;
@@ -134,9 +138,9 @@ sub generate_configs {
 	}
     }
 
-     # Classify contacts by their escalation-level
-     # We'll create a contactgroup for each level
-     foreach my $clid ( keys %contact_info ){
+    # Classify contacts by their escalation-level
+    # We'll create a contactgroup for each level
+    foreach my $clid ( keys %contact_info ){
  	foreach my $contid ( keys %{$contact_info{$clid}{contact}} ){
 	    my $contact = $contact_info{$clid}{contact}{$contid};
  	    # Skip if no availability
@@ -152,91 +156,89 @@ sub generate_configs {
 
  	    # Then group by escalation level
  	    my $level = $contact->{esc_level} || 0;
+	    $contactlists{$clid}{name} = $contact_info{$clid}{name};
  	    $contactlists{$clid}{level}{$level}{$contid} = $contact;
 	}
-     }
+    }
 
     $self->{contactlists} = \%contactlists;
     $self->{contacts}     = \%contacts;
-
-    # Get Service info
-    my %service_info;
-    my $serviceq = $self->{_dbh}->selectall_arrayref("
-                  SELECT    ipblock.id, service.id, service.name, 
-                            ipservice.monitored, ipservice.contactlist
-                  FROM      ipblock, ipservice, service
-                  WHERE     ipservice.ip=ipblock.id 
-                    AND     ipservice.service=service.id
-                 ");
-    foreach my $row ( @$serviceq ){
-	my ($ipid, $service_id, $service_name, $monitored, $clid) = @$row;
-	$service_info{$ipid}{$service_id}{name} = $service_name;
-	$service_info{$ipid}{$service_id}{monitored} = $monitored;
-	$service_info{$ipid}{$service_id}{contactlist} = $clid if $clid;
-    }
-	
+    
     my $device_info    = $self->get_device_info();
+
     my $int2device     = $self->get_int2device();
     my $intid2ifindex  = $self->get_intid2ifindex();
     my $device_parents = $self->get_device_parents($self->{ROOT});
     my $iface_graph    = $self->get_interface_graph();
     
     ######################################################################################
-    foreach my $devid ( sort { $device_info->{$a}->{hostname} 
-			       cmp $device_info->{$b}->{hostname} 
-			   } keys %$device_info ){
-	my %hostargs;
-	
-	# Is it within downtime period
+    foreach my $devid ( sort keys %$device_info ){
+
+	# We already search for monitored devices only in get_device_info()
+	# Is it within downtime period?
 	my $monitored = (!$self->in_downtime($devid))? 1 : 0;
 	next unless $monitored;
 
-	# Determine name
-	my $hostname = $device_info->{$devid}->{hostname} || next;
-	$hostargs{name} = $self->strip_domain($hostname);
+	my $devh = $device_info->{$devid};
+	next unless $devh->{target_addr} && $devh->{target_version};
+	my $ip = Ipblock->int2ip($devh->{target_addr}, $devh->{target_version});
 
-	# Determine IP
-	$hostargs{ip} = $self->get_device_main_ip($devid);
-	unless ( $hostargs{ip} ){
-	    $logger->warn("Cannot determine IP address for $hostname. Skipping");
-	    next;
-	}
+	$hosts{$ip}{ip} = $ip;
 
-  	# Determine the group name
- 	my $group;
-	if ( my $subnet = $device_info->{$devid}->{subnet} ){
-	    $group = $subnet_info{$subnet}->{entity} || 
-		$subnet_info{$subnet}->{description};
-	}
-	unless ( $group ){ 
-	    if ( my $entity = $device_info->{$devid}->{used_by} ){
-		$group = $entity;
+	# This is the device name in Netdot. 
+	my $hostname = $devh->{hostname} || next;
+	$hosts{$ip}{alias} = $hostname;
+	$hostname = $self->strip_domain($hostname);
+	unless ( exists $hostnames{$hostname} ){
+	    $hosts{$ip}{name} = $hostname;
+	}	
+	$hosts{$ip}{name} ||= $ip;
+	$hostnames{$hosts{$ip}{name}} = 1;
+
+  	# Determine the hostgroup name and alias
+ 	my $group_name;
+	my $group_alias;
+
+	my $name_field  = $self->{NAGIOS_HOSTGROUP_NAME_FIELD};
+	my $alias_field = $self->{NAGIOS_HOSTGROUP_ALIAS_FIELD};
+
+	if ( $name_field =~ /^subnet_/o ){
+	    my $nf = $name_field;
+	    $nf =~ s/^subnet_//;
+	    if ( my $subnet = $devh->{subnet} ){
+		$group_name = $subnet_info{$subnet}->{$nf};
 	    }
+	}else {
+	    $group_name = $devh->{$name_field};
 	}
- 	unless ( $group ){
- 	    $logger->warn("Device $hostname in unknown group");
- 	    $group = "Unknown";
- 	}
+	if ( $alias_field =~ /^subnet_/o ){
+	    my $af = $alias_field;
+	    $af =~ s/^subnet_//;
+	    if ( my $subnet = $devh->{subnet} ){
+		$group_alias = $subnet_info{$subnet}->{$af};
+	    }
+	}else {
+	    $group_alias = $devh->{$alias_field};
+	}
+
+ 	$group_name  ||= "Unknown";
+	$group_alias ||= "Unknown";
+
  	# Remove illegal chars
- 	$group =~ s/[\(\),]//g;  
- 	$group =~ s/^\s*(.)\s*$/$1/;
- 	$group =~ s/[\/\s]/_/g;  
- 	$group =~ s/&/and/g;     
- 	$hostargs{group} = $group;
+	$group_name = $self->_rem_illegal_chars($group_name);
+	$groups{$group_name}{alias} = $group_alias;
 
 	# Contact Lists
 	my @clids;
-	if ( @clids = keys %{$device_info->{$devid}->{contactlist}} ){
-	    foreach my $clid ( @clids ){
-		unless ( exists $contact_info{$clid} ){
-		    $logger->warn("Device $hostname ContactList id $clid not valid (no contacts?)");
-		    next;
-		}
-		next unless defined $contact_info{$clid}{name};
-		$contactlists{$clid}{name} = $contact_info{$clid}{name};
-		$contactlists{$clid}{name} =~ s/\s+/_/g;
-		push @{$hostargs{contactlists}}, $clid;
+	foreach my $clid ( keys %{$devh->{contactlist}} ){
+	    my $clname = defined $contact_info{$clid}{name};
+	    next unless $clname;
+	    unless ( exists $contact_info{$clid} ){
+		$logger->warn("Device $hostname ContactList $clname has no contacts. Skipping.");
+		next;
 	    }
+	    $contactlists{$clid}{name} = $contact_info{$clid}{name};
+	    push @clids, $clid;
 	}
 
 	# Host Parents
@@ -245,70 +247,47 @@ sub generate_configs {
 	    my $name = $self->strip_domain($device_info->{$d}->{hostname});
 	    push @parent_names, $name;
 	}
-	if ( @parent_names && defined $parent_names[0] ){
-	    $hostargs{parents} = join ',', @parent_names;    
-	}
-
-	push @{ $groups{$group}{members} }, $hostargs{name};
-	$self->print_host(%hostargs);
-
- 	# Add monitored services on the target IP
-	my $target_ip = $device_info->{$devid}->{ipid};
-	if ( defined $target_ip && exists $service_info{$target_ip} ){
-	    foreach my $servid ( keys %{$service_info{$target_ip}} ){
-		next unless ( $service_info{$target_ip}->{$servid}->{monitored} );
-		my %args;
-		$args{hostname} = $hostargs{name};
-		my $srvname = $service_info{$target_ip}->{$servid}->{name};
-		$args{srvname} = $srvname;
-
-		# Add service to servicegroup
-		push  @{ $servicegroups{$srvname}{members} }, $hostargs{name};
-
-		# Add community if SNMP managed
-		if ( $device_info->{$devid}->{snmp_managed} ){
-		    $args{community} = $device_info->{$devid}->{community};
-		}
-		
-		# If service has a contactlist, use that
-		# if not, use Device contactlists
-		my @cls;
-		if ( my $srvcl = $service_info{$target_ip}->{contactlist} ){
-		    push @cls, $srvcl;
-		}else{
-		    push @cls, @clids;
-		}
-		$args{contactlists} = \@cls if @cls;
-		$self->print_service(%args);
-	    }
-	}
-
-	# Services monitored via SNMP
-	if ( $device_info->{$devid}->{snmp_managed} ){
-
-	    # Add a bgppeer service check for each monitored BGP peering
-	    foreach my $peeraddr ( keys %{$device_info->{$devid}->{peering}} ){
-		my $peering = $device_info->{$devid}->{peering}->{$peeraddr};
-		next unless ( $peering->{monitored} );
-		my %args;
-		$args{hostname}     = $hostargs{name};
-		$args{peeraddr}     = $peeraddr;
-		$args{srvname}      = "BGPPEER";
-		$args{community}    = $device_info->{$devid}->{community};
-		$args{contactlists} = \@clids;
-		$self->print_service(%args);
-	    }
+	
+	# Services monitored via SNMP on the target IP
+	if ( $devh->{snmp_managed} ){
 	    
-	    # Add a ifstatus service check for each monitored interface
-	    foreach my $ifid ( keys %{$device_info->{$devid}->{interface}} ){
-		my $iface = $device_info->{$devid}->{interface}->{$ifid};
-		if ( $iface->{monitored} && defined $iface->{admin} && $iface->{admin} eq 'up' ){
-		    my %args;
-		    $args{hostname}  = $hostargs{name};
-		    $args{ifindex}   = $iface->{number};
-		    $args{srvname}   = "IFSTATUS";
-		    $args{community} = $device_info->{$devid}->{community};
+	    # Add a bgppeer service check for each monitored BGP peering
+	    foreach my $peeraddr ( keys %{$devh->{peering}} ){
+		my $peering = $devh->{peering}->{$peeraddr};
+		next unless ( $peering->{monitored} );
+		my $srvname = "BGPPEER_".$peeraddr;
+		$hosts{$ip}{service}{$srvname}{type}         = 'BGPPEER';
+		$hosts{$ip}{service}{$srvname}{hostname}     = $hosts{$ip}{name};
+		$hosts{$ip}{service}{$srvname}{peeraddr}     = $peeraddr;
+		$hosts{$ip}{service}{$srvname}{srvname}      = $srvname;
+		$hosts{$ip}{service}{$srvname}{community}    = $devh->{community};
+		$hosts{$ip}{service}{$srvname}{contactlists} = \@clids;
+	    }
+	}
 
+	foreach my $intid ( sort keys %{$devh->{interface}} ){   
+	    
+	    if ( $devh->{snmp_managed} ){
+		# Add a ifstatus service check for each monitored interface
+		my $iface = $devh->{interface}->{$intid};
+		if ( $iface->{monitored} && defined $iface->{admin} && $iface->{admin} eq 'up' ){
+		    unless ( $iface->{number} ){
+			$logger->warn("$hostname: interface $intid: IFSTATUS check requires ifindex");
+			return;
+		    }
+		    my $srvname = "IFSTATUS_".$iface->{number};
+		    $srvname .= "_".$iface->{name} if defined $iface->{name};
+		    $srvname = $self->_rem_illegal_chars($srvname);
+		    $hosts{$ip}{service}{$srvname}{type}        = 'IFSTATUS';
+		    $hosts{$ip}{service}{$srvname}{hostname}    = $hosts{$ip}{name};
+		    $hosts{$ip}{service}{$srvname}{ifindex}     = $iface->{number};
+		    $hosts{$ip}{service}{$srvname}{srvname}     = $srvname;
+		    $hosts{$ip}{service}{$srvname}{name}        = $iface->{name} if $iface->{name};
+		    $hosts{$ip}{service}{$srvname}{community}   = $devh->{community};
+		    if ( $iface->{name} && $iface->{description} ){
+			$hosts{$ip}{service}{$srvname}{displayname} = $iface->{name}." (".$iface->{description}.")";
+		    }
+		    
 		    # If interface has a contactlist, use that, otherwise use Device contactlists
 		    my @cls;
 		    if ( my $intcl = $iface->{contactlist} ){
@@ -316,45 +295,121 @@ sub generate_configs {
 		    }else{
 			push @cls, @clids;
 		    }
-		    $args{contactlists} = \@cls if @cls;
-
+		    $hosts{$ip}{service}{$srvname}{contactlists} = \@cls if @cls;
+		    
 		    # Determine parent service for service dependency.  If neighbor interface is monitored, 
 		    # and belongs to parent make ifstatus service on that interface the parent.  
 		    # Otherwise, make the ping service of the parent host the parent.
-		    if ( my $neighbor = $iface_graph->{$ifid} ){
+		    if ( my $neighbor = $iface_graph->{$intid} ){
 			my $nd = $int2device->{$neighbor};
 			if ( $nd && $device_parents->{$devid}->{$nd} ){
 			    # Neighbor device is my parent
 			    if ( exists $device_info->{$nd} ){
-				if ( $device_info->{$nd}->{interface}->{$neighbor}->{monitored} ){
+				my $ndh = $device_info->{$nd};
+				if ( $ndh->{interface}->{$neighbor}->{monitored} ){
 				    if ( my $nifindex = $intid2ifindex->{$neighbor} ){
-					$args{parent_host}    = $self->strip_domain($device_info->{$nd}->{hostname});
-					$args{parent_service} = "IFSTATUS_$nifindex";
+					$hosts{$ip}{service}{$srvname}{parent_host}    = $self->strip_domain($device_info->{$nd}->{hostname});
+					my $p_srv = "IFSTATUS_$nifindex";
+					$p_srv .= '_'.$ndh->{interface}->{$neighbor}->{name} if defined $ndh->{interface}->{$neighbor}->{name};
+					$p_srv = $self->_rem_illegal_chars($p_srv);
+					$hosts{$ip}{service}{$srvname}{parent_service} = $p_srv;
 				    }
 				}else{
-				    $args{parent_host}    = $self->strip_domain($device_info->{$nd}->{hostname});
-				    $args{parent_service} = 'PING';
+				    $hosts{$ip}{service}{$srvname}{parent_host}    = $self->strip_domain($device_info->{$nd}->{hostname});
+				    $hosts{$ip}{service}{$srvname}{parent_service} = 'PING';
 				}
 			    }else{
 				# Look for grandparents then
 				if ( my @parents = $self->get_monitored_ancestors($nd, $device_parents) ){
 				    my $p = $parents[0]; # Just grab the first one for simplicity
-				    $args{parent_host}    = $self->strip_domain($device_info->{$p}->{hostname});
-				    $args{parent_service} = 'PING';
+				    $hosts{$ip}{service}{$srvname}{parent_host}    = $self->strip_domain($device_info->{$p}->{hostname});
+				    $hosts{$ip}{service}{$srvname}{parent_service} = 'PING';
 				}
 			    }
 			}
 		    }
-		    $self->print_service(%args);
+		}
+	    }
+
+	    foreach my $ip_id ( sort keys %{$devh->{interface}->{$intid}->{ip} } ){
+		
+		my $iph = $devh->{interface}->{$intid}->{ip}->{$ip_id};
+		next unless $iph->{addr} && $iph->{version};
+		my $ip = Ipblock->int2ip($iph->{addr}, $iph->{version});
+
+		unless ( $devh->{target_id} == $ip_id ){
+		    # IP is not target IP. We only care about it if it's marked as monitored
+		    next unless $iph->{monitored};
+		    $hosts{$ip}{ip} = $ip;
+
+		    # Figure out a unique name for this IP
+		    if ( my $name = Netdot->dns->resolve_ip($ip) ){
+			$hosts{$ip}{alias} = $name; # fqdn
+			$name = $self->strip_domain($name);
+			unless ( exists $hostnames{$name} ){
+			    $hosts{$ip}{name} = $name;
+			}
+		    }
+		    $hosts{$ip}{name}  ||= $ip;
+		    $hosts{$ip}{alias} ||= $hostname.'_'.$ip;
+		    $hostnames{$hosts{$ip}{name}} = 1; 
+		}
+
+		# Common things to all IPs in this device
+		$hosts{$ip}{group} = $group_name;
+		push @{ $groups{$group_name}{members} }, $hosts{$ip}{name};
+		push @{$hosts{$ip}{contactlists}}, @clids;
+		if ( @parent_names && defined $parent_names[0] ){
+		    $hosts{$ip}{parents} = join ',', @parent_names;    
+		}
+
+
+		# Add monitored services on this IP
+		foreach my $servid ( keys %{$iph->{srv}} ){
+		    next unless ( $iph->{srv}->{$servid}->{monitored} );
+		    my $srvname = $iph->{srv}->{$servid}->{name};
+		    
+		    $hosts{$ip}{service}{$srvname}{hostname} = $hosts{$ip}{name};
+		    $hosts{$ip}{service}{$srvname}{type}     = $srvname;
+		    $hosts{$ip}{service}{$srvname}{srvname}  = $srvname;
+		    
+		    # Add service to servicegroup
+		    push  @{ $servicegroups{$srvname}{members} }, $hosts{$ip}{name};
+		    
+		    # Add community if SNMP managed
+		    if ( $devh->{snmp_managed} ){
+			$hosts{$ip}{service}{$srvname}{community} = $devh->{community};
+		    }
+		    
+		    # If service has a contactlist, use that
+		    # if not, use Device contactlists
+		    my @cls;
+		    if ( my $srvcl = $iph->{srv}->{$servid}->{contactlist} ){
+			push @cls, $srvcl;
+		    }else{
+			push @cls, @clids;
+		    }
+		    $hosts{$ip}{service}{$srvname}{contactlists} = \@cls if @cls;
 		}
 	    }
 	}
-	
+    }
+
+    # Print each host and its services together
+    foreach my $i ( sort { $hosts{$a}{name} 
+			   cmp $hosts{$b}{name} 
+		    } keys %hosts ){
+	$self->print_host(\%{$hosts{$i}});
+	foreach my $s ( sort keys %{$hosts{$i}{service}} ){
+	    $self->print_service(\%{$hosts{$i}{service}{$s}});
+	}
     }
 
     $self->print_hostgroups(\%groups);
     $self->print_servicegroups(\%servicegroups);
     $self->print_contacts();
+
+    $self->print_eof($self->{out});
 
     $logger->info("Netdot::Exporter::Nagios: Configuration written to file: ".$self->{filename});
     close($self->{out});
@@ -370,14 +425,19 @@ sub generate_configs {
 =cut
 
 sub print_host {
-    my ($self, %argv) = @_;
+    my ($self, $argv) = @_;
 
-    my $name      = $argv{name};
-    my $ip        = $argv{ip};
-    my $group     = $argv{group};
-    my $parents   = $argv{parents};
-    my @cls       = @{ $argv{contactlists} } if $argv{contactlists};
+    my $name      = $argv->{name};
+    my $alias     = $argv->{alias};
+    my $ip        = $argv->{ip};
+    my $group     = $argv->{group};
+    my $parents   = $argv->{parents};
+    my @cls       = @{ $argv->{contactlists} } if $argv->{contactlists};
     my $out       = $self->{out};
+
+    my $generic_host = $self->{NAGIOS_TEMPLATES}->{generic_host};
+    my $generic_trap = $self->{NAGIOS_TEMPLATES}->{generic_trap};
+    my $generic_ping = $self->{NAGIOS_TEMPLATES}->{generic_ping};
 
     my $contactlists = $self->{contactlists};
     my %levels;
@@ -408,16 +468,16 @@ sub print_host {
 	    
 	    if ( $first ){
 		print $out "define host{\n";
-		print $out "\tuse                    generic-host\n";
+		print $out "\tuse                    $generic_host\n";
 		print $out "\thost_name              $name\n";
-		print $out "\talias                  $group\n";
+		print $out "\talias                  $alias\n";
 		print $out "\taddress                $ip\n";
 		print $out "\tparents                $parents\n" if ($parents);
 		print $out "\tcontact_groups         $contact_groups\n";
 		print $out "}\n\n";
 		if ( $self->{NAGIOS_TRAPS} ){
 		    print $out "define service{\n";
-		    print $out "\tuse                     generic-trap\n";
+		    print $out "\tuse                     $generic_trap\n";
 		    print $out "\thost_name               $name\n";
 		    print $out "\tcontact_groups          $contact_groups\n";
 		    print $out "}\n\n";
@@ -451,9 +511,9 @@ sub print_host {
     }
     if ( !@cls || !keys %levels ){
 	print $out "define host{\n";
-	print $out "\tuse                    generic-host\n";
+	print $out "\tuse                    $generic_host\n";
 	print $out "\thost_name              $name\n";
-	print $out "\talias                  $group\n";
+	print $out "\talias                  $alias\n";
 	print $out "\taddress                $ip\n";
 	print $out "\tparents                $parents\n" if ($parents);
 	print $out "\tcontact_groups         nobody\n";
@@ -462,7 +522,7 @@ sub print_host {
 	if ( $self->{NAGIOS_TRAPS} ){
 	    # Define a TRAP service for every host
 	    print $out "define service{\n";
-	    print $out "\tuse                     generic-trap\n";
+	    print $out "\tuse                     $generic_trap\n";
 	    print $out "\thost_name               $name\n";
 	    print $out "\tcontact_groups          nobody\n";
 	    print $out "}\n\n";
@@ -471,7 +531,7 @@ sub print_host {
     
     # Add ping service for every host
     print $out "define service{\n";
-    print $out "\tuse                    generic-ping\n";
+    print $out "\tuse                    $generic_ping\n";
     print $out "\thost_name              $name\n";
     print $out "}\n\n";
 
@@ -486,23 +546,27 @@ sub print_host {
 =cut
 
 sub print_service {
-    my ($self, %argv) = @_;
-    my ($hostname, $srvname) = @argv{'hostname', 'srvname'};
+    my ($self, $argv) = @_;
+    my $hostname    = $argv->{hostname};
+    my $srvname     = $argv->{srvname};
+    my $type        = $argv->{type};
+    my $displayname = $argv->{displayname} || $srvname;
 
     my $checkcmd;
-    unless ( $checkcmd = $self->{NAGIOS_CHECKS}{$srvname} ){
+    unless ( $checkcmd = $self->{NAGIOS_CHECKS}{$type} ){
 	$logger->warn("Service check for $srvname not implemented." . 
 		      " Skipping $srvname check for host $hostname.");
 	return;
     }
 
-    my @cls = @{ $argv{contactlists} } if $argv{contactlists};
+    my @cls = @{ $argv->{contactlists} } if $argv->{contactlists};
     my $out = $self->{out};
     my $contactlists = $self->{contactlists};
+    my $generic_service = $self->{NAGIOS_TEMPLATES}->{generic_service};
 
     
-    if ( $srvname eq "BGPPEER" || $srvname eq "IFSTATUS" ){
-	if ( my $community = $argv{community} ){
+    if ( $srvname =~ /^BGPPEER/o || $srvname =~ /^IFSTATUS/o ){
+	if ( my $community = $argv->{community} ){
 	    $checkcmd .= "!$community";				
 	}else{
 	    $logger->warn("Service check for $srvname requires a SNMP community." .
@@ -510,25 +574,18 @@ sub print_service {
 	    return;
 	}
     }
-    if ( $srvname eq "IFSTATUS" ){
-	my $ifindex;
-	unless ( $ifindex = $argv{ifindex} ){
-	    $logger->warn("Service check for $srvname requires ifindex." . 
-			  " Skipping $srvname check for host $hostname.");
-	    return;
-	}
-	$srvname  .= "_$ifindex"; # Make the service name unique
+    if ( $srvname =~ /^IFSTATUS/o ){
+	my $ifindex = $argv->{ifindex};
 	$checkcmd .= "!$ifindex"; # Pass the argument to the check command
     }
 
-    if ( $srvname eq "BGPPEER" ){
+    if ( $srvname =~ /^BGPPEER/o ){
 	my $peeraddr;
-	unless ( $peeraddr = $argv{peeraddr} ){
+	unless ( $peeraddr = $argv->{peeraddr} ){
 	    $logger->warn("Service check for $srvname requires peeraddr." . 
 			  " Skipping $srvname check for host $hostname.");
 	    return;
 	}
-	$srvname  .= "_$peeraddr"; # Make the service name unique
 	$checkcmd .= "!$peeraddr"; # Pass the argument to the check command
     }
     
@@ -557,9 +614,10 @@ sub print_service {
 	    
 	    if ( $first ){
 		print $out "define service{\n";
-		print $out "\tuse                   generic-service\n";
+		print $out "\tuse                   $generic_service\n";
 		print $out "\thost_name             $hostname\n";
 		print $out "\tservice_description   $srvname\n";
+		print $out "\tdisplay_name          $displayname\n";
 		print $out "\tcontact_groups        $contact_groups\n";
 		print $out "\tcheck_command         $checkcmd\n";
 		print $out "}\n\n";
@@ -582,17 +640,18 @@ sub print_service {
     }
     if ( ! @cls || ! keys %levels ){
 	print $out "define service{\n";
-	print $out "\tuse                  generic-service\n";
+	print $out "\tuse                  $generic_service\n";
 	print $out "\thost_name            $hostname\n";
 	print $out "\tservice_description  $srvname\n";
+	print $out "\tdisplay_name         $displayname\n";
 	print $out "\tcontact_groups       nobody\n";
 	print $out "\tcheck_command        $checkcmd\n";
 	print $out "}\n\n";
     }
 
     # Add service dependencies if needed
-    if ( $argv{parent_host} && $argv{parent_service} ){
-	$self->print_servicedep($hostname, $srvname, $argv{parent_host}, $argv{parent_service});
+    if ( $argv->{parent_host} && $argv->{parent_service} ){
+	$self->print_servicedep($hostname, $srvname, $argv->{parent_host}, $argv->{parent_service});
     }
 }
 
@@ -607,8 +666,9 @@ sub print_service {
 sub print_contacts {
     my($self) = @_;
     my $out = $self->{out};
-    my $contacts     = $self->{contacts};
-    my $contactlists = $self->{contactlists};
+    my $contacts        = $self->{contacts};
+    my $contactlists    = $self->{contactlists};
+    my $generic_contact = $self->{NAGIOS_TEMPLATES}->{generic_contact};
 
     # Create the contact templates (with a person's common info)
     # A person might be a contact for several groups/events
@@ -616,7 +676,7 @@ sub print_contacts {
     foreach my $name ( keys %$contacts ){
 	print $out "define contact{\n";
 	print $out "\tname                            $name\n";
-	print $out "\tuse                             generic-contact\n";
+	print $out "\tuse                             $generic_contact\n";
 	print $out "\talias                           $name\n";
 	print $out "\temail                           ".$contacts->{$name}->{email}."\n" if $contacts->{$name}->{email};
 	print $out "\tpager                           ".$contacts->{$name}->{pager}."\n" if $contacts->{$name}->{pager};
@@ -674,7 +734,7 @@ sub print_contacts {
 		}
 	    }
 	    # Create the contactgroup
-	    my $members = join ',', @members;
+	    my $members = join ',', sort @members;
 	    
 	    print $out "define contactgroup{\n";
 	    print $out "\tcontactgroup_name       $clname-level_$level\n";
@@ -697,10 +757,13 @@ sub print_hostgroups{
 
     my $out = $self->{out};
     foreach my $group ( keys %$groups ){
-	my $hostlist = join ',', @{ $groups->{$group}->{members} };
+	my $alias = $groups->{$group}->{alias} || $group;
+	next unless ( defined $groups->{$group}->{members} && 
+		      ref($groups->{$group}->{members}) eq 'ARRAY' );
+	my $hostlist = join ',', sort @{ $groups->{$group}->{members} };
 	print $out "define hostgroup{\n";
 	print $out "\thostgroup_name      $group\n";
-	print $out "\talias               $group\n";
+	print $out "\talias               $alias\n";
 	print $out "\tmembers             $hostlist\n";
 	print $out "}\n\n";
     }
@@ -719,7 +782,7 @@ sub print_servicegroups{
     foreach my $group ( keys %$groups ){
 	# servicegroup members are like:
 	# members=<host1>,<service1>,<host2>,<service2>,...,
-	my $hostlist = join ',', map { "$_,$group" }@{ $groups->{$group}{members} };
+	my $hostlist = join ',', sort map { "$_,$group" }@{ $groups->{$group}{members} };
 	print $out "define servicegroup{\n";
 	print $out "\tservicegroup_name      $group\n";
 	print $out "\talias                  $group\n";
@@ -769,7 +832,7 @@ sub get_interface_graph {
     my $links = $self->{_dbh}->selectall_arrayref("
                 SELECT  i1.id, i2.id 
                 FROM    interface i1, interface i2
-                WHERE   i2.neighbor = i1.id AND i1.neighbor = i2.id
+                WHERE   i1.id > i2.id AND i2.neighbor = i1.id AND i1.neighbor = i2.id
             "); 
     foreach my $link ( @$links ) {
 	my ($fr, $to) = @$link;
@@ -851,6 +914,19 @@ sub strip_domain {
 	$hostname =~ s/\.$domain// ;
     }
     return $hostname;
+}
+
+########################################################################
+# Remove illegal chars
+
+sub _rem_illegal_chars {
+    my ($self, $string) = @_;
+    return unless $string;
+    $string =~ s/[\(\),'";]//g;  
+    $string =~ s/^\s*(.*)\s*$/$1/;
+    $string =~ s/[\/\s]/_/g;  
+    $string =~ s/&/and/g;
+    return $string;
 }
 
 =head1 AUTHOR
