@@ -40,7 +40,7 @@ my (@field_headers, @cell_data, @headers, @rows);
 %	      if ($edit eq "cableinfo"){	 
                 <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="сохранить" type="submit">
 %	      } else {
-                <a href="cable_strand.html?id=NEW">[новый]</a> &nbsp;
+                <a href="cable_strand.html?id=NEW">[добавить]</a> &nbsp;
 		<a href="cable_plant.html?backbone_id_srch=<% $backbone_id_srch %>&page_type=<% $page_type %>&edit=cableinfo">[редактировать]</a>
 %             }
             </div>

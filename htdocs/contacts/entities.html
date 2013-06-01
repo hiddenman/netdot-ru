@@ -5,7 +5,7 @@ Entities
 </%doc>
 %
 <%attr>
-title        => 'Entities'
+title        => 'Организации'
 </%attr>
 %
 %
@@ -63,14 +63,14 @@ my $manager = $ui->get_permission_manager($r);
 <div id="sectiontools" <% $hideheader %>>
   <div class="container">
     <div class="containerheadleft">
-        Contacts Tasks
+        Операции с организациями
     </div>
     <div class="containerheadright">
 %   if ( $manager && $manager->can($user, 'access_admin_section', 'entities:new') ){
 %       if ( $view_entity eq 'search' ){ 
-	    <a href="index.html?page=ENTITIES&view_entity=new">[new]</a>
+	    <a href="index.html?page=ENTITIES&view_entity=new">[добавить]</a>
 %       }elsif ( $view_entity eq 'new' ){
-            <a href="index.html?page=ENTITIES&view_entity=search">[search]</a>
+            <a href="index.html?page=ENTITIES&view_entity=search">[поиск]</a>
 %       }
 %   }
 %   print_showtaskslink($show_tasks);
@@ -79,32 +79,32 @@ my $manager = $ui->get_permission_manager($r);
         <table><tr><td>
 %   if ( $view_entity eq 'search' ){
         <fieldset class="medium">
-            <legend>Search</legend>
+            <legend>Поиск</legend>
             <form action="entities.html" method="POST">
                 <p>
-                <label for="Find">Entity:</label>
+                <label for="Find">Организация:</label>
                 <input type="text" name="search_entities" class="txt" value="<% $search_entities %>"> 
-                <input name="submit" value="Find" class="btn" type="submit">
+                <input name="submit" value="Найти" class="btn" type="submit">
                 <input type="hidden" name="_action" value="SEARCH">
                 </p>
             </form>
         </fieldset>
 %   }elsif ( $view_entity eq 'new' ){
        <fieldset class="medium">
-            <legend>Add A New Entity</legend>
+            <legend>Добавить новую организацию</legend>
             <form action="entities.html" method="POST">
                 <p>
-                <label for="new">Name:</label>
+                <label for="new">Название:</label>
     <script type="text/javascript">var entorigname="";</script>
     <input type="text" name="entity_name" id="entitynameinput" class="txt" value="" onfocus="entorigname=document.getElementById('entitynameinput').value;" onblur="var entname=document.getElementById('entitynameinput').value;if(document.getElementById('newsiteinput').value==entorigname){document.getElementById('newsiteinput').value=entname;}if(document.getElementById('newclistinput').value==entorigname){document.getElementById('newclistinput').value=entname;}">
                 </p>
                 <p>
-                <label for="new">Roles:</label>
+                <label for="new">Тип:</label>
                 <input type="hidden" name="sitestatus" id="sitestatus" value="new">
                 <input type="hidden" name="clstatus" id="clstatus" value="new">
                 <div id="entityroles">
                     <select name="entityroles" multiple="multiple">
-                    <option value="">-- Select --</option>
+                    <option value="">-- Выберите --</option>
 %                   my @roles = EntityType->retrieve_all;
 %                   foreach my $r (sort { $a->name cmp $b->name } @roles) {
                         <option value="<% $r->id %>"><% Encode::encode_utf8($r->name) %></option>
@@ -112,10 +112,10 @@ my $manager = $ui->get_permission_manager($r);
                     </select>
                 </div>
                 <p>
-                <label for="new" id="sitelabel">Site:</label>
+                <label for="new" id="sitelabel">Здание:</label>
                 <div id="existingsite" style="display:none">
                     <select name="site" class="dropdown">
-                    <option value="">-- Select --</option>
+                    <option value="">-- Выберите --</option>
 %                   my @sites = Site->retrieve_all;
 %                   foreach my $s (sort { $a->name cmp $b->name } @sites) {
                         <option value="<% $s->id %>"><% Encode::encode_utf8($s->name) %></option>
@@ -129,10 +129,10 @@ my $manager = $ui->get_permission_manager($r);
                 </div>
                 </p>
                 <p>
-                <label for="new" id='cllabel'>Contact List:</label>
+                <label for="new" id='cllabel'>Список контактов:</label>
                 <div id="existingcontactlist" style="display:none">
                     <select name="contactlist" class="dropdown">
-                    <option value="">-- Select --</option>
+                    <option value="">-- Выберите --</option>
 %                   my @clist = ContactList->retrieve_all;
 %                   foreach my $cl (@clist) {
                         <option value="<% $cl->id %>"><% Encode::encode_utf8($cl->name) %></option>
@@ -148,7 +148,7 @@ my $manager = $ui->get_permission_manager($r);
                 <p>
                 <label for="new">&nbsp;</label>
                 <input type="hidden" name="_action" value="INSERT">
-                <input name="submit" value="Add Entity" class="btn" type="submit">
+                <input name="submit" value="Добавить организацию" class="btn" type="submit">
                 </p>
             </form>
         </fieldset>
@@ -275,7 +275,7 @@ if ( $_action eq "INSERT" && $submit ){
 %     if ( scalar @list > 1 ){
 	 <div class="container">
            <div class="containerhead">
-              Query <em><% $search %></em> returned: <% scalar(@list) %> matches
+              Поиск по <em><% $search %></em> нашёл: <% scalar(@list) %> значений
            </div>
            <div class="containerbody">
                <& /generic/sortresults.mhtml, object=>\@list, page=>'view.html', withedit=>0  &>

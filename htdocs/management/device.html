@@ -8,7 +8,7 @@ and all its relevant info in one page
 </%doc>
 %
 <%attr>
-title        => 'Device' 
+title        => 'Устройство' 
 section      => 'Management'
 </%attr>
 %
@@ -208,19 +208,19 @@ my $refresh_url = "device.html?id=$id&view=$view";
 <!-- Header Table -->
 <div class="containeroutside">
   <div class="containerheadleftoutside">
-  Device: <b><% $fqdn %></b>&nbsp;
+  Устройство: <b><% $fqdn %></b>&nbsp;
  <a href="http://<% $fqdn %>" target="#">[HTTP]</a> <a href="https://<% $fqdn %>" target="#">[HTTPS]</a>
   </div><!-- close containerheadleftoutside -->
 
  <div class="containerheadrightoutside">
-    <a href="<% $refresh_url %>">[refresh]</a>
+    <a href="<% $refresh_url %>">[обновить]</a>
 %    if ( $o->snmp_managed ){
 %        if ( $manager && $manager->can($user, 'edit', $o) ){
-	    <a href="updatedevice.html?device=<% $id %>&action=discover">[snmp-update]</a>
+	    <a href="updatedevice.html?device=<% $id %>&action=discover">[snmp-обновление]</a>
 %        }
 %    }
 %    if ( $manager && $manager->can($user, 'delete', $o) ){
-        <a href="delete.html?table=Device&id=<% $id %>">[delete]</a>
+        <a href="delete.html?table=Device&id=<% $id %>">[удалить]</a>
 %    }
  </div> <!-- close containerheadrightoutside -->
 
@@ -233,41 +233,41 @@ my $refresh_url = "device.html?id=$id&view=$view";
 <div id="navbar">
     <ul id="navigation">
 %     if( $view eq "Basics" ) {
-        <li><span>Basics</span></li>
+        <li><span>Основное</span></li>
 %     } else {
-        <li><a href="device.html?id=<% $id %>&view=Basics">Basics</a></li>
+        <li><a href="device.html?id=<% $id %>&view=Basics">Основная информация</a></li>
 %     }
 %     if( $view eq "Interfaces" ) {
-        <li><span>Interfaces</span></li>
+        <li><span>Интерфейсы</span></li>
 %     } else {
-        <li><a href="device.html?id=<% $id %>&view=Interfaces">Interfaces</a></li>
+        <li><a href="device.html?id=<% $id %>&view=Interfaces">Интерфейсы</a></li>
 %     }
 %     if ( @modules = $o->modules ){
 %       if( $view eq "Modules" ) {
-          <li><span>Modules</span></li>
+          <li><span>Модули</span></li>
 %       } else {
-          <li><a href="device.html?id=<% $id %>&view=Modules">Modules</a></li>
+          <li><a href="device.html?id=<% $id %>&view=Modules">Модули</a></li>
 %       }
 %     }
 %     if( $view eq "IP" ) {
-        <li><span>IP info</span></li>
+        <li><span>Информация о IP</span></li>
 %     } else {
-        <li><a href="device.html?id=<% $id %>&view=IP">IP info</a></li>
+        <li><a href="device.html?id=<% $id %>&view=IP">Информация о IP</a></li>
 %     }
 %     if ( $o->bgppeers ){
 %       if( $view eq "BGP" ) {
-          <li><span>BGP Peers</span></li>
+          <li><span>BGP партнёры</span></li>
 %       } else {
-          <li><a href="device.html?id=<% $id %>&view=BGP">BGP Peers</a></li>
+          <li><a href="device.html?id=<% $id %>&view=BGP">BGP партнёры</a></li>
 %       }
 %     }
 %     my @circuits = $o->get_circuits;
 %     if( scalar @circuits ){
 %         if( $view eq "Circuit" ){
-              <li><span>Circuits</span></li>
+              <li><span>Логические каналы</span></li>
 %         }
 %         else{
-              <li><a href="device.html?id=<% $id %>&view=Circuit">Circuits</a></li>
+              <li><a href="device.html?id=<% $id %>&view=Circuit">Логические каналы</a></li>
 %         }
 %     }
 %     if ( $o->stp_enabled ){
@@ -278,9 +278,9 @@ my $refresh_url = "device.html?id=$id&view=$view";
 %       }
 %     }
 %     if( $view eq "Topology" ) {
-        <li><span>Topology</span></li>
+        <li><span>Топология</span></li>
 %     } else {
-        <li><a href="device.html?id=<% $id %>&view=Topology">Topology</a></li>
+        <li><a href="device.html?id=<% $id %>&view=Topology">Топология</a></li>
 %     }
 %     if ( @arp_caches = $o->arp_caches ){
 %       if( $view eq "ARP" ) {
@@ -297,19 +297,19 @@ my $refresh_url = "device.html?id=$id&view=$view";
 %       }
 %     }
 %     if( $view eq "History" ) {
-        <li><span>History</span></li>
+        <li><span>История</span></li>
 %     } else {
-        <li><a href="device.html?id=<% $id %>&view=History">History</a></li>
+        <li><a href="device.html?id=<% $id %>&view=History">История</a></li>
 %     }
 %     if( $view eq "Rights" ) {
-        <li><span>Access Rights</span></li>
+        <li><span>Права доступа</span></li>
 %     } else {
-        <li><a href="device.html?id=<% $id %>&view=Rights">Access Rights</a></li>
+        <li><a href="device.html?id=<% $id %>&view=Rights">Права доступа</a></li>
 %     }
 %     if( $view eq "All" ) {
-        <li><span>All</span></li>
+        <li><span>Вся информация</span></li>
 %     } else {
-        <li><a href="device.html?id=<% $id %>&view=All">All</a></li>
+        <li><a href="device.html?id=<% $id %>&view=All">Вся информация</a></li>
 %     }
     </ul>
 </div>
@@ -331,17 +331,17 @@ my $refresh_url = "device.html?id=$id&view=$view";
 % }
     <div class="container">
 	<!-- General Info Table -->
-    	<div class="containerheadleft"><b>General</b></div>
+    	<div class="containerheadleft"><b>Общая информация</b></div>
     	<div class="containerheadright">
 % if ( $editgen ) {
 	    <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
-	    <input type="submit" name="submit" value="save" >
+	    <input type="submit" name="submit" value="Сохранить" >
 %           my $digest = $o->get_digest();
             <input type="hidden" name="state_digest" value="<% $digest %>">
 
 % }else{
 %    if ( $manager && $manager->can($user, "edit", $o) ){
-         <a href="device.html?id=<% $id %>&view=<% $view %>&editgen=1">[edit]</a>
+         <a href="device.html?id=<% $id %>&view=<% $view %>&editgen=1">[редактировать]</a>
 %    }else{
          &nbsp;
 %    }
@@ -417,15 +417,15 @@ $ui->add_to_fields(o=>$o, edit=>$editgen,
 <!-- Location Table -->
 <div class="container">
     <div class="containerheadleft">
-        Location/Contacts
+        Расположение/Контакты
     </div>
     <div class="containerheadright">
 %	if ($editloc){	 
         <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
-        <input type="submit" name="submit" value="save">
+        <input type="submit" name="submit" value="Сохранить">
 %	}else{
 %           if ( $manager && $manager->can($user, "edit", $o) ){
-                <a href="device.html?id=<% $id %>&view=<% $view %>&editloc=1">[edit]</a>
+                <a href="device.html?id=<% $id %>&view=<% $view %>&editloc=1">[редактировать]</a>
 %           }else{
                 &nbsp;
 %    	    }
@@ -489,15 +489,15 @@ $ui->add_to_fields(o=>$o, edit=>0, fields=>\@fields, field_headers=>\@field_head
 <!-- Management Table -->
 <div class="container">
     <div class="containerheadleft">
-        Management
+        Управление
     </div>
     <div class="containerheadright">
 %	 if ($editmgmt){	 
         <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
-        <input type="submit" name="submit" value="save">
+        <input type="submit" name="submit" value="Сохранить">
 %	 }else{
 %           if ( $manager && $manager->can($user, "edit", $o) ){
-                <a href="device.html?id=<% $id %>&view=<% $view %>&editmgmt=1">[edit]</a>
+                <a href="device.html?id=<% $id %>&view=<% $view %>&editmgmt=1">[редактировать]</a>
 %           }else{
                 &nbsp;
 % 	    }
@@ -570,15 +570,15 @@ if ( $o->snmp_managed ){
 
 <div class="container">
     <div class="containerheadleft">
-        Comments
+        Комментарии
     </div>
     <div class="containerheadright">
 %	if ( $editcomments ){
             <input type="button" name="cancel_button" value="Cancel" onClick="history.go(-1);">
-            <input type="submit" name="submit" value="save">
+            <input type="submit" name="submit" value="Сохранить">
 %	}else{
 %           if ( $manager && $manager->can($user, "edit", $o) ){
-                <a href="device.html?id=<% $id %>&view=<% $view %>&editcomments=1">[edit]</a>
+                <a href="device.html?id=<% $id %>&view=<% $view %>&editcomments=1">[редактировать]</a>
 %           }else{
                 &nbsp;
 %	    }
@@ -608,9 +608,9 @@ print $tmp{value};
     <div class="containerheadright">
 %     if ( $manager && $manager->can($user, 'edit', $o) ){
 %         if ( @attributes ) {
-              <a href="device.html?id=<% $o %>&editattr=1">[edit]</a>
+              <a href="device.html?id=<% $o %>&editattr=1">[редактировать]</a>
 %         }
-          <a href="edit.html?table=DeviceAttr&device=<% $o %>">[add]</a>
+          <a href="edit.html?table=DeviceAttr&device=<% $o %>">[добавить]</a>
 %     }else{
           &nbsp;
 %     }
@@ -673,19 +673,19 @@ function showVlan(){
       push @headers, '[del]';
     }
     
-    push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=number">Number</a>';
-    push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=name">Name</a>';
+    push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=number">Номер</a>';
+    push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=name">Название</a>';
     
     if ( ! $editints ){
-      push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=speed">Speed</a>';
+      push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=speed">Скорость</a>';
       push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=vlan">VLAN</a>';
-      push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=oper_status">Status</a>';
+      push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=oper_status">Статус</a>';
     }
-    push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=monitored">Mon?</a>';
+    push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=monitored">Мониторинг?</a>';
     push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=snmp">SNMP?</a>';
     
     if ( exists $intinfo{jack} || $editints ){
-      push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=jack">Jack(cable)</a>';
+      push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=jack">Разъем (кабель)</a>';
       my @closets = $o->room->closets if ( $o->room );
       foreach my $cl ( @closets ) {
 	  push @closet_jacks,  $cl->horizontalcables;
@@ -693,15 +693,15 @@ function showVlan(){
       @closet_jacks = sort { $a->get_label cmp $b->get_label } @closet_jacks;
     }
     if ( exists $intinfo{room_char} || $editints ){
-      push @headers, 'Room';
+      push @headers, 'Помещение';
     }
     if ( exists $intinfo{jack_char} || $editints ){
-      push @headers, 'Jack';
+      push @headers, 'Разъем';
     }
     if ( exists $intinfo{description} || $editints ){
-      push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=descr">Descr.</a>';
+      push @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&ifsort=descr">Описание</a>';
     }
-    push @headers, 'Neighbor';
+    push @headers, 'Соседние устройства';
 
 
     ### Actual data
@@ -727,7 +727,7 @@ function showVlan(){
 		    if ( (keys %{$ifvlans{$if}} > 3) ) {
 			my $rc = "<select name=\"vlan_list\" ";
 			my $sc = "onChange=\"window.open(this.options[this.selectedIndex].value,'_top')\">\n";
-			my $tc = "<option value=\"$refresh_url\" selected>--Select--</option>\n";
+			my $tc = "<option value=\"$refresh_url\" selected>--Выберите--</option>\n";
 			$ac = $rc . $sc . $tc;
 			foreach my $v ( sort { $a <=> $b } keys %{$ifvlans{$if}} ) {
 			    my $link = "view.html?table=Vlan&id=$vlans{$v}";
@@ -797,7 +797,7 @@ function showVlan(){
 <!-- Interface Table -->
 <div class="container">
     <div class="containerheadleft">
-        Interfaces
+        Интерфейсы
     </div>
     <div class="containerheadright">
 
@@ -807,15 +807,15 @@ function showVlan(){
 	<input type="hidden" name="view" value="<% $view %>">
 	<input type="hidden" name="ifsort" value="<% $ifsort %>">
 	<input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
-	<input type="submit" name="submit" value="save">
+	<input type="submit" name="submit" value="Сохранить">
 %   }else{
 
         <form name="showvlans">
 	VLAN view: <select name="showvlan" onChange="showVlan();">
 %       if ( $showvlan eq 'all' ){
-            <option value="all" SELECTED>all</option>
+            <option value="all" SELECTED>все</option>
 %       }else{
-            <option value="all">all</option>
+            <option value="all">все</option>
 %       }
 %       foreach my $vid ( sort { $a <=> $b } keys %vlans ){
 %           if ( $showvlan eq $vid ){
@@ -832,7 +832,7 @@ function showVlan(){
 %       }
 	&nbsp;&nbsp;
 %       if ( $manager && $manager->can($user, "edit", $o) ){
-            <a href="device.html?id=<% $id %>&view=<% $view %>&ifsort=<% $ifsort %>&editints=1">[edit]</a>
+            <a href="device.html?id=<% $id %>&view=<% $view %>&ifsort=<% $ifsort %>&editints=1">[редактировать]</a>
 %       }
 %  }
 
@@ -843,7 +843,7 @@ function showVlan(){
     <div class="containerheadright">
 %	  if ( $editints ){	 
             <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
-            <input type="submit" name="submit" value="save">
+            <input type="submit" name="submit" value="Сохранить">
 %	  }
     </div>
 </div>
@@ -852,7 +852,7 @@ function showVlan(){
 %  if ( $manager && $manager->can($user, 'edit', $o) ){
 <div class="container">
     <div class="containerheadleft">
-        Options
+        Настройки
     </div>
     <div class="containerheadright">&nbsp;</div>
     <div class="containerbody">
@@ -860,22 +860,22 @@ function showVlan(){
     <form name="add_ints_form" action="device.html" method="POST">
       <input type="hidden" name="id" value="<% $id %>">
       <input type="hidden" name="view" value="<% $view %>">
-      Manually 
-      <input type="submit" name="intadd" value="Add">
-      <input type="text" name="intaddnum" value="1" size="3"> interfaces
+      Вручную 
+      <input type="submit" name="intadd" value="Добавить">
+      <input type="text" name="intaddnum" value="1" size="3"> интерфейсов
     </form>
     </p>
     <p>
     <form name="overwrite_form" action="device.html" method="POST">
       <input type="hidden" name="id" value="<% $id %>">
       <input type="hidden" name="view" value="<% $view %>">
-      SNMP Updates Overwrite Descriptions:
+      Обновление по SNMP перезаписывает описания:
       <select name="overwrite_if_descr">
-          <option value="" selected>--Select--</option>
-          <option value="0">No</option>
-          <option value="1">Yes</option>
+          <option value="" selected>--Выберите--</option>
+          <option value="0">Нет</option>
+          <option value="1">Да</option>
       </select>
-      <input type="submit" name="Set" value="Set">
+      <input type="submit" name="Set" value="Установить">
     </form>
     </p>
     </div>
@@ -914,7 +914,7 @@ print "<pre>", Dumper(%modules), "</pre>" if $DEBUG;
 
 <div class="container">
     <div class="containerhead">
-        Device Modules (<% scalar @modules %>)
+        Модули устройства (<% scalar @modules %>)
     </div>
     <div class="containerbody">
        <& .show_modules, modules=>\%modules, objects=>$modules{root} &>
@@ -937,7 +937,7 @@ $objects
 %    my @children = sort { $a->pos <=> $b->pos } @{$modules->{$obj->number}{children}};
 <div class="container">
     <div class="containerheadleft">
-        Module <% $obj->number %> contains:
+        Модуль <% $obj->number %> содержит:
     </div>
     <div class="containerheadright">&nbsp;
     </div>
@@ -969,7 +969,7 @@ $objects
 
 <div class="container">
     <div class="containerheadleft">
-        IPs
+        IP адреса
     </div>
     <div class="containerheadright">
 %   if ( $editips ) {
@@ -978,12 +978,12 @@ $objects
 	  <input type="hidden" name="view" value="<% $view %>">
 	  <input type="hidden" name="ipsort" value="<% $ipsort %>">
 	  <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
-          <input type="submit" name="submit" value="save">
+          <input type="submit" name="submit" value="Сохранить">
 %   }
 %   if ( !$editips && !$add_ip ){
 %       if ( $manager && $manager->can($user, "edit", $o) ){
-          <a href="device.html?id=<% $id %>&view=<% $view %>&ipsort=<% $ipsort %>&editips=1">[edit]</a>
-          <a href="device.html?id=<% $id %>&view=<% $view %>&ipsort=<% $ipsort %>&add_ip=1">[add]</a>
+          <a href="device.html?id=<% $id %>&view=<% $view %>&ipsort=<% $ipsort %>&editips=1">[редактировать]</a>
+          <a href="device.html?id=<% $id %>&view=<% $view %>&ipsort=<% $ipsort %>&add_ip=1">[добавить]</a>
 %       }
 %   }
     </div>
@@ -993,10 +993,10 @@ $objects
 if (scalar @$ips){
     (@headers, @rows, @row) = ();
 
-    @headers = ('<a href="device.html?id='. $id .'&view='. $view .'&ipsort=address">Address</a>',
-		'Subnet',
-		'<a href="device.html?id='. $id .'&view='. $view .'&ipsort=interface">Interface</a>',
-		'DNS Name(s)', 'Monitored?', 'Services',
+    @headers = ('<a href="device.html?id='. $id .'&view='. $view .'&ipsort=address">Адрес</a>',
+		'Подсеть',
+		'<a href="device.html?id='. $id .'&view='. $view .'&ipsort=interface">Интерфейс</a>',
+		'DNS имя(имена)', 'Мониторинг?', 'Сервисы',
 		);
 
     my $can_edit = ($manager && $manager->can($user, "edit", $o))? 1 : 0;
@@ -1118,7 +1118,7 @@ if ( !$editips ){
     if ( $add_ip ){
 	print '<p>';
 	print '<input type="button" name="cancel_button" value="Cancel" onClick="history.go(-1);">';
-	print '<input type="submit" name="add_ip" value="Add">';
+	print '<input type="submit" name="add_ip" value="Добавить">';
     }
 }
 if ( $editips || $add_ip ) {
@@ -1130,7 +1130,7 @@ if ( $editips || $add_ip ) {
 % if ( !$editips && !$add_ip ){
 <div class="container">
     <div class="containerheadleft">
-        Options
+        Настройки
     </div>
     <div class="containerheadright">&nbsp;</div>
     <div class="containerbody">
@@ -1139,13 +1139,13 @@ if ( $editips || $add_ip ) {
       <form name="if_auto_dns_form" action="device.html" method="POST">
         <input type="hidden" name="id" value="<% $id %>">
         <input type="hidden" name="view" value="<% $view %>">
-        Set Auto DNS on all IP interfaces to:
+        Установить авто-DNS на всех IP-интерфейсах:
         <select name="if_auto_dns">
           <option value="" selected>--Select--</option>
-          <option value="0">No</option>
-          <option value="1">Yes</option>
+          <option value="0">Нет</option>
+          <option value="1">Да</option>
         </select>
-        <input type="submit" name="Set" value="Set">
+        <input type="submit" name="Set" value="Установить">
       </form>
       </p>
 %   }
@@ -1180,10 +1180,10 @@ if ( $editips || $add_ip ) {
 	      <input type="hidden" name="id" value="<% $id %>">
 	      <input type="hidden" name="view" value="<% $view %>">
 	      <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
-	      <input type="submit" name="submit" value="save">
+	      <input type="submit" name="submit" value="Сохранить">
 %         }else{
 %             if ( $manager && $manager->can($user, "edit", $o) ){
-                  <a href="device.html?id=<% $id %>&view=<% $view %>&editdevbgp=1">[edit]</a>
+                  <a href="device.html?id=<% $id %>&view=<% $view %>&editdevbgp=1">[редактировать]</a>
 %             }
 %         }
    </div>
@@ -1207,7 +1207,7 @@ if ( $editips || $add_ip ) {
 <!-- BGP Peers Table -->
 <div class="container">
     <div class="containerheadleft">
-        BGP Peers
+        BGP партнёры
     </div>
     <div class="containerheadright">
 
@@ -1216,10 +1216,10 @@ if ( $editips || $add_ip ) {
 	<input type="hidden" name="id" value="<% $id %>">
 	<input type="hidden" name="view" value="<% $view %>">
         <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
-	<input type="submit" name="submit" value="save">
+	<input type="submit" name="submit" value="Сохранить">
 %     }else{
 %         if ( $manager && $manager->can($user, "edit", $o) ){
-              <a href="device.html?id=<% $id %>&view=<% $view %>&editbgp=1">[edit]</a>
+              <a href="device.html?id=<% $id %>&view=<% $view %>&editbgp=1">[редактировать]</a>
 %         }
 %     }
     </div>
@@ -1229,12 +1229,12 @@ if ( $editips || $add_ip ) {
 
 (@headers, @rows) = ();
 
-push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=ip">Remote IP</a>' );
-push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=id">ID</a>' );
-push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=entity">Entity</a>' );
-push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=asname">AS Name</a>' );
-push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=asnumber">AS Number</a>' );
-push( @headers, 'Monitored?' );
+push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=ip">Удаленный IP адрес</a>' );
+push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=id">Идентификатор</a>' );
+push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=entity">Объект</a>' );
+push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=asname">Название автономной системы</a>' );
+push( @headers, '<a href="device.html?id=' . $id . '&view=' . $view . '&peersort=asnumber">Номер автономной системы</a>' );
+push( @headers, 'Мониторинг?' );
 
 if ( $epeers ){
     push @rows, ["<strong>External (eBGP)</strong>", "", "", "", "", ""];
@@ -1411,21 +1411,21 @@ if ( $ipeers ){
       <input type="hidden" name="view" value="<% $view %>">
 <table>
   <tr>
-      <th>Show Vlans?</th>
-      <th>Show this Vlan only?</th>
-      <th>Show Interface Names?</th>
-      <th>Depth up</th>
-      <th>Depth down</th>
-      <th>Reference Point</th>
+      <th>Отображать VLAN-ы?</th>
+      <th>Отображать только этот VLAN?</th>
+      <th>Отображать название интерфейсов?</th>
+      <th>Глубина вверх</th>
+      <th>Глубина вниз</th>
+      <th>Базовое устройство</th>
       <th>&nbsp;</th>
   </tr>
   <tr>
       <td><input type="checkbox" name="topovlans" onChange="if(document.change_topo_view_form.topovlans.checked==false){document.change_topo_view_form.specific_vlan.value=0;}" value="1" <% ($topovlans ? "checked" : "") %>></td>
       <td><select name="specific_vlan" onChange="if(document.change_topo_view_form.specific_vlan.value!=0){document.change_topo_view_form.topovlans.checked=true;}">
 %       if ( $specific_vlan == 0 ) {
-          <option value="" SELECTED>--Select--</option>
+          <option value="" SELECTED>--Выберите--</option>
 %       } else {
-          <option value="">--Select--</option>
+          <option value="">--Выберите--</option>
 %       }
 %       foreach my $vid ( sort { $a <=> $b } keys %vlans ){
 %           if ( $specific_vlan == $vid ){
@@ -1440,7 +1440,7 @@ if ( $ipeers ){
       <td><input type="text" name="topodepth_down" size=2 value="<% $topodepth_down %>"></td>
       <td><input type="text" name="toporoot" size=20 value="<% $toporoot %>"></td>
       
-    <td><input type="submit" value="Change View"></td>
+    <td><input type="submit" value="Изменить отображение"></td>
   </tr>
 </table>
 </form>
@@ -1448,7 +1448,7 @@ if ( $ipeers ){
 <!-- Topology drawing -->
 <div class="container">
     <div class="containerhead">
-        Topology - Layer 2
+        Топология - Уровень 2
     </div>
     <div class="containerbody">
     <center>
@@ -1476,7 +1476,7 @@ if ( $ipeers ){
 <!-- ARP Cache Table -->
 <div class="container">
     <div class="containerhead">
-        ARP Caches
+        ARP кэши
     </div>
     <div class="containerbody">
         <& /generic/sortresults.mhtml, object => \@arp_caches , view => "row" , sort=>0 &>
@@ -1498,7 +1498,7 @@ if ( $ipeers ){
 <!-- FWT Cache Table -->
 <div class="container">
     <div class="containerhead">
-        Forwarding Tables
+        Таблицы форвардинга
     </div>
     <div class="containerbody">
         <& /generic/sortresults.mhtml, object => \@fwt , view => "row" , sort=>0&>
@@ -1521,7 +1521,7 @@ if ( $ipeers ){
 <!-- History Table -->
 <div class="container">
     <div class="containerhead">
-        History
+        История
     </div>
     <div class="containerbody">
         <& /generic/sortresults.mhtml, object => \@h_objs , view => "row" &>
@@ -1539,7 +1539,7 @@ if ( $ipeers ){
 
 %if ( $view eq "Circuit" || $view eq "All" ){
     <div class="container">
-        <div class="containerhead">Circuits</div>
+        <div class="containerhead">Логические каналы</div>
         <div class="containerbody">
             <& /generic/sortresults.mhtml, object => \@circuits , view => "row" &>
         </div>
@@ -1561,15 +1561,15 @@ if ( $view eq "Rights" || $view eq "All" ){
 
 % if ( $manager && $manager->can($user, "access_section", 'device.html:edit_rights') ){
       <div class="container">
-      <div class="containerheadleft">Access Rights</div>
+      <div class="containerheadleft">Права доступа</div>
       <div class="containerheadright">
       &nbsp;
 %     if ( $edit ne 'edit_rights' ){
 %         if ( $manager && $manager->can($user, 'edit', $o) ){
 %             if ( @all_rights ){
-                  <a href="device.html?id=<% $o %>&view=Rights&edit=edit_rights">[edit]</a>
+                  <a href="device.html?id=<% $o %>&view=Rights&edit=edit_rights">[редактировать]</a>
 %             }
-              <a href="device.html?id=<% $o %>&view=Rights&_action=VIEW_ADD_RIGHTS">[add]</a>
+              <a href="device.html?id=<% $o %>&view=Rights&_action=VIEW_ADD_RIGHTS">[добавить]</a>
 %	  }
 %     }
       </div>

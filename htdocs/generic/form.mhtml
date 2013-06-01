@@ -131,5 +131,5 @@ foreach my $c ( sort { $order{$a} <=> $order{$b} } keys %order ) {
 % }
 
 % if ( $edit ){
-      <br>(<font color="red">*</font>) Field is required. <br>
+      <br>(<font color="red">*</font>) Обязательное поле. <br>
 % }

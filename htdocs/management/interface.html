@@ -4,7 +4,7 @@ Device Interface UI
 %
 %
 <%attr>
-title   => 'Interface' 
+title   => 'Интерфейс' 
 section => 'Management'
 </%attr>
 %
@@ -40,18 +40,18 @@ my %linksfrom = Interface->meta_data->get_links_from;
 
 <!-- Display main object values -->
 <div class="container">
-    <div class="containerheadleftoutside"><strong>Interface</strong></div>
+    <div class="containerheadleftoutside"><strong>Интерфейс</strong></div>
     <div class="containerheadrightoutside">
 %           if ( $manager && $manager->can($user, "access_admin_section", 'interface.html:new') ){
                 <a href="edit.html?table=Interface">[new]</a>
 %           }
 %           if ( $manager && $manager->can($user, 'delete', $o) ){
-                <a href="delete.html?table=Interface&id=<% $id %>">[delete]</a>
+                <a href="delete.html?table=Interface&id=<% $id %>">[удалить]</a>
 %           }
 %           if ( $manager && $manager->can($user, 'edit', $o) ){
-                <a href="edit.html?table=Interface&id=<% $id %>">[edit]</a>
+                <a href="edit.html?table=Interface&id=<% $id %>">[редактировать]</a>
 %           }
-            <a href="#" onClick="opentextwindow(jspopoutstring,'js','');">[text]</a>
+            <a href="#" onClick="opentextwindow(jspopoutstring,'js','');">[текст]</a>
     </div>
     <div class="containerbodyoutside">
         <& /generic/form.mhtml, table=>"Interface", id=>$id, edit=>0 &>
@@ -67,7 +67,7 @@ my %linksfrom = Interface->meta_data->get_links_from;
 %	      if ( $view eq "all" ){
 		  [all]
 %	      }elsif ( keys %linksfrom > 1 ){
-		  <a href="interface.html?id=<% $o %>&view=all">[all]</a>
+		  <a href="interface.html?id=<% $o %>&view=all">[все]</a>
 %             }
 %             foreach my $i ( sort keys %linksfrom ){
 %               next if $i eq 'neighbors';
@@ -78,7 +78,7 @@ my %linksfrom = Interface->meta_data->get_links_from;
                    <a href="interface.html?id=<% $o %>&view=<% $i %>">[<% $i %>]</a>
 %               }   
 %             }
-              <a href="interface.html?id=<% $o %>&view=history">[history]</a>
+              <a href="interface.html?id=<% $o %>&view=history">[история]</a>
 	   </div>
 	</div>
       </div>
@@ -174,9 +174,9 @@ my %linksfrom = Interface->meta_data->get_links_from;
                 &nbsp;
 %           }else{
 %	        if ( $num ){
-                    <a href="view.html?table=<% $table %>&id=<% $id %>&view=<% $view %>&edit=<% $i %>">[edit]</a>
+                    <a href="view.html?table=<% $table %>&id=<% $id %>&view=<% $view %>&edit=<% $i %>">[редактировать]</a>
 %	        }
-	        <a href="edit.html?table=<% $ctbl %>&<% $ffield %>=<% $o %>">[add]</a>
+	        <a href="edit.html?table=<% $ctbl %>&<% $ffield %>=<% $o %>">[добавить]</a>
 %           }
 	    </div>
 

@@ -55,7 +55,7 @@ if ( $DEBUG ){
     <div class="containerheadright">
 %       if ( ! $table->meta_data->is_history() ){
 %	    if ( $manager && $manager->can($user, 'access_admin_section', 'view.html:new') ){
-                <a href="edit.html?table=<% $table %>">[новый]</a>
+                <a href="edit.html?table=<% $table %>">[добавить]</a>
 %           }
 %	    if ( $manager && $manager->can($user, "edit", $obj) ){
 		<a href="edit.html?table=<% $table %>&id=<% $obj %>">[edit]</a>

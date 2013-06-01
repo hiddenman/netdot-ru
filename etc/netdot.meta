@@ -8123,7 +8123,7 @@ $meta = {
         description => '',
         length => '255',
         nullable => 1,
-        tag => 'Description',
+        tag => 'Описание',
         type => 'varchar'
       },
       vlangroup => {
@@ -8136,7 +8136,7 @@ $meta = {
           table => 'VlanGroup'
         },
         nullable => 1,
-        tag => 'Group',
+        tag => 'Группа',
         type => 'bigint'
       },
       id => {
@@ -8152,7 +8152,7 @@ $meta = {
         description => '',
         length => '',
         nullable => 1,
-        tag => 'Comments',
+        tag => 'Комментарии',
         type => 'text'
       },
       name => {
@@ -8160,7 +8160,7 @@ $meta = {
         description => 'Human-defined Name for this VLAN',
         length => '255',
         nullable => 1,
-        tag => 'Name',
+        tag => 'Название',
         type => 'varchar'
       },
       vid => {
@@ -8168,7 +8168,7 @@ $meta = {
         description => '',
         length => '',
         nullable => 0,
-        tag => 'VLAN ID',
+        tag => 'Идентификатор VLAN',
         type => 'integer'
       }
     },

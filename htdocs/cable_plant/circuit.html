@@ -143,7 +143,7 @@ if ( $_action ){
     <div class="containerheadright">
         <a href="circuit.html?id=<% $o->id %>">[обновить]</a>
 %   if ( $manager && $manager->can($user, 'access_admin_section', 'circuit:new') ){
-        <a href="edit.html?table=Circuit">[новый]</a>
+        <a href="edit.html?table=Circuit">[добавить]</a>
 %   }
 %   if ( $manager && $manager->can($user, 'edit', $o) ){
         <a href="edit.html?table=Circuit&id=<% $o->id %>">[редактировать]</a>

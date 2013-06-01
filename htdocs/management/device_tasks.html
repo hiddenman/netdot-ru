@@ -5,7 +5,7 @@
 </%doc>
 %
 <%attr>
-title => 'Device Tasks' 
+title => 'Операции с устройствами' 
 </%attr>
 %
 %
@@ -127,15 +127,15 @@ my $manager = $ui->get_permission_manager($r);
 <div id="sectiontools" <% $hideheader %>>
 <div class="container">
     <div class="containerheadleft">
-        Device Tasks
+        Операции с устройствами
     </div>
     <div class="containerheadright">
 
 %   if ( $manager && $manager->can($user, 'access_admin_section', 'device_tasks:new') ){
 %       if ( $view eq 'search' ){ 
-	    <a href="device_tasks.html?view=new">[new]</a>
+	    <a href="device_tasks.html?view=new">[добавить]</a>
 %       }elsif ( $view eq 'new' ){
-            <a href="device_tasks.html?view=search">[search]</a>
+            <a href="device_tasks.html?view=search">[поиск]</a>
 %       }
 %   }
 %   print_showtaskslink($show_tasks);
@@ -145,16 +145,16 @@ my $manager = $ui->get_permission_manager($r);
 
 %   if ( $view eq 'search' ){
         <fieldset class="medium">
-            <legend>Find Devices</legend>
+            <legend>Найти устройства</legend>
             <form action="device_tasks.html" method="POST">
                 <p>
-                <label for="search">Name/IP/MAC:</label>
+                <label for="search">Название/IP/MAC:</label>
                 <input type="text" name="device_search" class="longtxt" value="<% $device_search %>"> 
                 </p>
                 <p>
-                <label for="Select">Names within:</label>
+                <label for="Select">Названия в пределах:</label>
                 <select name="zone_id">
-		<option value="0">All Zones</option>
+		<option value="0">Всех зон</option>
 %               foreach my $zone ( sort { $a->name cmp $b->name } @all_zones ){
 %                   if ( $zone->id eq $zone_id ){
                         <option value="<% $zone->id %>" SELECTED><% Encode::encode_utf8($zone->get_label) %></option>
@@ -163,7 +163,7 @@ my $manager = $ui->get_permission_manager($r);
 %                   }
 %               }
                 </select>
-                <input name="submit" value="Find" class="btn" type="submit">
+                <input name="submit" value="Найти" class="btn" type="submit">
                 </p>
             </form>
         </fieldset>
@@ -172,14 +172,14 @@ my $manager = $ui->get_permission_manager($r);
 %           $m->comp('/generic/error.mhtml', error=>'You do not have permission to add new devices');
 %       }
         <fieldset class="medium">
-            <legend>Discover Device</legend>
+            <legend>Опросить устройства</legend>
             <form action="updatedevice.html" method="POST">
                 <p>
-                <label for="host">Name/IP:</label>
+                <label for="host">Имя узла/IP:</label>
                 <input type="text" name="host" class="longtxt" value="">
                 </p>
                 <p>
-                <label for="version">SNMP Version:</label>
+                <label for="version">Версия SNMP:</label>
                 <select name="version" id="version" onChange="showSnmpV3Args('version', 'v3args', 'v2args')">
 %               foreach my $version ( qw(1 2 3) ){
 %                   if ( $version eq $ui->config->get('DEFAULT_SNMPVERSION') ){
@@ -196,11 +196,11 @@ my $manager = $ui->get_permission_manager($r);
                     <div id="v3args" style="display:none">
 %               }
                 <p>
-                <label for="sec_name">Sec Name:</label>
+                <label for="sec_name">Имя пользователя для аутентификации:</label>
                 <input type="text" name="sec_name" class="txt" value="<% $ui->config->get('DEFAULT_SNMP_SECNAME') %>">
                 </p>
                 <p>
-                <label for="sec_level">Sec Level:</label>
+                <label for="sec_level">Уровень безопасности:</label>
                 <select name="sec_level">
 %               foreach my $seclevel ( qw(noAuthNoPriv authNoPriv authPriv) ){
 %		    if ( $ui->config->get('DEFAULT_SNMP_SECLEVEL') eq $seclevel ){
@@ -212,7 +212,7 @@ my $manager = $ui->get_permission_manager($r);
 		</select>
                 </p>
                 <p>
-                <label for="auth_proto">Auth Proto:</label>
+                <label for="auth_proto">Протокол аутентификации:</label>
                 <select name="auth_proto">
 %               foreach my $proto ( qw(MD5 SHA) ){
 %		    if ( $ui->config->get('DEFAULT_SNMP_AUTHPROTO') eq $proto ){
@@ -224,11 +224,11 @@ my $manager = $ui->get_permission_manager($r);
 		</select>
                 </p>
                 <p>
-                <label for="auth_pass">Auth Pass:</label>
+                <label for="auth_pass">Пароль для аутентификации:</label>
                 <input type="password" name="auth_pass" class="txt" value="<% $ui->config->get('DEFAULT_SNMP_AUTHPASS') %>">
                 </p>
                 <p>
-                <label for="">Priv Proto:</label>
+                <label for="">Протокол шифрования:</label>
                 <select name="priv_proto">
 %               foreach my $proto ( qw(DES AES) ){
 %		    if ( $ui->config->get('DEFAULT_SNMP_PRIVPROTO') eq $proto ){
@@ -240,7 +240,7 @@ my $manager = $ui->get_permission_manager($r);
 		</select>
                 </p>
                 <p>
-                <label for="priv_pass">Priv Pass:</label>
+                <label for="priv_pass">Пароль для протокола шифрования:</label>
                 <input type="password" name="priv_pass" class="txt" value="<% $ui->config->get('DEFAULT_SNMP_PRIVPASS') %>">
                 </p>
                 <p>
@@ -251,12 +251,12 @@ my $manager = $ui->get_permission_manager($r);
 		    <div id="v2args" style="display:block">
 %	        }
                 <p>
-                <label for="comstr">SNMP Community:</label>
+                <label for="comstr">SNMP группа:</label>
                 <select name="comstr" id="comstr" onChange="otherOption('comstr','back','other_comstr');">
 %               foreach my $comm ( @communities ){
  	            <option name="<% $comm %>"><% $comm %></option>
 %               }
-                <option name="Other" id="Other" value="Other">Other</option>
+                <option name="Other" id="Other" value="Other">Другая</option>
                 </select>
                 <input type="button" style="visibility:hidden" name="back" id="back" value="<" onClick="backSelectOpt('comstr','back','other_comstr');">
                 <label for="other_comstr"></label>
@@ -265,18 +265,18 @@ my $manager = $ui->get_permission_manager($r);
 		</div>
 		<p><br>
                 <input type="hidden" name="action" value="discover">
-                <input type="submit" name="submit" class="btn" value="discover">
+                <input type="submit" name="submit" class="btn" value="Опросить">
             </form>    
         </fieldset>
 
         <fieldset class="medium">
-            <legend>Add Device manually</legend>
+            <legend>Добавить устройство вручную</legend>
             <form action="device.html" method="POST">
                 <p>
-                <label for="newhost">Name:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <label for="newhost">Название:&nbsp;&nbsp;&nbsp;&nbsp;</label>
                 <input type="text" name="newhost" class="longtxt" value="">
                 <input type="hidden" name="deviceadd" value="add">
-                <input type="submit" name="submit" class="btn" value="add">
+                <input type="submit" name="submit" class="btn" value="Добавить">
                 </p>
             </form>
         </fieldset>

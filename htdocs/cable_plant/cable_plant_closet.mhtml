@@ -55,7 +55,7 @@ print "closets is <pre>", Dumper(@closets), "</pre><br>" if $DEBUG;
 %             if ($edit eq "cableinfo"){	 
                 <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);"> &nbsp;&nbsp; <input name="submit" value="сохранить" type="submit">
 %             } else {
-                <a href="closet.html?id=NEW&site_id=<% $id %>">[новый]</a> &nbsp;
+                <a href="closet.html?id=NEW&site_id=<% $id %>">[добавить]</a> &nbsp;
 		<a href="cable_plant.html?id=<% $id %>&page_type=<% $page_type %>&edit=cableinfo">[редактировать]</a>
 %             }
             </div>

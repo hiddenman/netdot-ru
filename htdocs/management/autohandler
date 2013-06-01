@@ -10,7 +10,7 @@ $showheader => 1
 </%args>
 
 <%attr>
-title   => 'Management' 
+title   => 'Управление' 
 # This is used by the toplevel autohandler to determine the section.
 # Since attributes aren't inherited (but shouldn't they be ...) we have
 # to also specify this in the dhandler
@@ -95,15 +95,15 @@ if ( my $next = $m->fetch_next ){
         return {  
 	    section      => $SECTION,
 	    page         => 'management/', 
-	    title        => 'Management',
+	    title        => 'Управление',
 	    attribute    => $PAGE_ATTRIBUTE,
 	    sub_sections => [
-		{ section => 'DEVICE',   title => 'Devices' },
-                { section => 'ASSETS',    title => 'Assets' },
-		{ section => 'VLANS',    title => 'VLANs' },
-		{ section => 'ADDRESS',  title => 'Address Space' },
-		{ section => 'HOSTS',    title => 'DNS Records' },
-		{ section => 'ZONES',    title => 'DNS Zones' },
+		{ section => 'DEVICE',   title => 'Устройства' },
+                { section => 'ASSETS',    title => 'Ресуры' },
+		{ section => 'VLANS',    title => 'VLAN-ы' },
+		{ section => 'ADDRESS',  title => 'Адресное пространство' },
+		{ section => 'HOSTS',    title => 'DNS записи' },
+		{ section => 'ZONES',    title => 'DNS зоны' },
 		{ section => 'DHCP',     title => 'DHCP' },
 	    ]
         };

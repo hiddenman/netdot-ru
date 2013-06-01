@@ -4,7 +4,7 @@ Interface for VLAN Groups
 %
 %
 <%attr>
-title   => 'VLANs' 
+title   => 'VLAN-ы' 
 section => 'Management'
 </%attr>
 %
@@ -70,12 +70,12 @@ if( $_action eq "INSERT" && !$o ){
 %    @grouplist = VlanGroup->retrieve_all;
     
       <div class="container">
-          <div class="containerheadleft">VLAN Groups:</div>
+          <div class="containerheadleft">Группы VLAN-ов:</div>
 	  <div class="containerheadright">
           &nbsp;
 %	  if ( !$editgroups && scalar(@grouplist) ){
 %             if ( $manager && $manager->can($user, "access_admin_section", 'vlan.html:editgroups') ){
-                  <a href="vlan.html?$action=<% $_action %>&editgroups=1">[edit]</a>
+                  <a href="vlan.html?$action=<% $_action %>&editgroups=1">[редактировать]</a>
 %             }
 %         }
           </div>
@@ -87,19 +87,19 @@ if( $_action eq "INSERT" && !$o ){
                       <& /generic/sortresults.mhtml, object => \@grouplist, page=>'view.html', withedit=>0, sort=>'start_vid' &>
 %                 }
 %             }else{
-                  No VLAN Groups Defined
+                  Не заданы группы VLAN-ов
 %             }
           </div>
       </div>
 
 %     @vlanlist = Vlan->search(vlangroup => undef);
       <div class="container">
-          <div class="containerheadleft">Ungrouped VLANs:</div>
+          <div class="containerheadleft">Негрупированные VLAN-ы:</div>
 	  <div class="containerheadright">
           &nbsp;
 %	  if ( !$editvlans && scalar(@vlanlist) ){
 %             if ( $manager && $manager->can($user, "access_admin_section", 'vlan.html:editvlans') ){
-                  <a href="vlan.html?$action=<% $_action %>&editvlans=1">[edit]</a>
+                  <a href="vlan.html?$action=<% $_action %>&editvlans=1">[редактировать]</a>
 %             }
 %         }
           </div>
