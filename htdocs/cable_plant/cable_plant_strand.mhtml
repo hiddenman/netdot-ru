@@ -169,14 +169,14 @@ HERE
 			      {
 				  next if ($bb->id == int($strand->cable) || exists($stored{$bb}));
 				  $stored{$bb} = 1;
-				  $ac .= sprintf("<option value=\"%s\">%s</option>\n", $bb->id, $bb->name);
+				  $ac .= sprintf("<option value=\"%s\">%s</option>\n", $bb->id, Encode::encode_utf8($bb->name));
 			      }
 
 			      $ac .= '</select> &nbsp; ';
 			      $ac .= '<select name="__splice1_' . $strand->id . '">';
 			      $ac .= '<option value="">-- Выберите --</option>';
 			      if (scalar(@splices)) {
-				  $ac .= '<option value="' . $splices[0]->strand2->id . '" SELECTED>' . $splices[0]->strand2->name . '</option>';
+				  $ac .= '<option value="' . $splices[0]->strand2->id . '" SELECTED>' . Encode::encode_utf8($splices[0]->strand2->name) . '</option>';
 			      }
 			      $ac .= '<option value="">[ничего]</option>';
 			      $ac .= '</select>';
@@ -190,14 +190,14 @@ HERE
 			      {
 				  next if ($bb->id == int($strand->cable) || exists($stored{$bb}));
 				  $stored{$bb} = 1;
-				  $ac .= sprintf("<option value=\"%s\">%s</option>\n", $bb->id, $bb->name);
+				  $ac .= sprintf("<option value=\"%s\">%s</option>\n", $bb->id, Encode::encode_utf8($bb->name));
 			      }
 
 			      $ac .= '</select> &nbsp; ';
 			      $ac .= '<select name="__splice2_' . $strand->id . '">';
 			      $ac .= '<option value="">-- Выберите --</option>';
 			      if (scalar(@splices) == 2) {
-				  $ac .= '<option value="' . $splices[1]->strand2->id . '" SELECTED>' . $splices[1]->strand2->name . '</option>';
+				  $ac .= '<option value="' . $splices[1]->strand2->id . '" SELECTED>' . Encode::encode_utf8($splices[1]->strand2->name) . '</option>';
 			      }
 			      $ac .= '<option value="">[ничего]</option>';
 			      $ac .= '</select>';

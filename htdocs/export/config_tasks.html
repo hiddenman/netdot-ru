@@ -65,7 +65,7 @@ my $manager = $ui->get_permission_manager($r);
                 <label>Select one or more of:</label>
                 <select name="config_types" size="6" MULTIPLE>
 %               foreach my $type ( @types ){
-        	    <option value="<% $type %>"><% $type %></option> 
+        	    <option value="<% Encode::encode_utf8($type) %>"><% Encode::encode_utf8($type) %></option> 
 %               } 
                 </select>
                 </p>
@@ -76,7 +76,7 @@ my $manager = $ui->get_permission_manager($r);
                 <label>Select specific zones</strong> (default is ALL):</label>
                 <select name="zones" size="6" MULTIPLE>
 %               foreach my $zone ( Zone->retrieve_all ){
-        	    <option value="<% $zone %>"><% $zone->name %></option> 
+        	    <option value="<% Encode::encode_utf8($zone) %>"><% Encode::encode_utf8($zone->name) %></option> 
 %               } 
                 </select>
                 </p>
@@ -95,7 +95,7 @@ my $manager = $ui->get_permission_manager($r);
                 <label>Select specific scopes</strong> (default is ALL):</label>
                 <select name="scopes" size="6" MULTIPLE>
 %               foreach my $scope ( DhcpScope->search(type=>'global') ){
-        	    <option value="<% $scope->name %>"><% $scope->name %></option> 
+        	    <option value="<% Encode::encode_utf8($scope->name) %>"><% Encode::encode_utf8($scope->name) %></option> 
 %               } 
                 </select>
                 </p>

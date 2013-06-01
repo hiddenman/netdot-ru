@@ -75,7 +75,7 @@ if ( exists $ao->{$objt} ){
         <select name="show_contactlist" onChange="document.contacts_form.submit()">
             <option value="">- Select List -</option>
 %       foreach my $obj ( sort { $a->get_label cmp $b->get_label } @objs ){
-            <option value="<% $obj %>"><% $obj->get_label %></option>
+            <option value="<% $obj %>"><% Encode::encode_utf8($obj->get_label) %></option>
 %       }
         </select>
         </form>

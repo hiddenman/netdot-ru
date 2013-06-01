@@ -70,7 +70,7 @@ my $manager   = $ui->get_permission_manager($r);
 				   $b->get_label } Interface->retrieve_all;
 	      print '<select name="new_interface" id="new_interface">';
 	      foreach my $i ( @all ){
-		  printf('<option value="%d">%s</option>', $i->id, $i->get_label);
+		  printf('<option value="%d">%s</option>', $i->id, Encode::encode_utf8($i->get_label));
 	      }
 	      print '</select>';
 	  }else{

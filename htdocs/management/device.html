@@ -1106,7 +1106,7 @@ if ( !$editips ){
 		  $ac .= '<select name="add_ip_int" >';
 		  $ac .= '<option value="">Select Interface</option>';
 		  foreach my $int ( sort { $a->get_label cmp $b->get_label } $o->interfaces ){
-		      $ac .= '<option value="' . $int->id . '">' . $int->get_label . '</option>';
+		      $ac .= '<option value="' . $int->id . '">' . Encode::encode_utf8($int->get_label) . '</option>';
 		  }
 		  $ac .= '</select>';
 		  $ac;

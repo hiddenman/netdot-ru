@@ -93,9 +93,9 @@ my $manager = $ui->get_permission_manager($r);
 		<option value="0">All Zones</option>
 %               foreach my $zone ( sort { $a->name cmp $b->name } @all_zones ){
 %                   if ( $zone->id eq $zone_id ){
-                        <option value="<% $zone->id %>" SELECTED><% $zone->get_label %></option>
+                        <option value="<% $zone->id %>" SELECTED><% Encode::encode_utf8($zone->get_label) %></option>
 %                   }else{
-                        <option value="<% $zone->id %>"><% $zone->get_label %></option>
+                        <option value="<% $zone->id %>"><% Encode::encode_utf8($zone->get_label) %></option>
 %                   }
 %               }
                 </select>
@@ -118,9 +118,9 @@ my $manager = $ui->get_permission_manager($r);
 %   	        foreach my $z ( sort { $a->name cmp $b->name } @all_zones ){
 %		    next if $z->is_dot_arpa;
 %                   if ( $z->get_label eq $default_zone ){
-%		        $zone_select .= '<option value="'.$z->id.'" SELECTED>'.$z->get_label.'</option>';
+%		        $zone_select .= '<option value="'.$z->id.'" SELECTED>'.Encode::encode_utf8($z->get_label).'</option>';
 %                   }else{
-%		        $zone_select .= '<option value="'.$z->id.'">'.$z->get_label.'</option>';
+%		        $zone_select .= '<option value="'.$z->id.'">'.Encode::encode_utf8($z->get_label).'</option>';
 %                   }
 %	        }
 %	        $zone_select .= "</select>";
@@ -141,7 +141,7 @@ my $manager = $ui->get_permission_manager($r);
 %                       if ( $o->description ){
 %                           $subnet_label .= " (".$o->description.")"; 
 %                       }
-                        <option value="<% $o %>"><% $subnet_label %></option>
+                        <option value="<% $o %>"><% Encode::encode_utf8($subnet_label) %></option>
 %                   }
                     </select> 
                     </p>

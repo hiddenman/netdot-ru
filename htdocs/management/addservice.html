@@ -119,7 +119,7 @@ if ( $Add ){
 &{sub{
     my $ac = '<select name="service">';
     foreach my $o ( sort { $a->name cmp $b->name } Service->retrieve_all() ){
-	    $ac .= '<option value="'.$o->id.'">'.$o->name.'</option>';
+	    $ac .= '<option value="'.$o->id.'">'.Encode::encode_utf8($o->name).'</option>';
     }
     $ac .= '</select>';
     $ac;
@@ -134,9 +134,9 @@ if ( $Add ){
     my $ac = '<select name="contactlist">';
     foreach my $o ( sort { $a->name cmp $b->name } ContactList->retrieve_all() ){
 	if ( defined $cl && $cl->id == $o->id ){
-	    $ac .= '<option value="'.$o->id.'" SELECTED>'.$o->name.'</option>';
+	    $ac .= '<option value="'.$o->id.'" SELECTED>'.Encode::encode_utf8($o->name).'</option>';
 	}else{
-	    $ac .= '<option value="'.$o->id.'">'.$o->name.'</option>';
+	    $ac .= '<option value="'.$o->id.'">'.Encode::encode_utf8($o->name).'</option>';
 	}
     }
     $ac .= '</select>';

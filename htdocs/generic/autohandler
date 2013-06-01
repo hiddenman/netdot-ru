@@ -78,7 +78,7 @@ my $SECTION = "Advanced";
             <select name="table" onChange="document.browse_form.submit()">
             <option>Select table</option>
 %           foreach my $t ( @t ) {
-                <option value="<% $t->name %>"><% $t->db_name %></option>
+                <option value="<% Encode::encode_utf8($t->name) %>"><% Encode::encode_utf8($t->db_name) %></option>
 %           }
             </select>
         </form>
@@ -92,7 +92,7 @@ my $SECTION = "Advanced";
             <select name="table" onChange="document.search_form.submit()">
             <option>Select table</option>
 %       foreach my $t ( @t ) {
-                <option value="<% $t->name %>"><% $t->db_name %></option>
+                <option value="<% Encode::encode_utf8($t->name) %>"><% Encode::encode_utf8($t->db_name) %></option>
 %       }
             </select>
         </form>
@@ -109,7 +109,7 @@ We do not want operators to insert any records
             <select name="table" onChange="document.add_form.submit()">
             <option>Select table</option>
 %       foreach my $t ( @t ) {
-                <option value="<% $t->name %>"><% $t->db_name %></option>
+                <option value="<% Encode::encode_utf8($t->name) %>"><% Encode::encode_utf8($t->db_name) %></option>
 %       }
             </select>
         </form>

@@ -60,9 +60,9 @@ my $manager = $ui->get_permission_manager($r);
 <%perl>
                     foreach my $site ( @sites ){
 			if ( $site->id eq $site_select ){
-			    printf("<option value=\"%s\" selected>%s</option>\n", $site->id, $site->name);
+			    printf("<option value=\"%s\" selected>%s</option>\n", $site->id, Encode::encode_utf8($site->name));
 			}else{
-			    printf("<option value=\"%s\">%s</option>\n", $site->id, $site->name);
+			    printf("<option value=\"%s\">%s</option>\n", $site->id, Encode::encode_utf8($site->name));
 			}
                     }
 </%perl>

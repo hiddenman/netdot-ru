@@ -179,7 +179,7 @@ push( @field_headers, "Соединено с: " );
     <select name="__splice1">
         <option value="">-- Выберите --</option>
 %       if (scalar(@splices)) {
-            <option value="<% $splices[0]->strand2->id %>" SELECTED><% $splices[0]->strand2->name %></option>
+            <option value="<% $splices[0]->strand2->id %>" SELECTED><% Encode::encode_utf8($splices[0]->strand2->name) %></option>
 %       }
         <option value="">[ничего]</option>
     </select>
@@ -198,7 +198,7 @@ push( @field_headers, "Соединено с: " );
     <select name="__splice2">
         <option value="">-- Выберите --</option>
 %       if (scalar(@splices) == 2) {
-            <option value="<% $splices[1]->strand2->id %>" SELECTED><% $splices[1]->strand2->name %></option>
+            <option value="<% $splices[1]->strand2->id %>" SELECTED><% Encode::encode_utf8($splices[1]->strand2->name) %></option>
 %       }
         <option value="">[ничего]</option>
         </select>

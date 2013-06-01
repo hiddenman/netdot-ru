@@ -568,7 +568,7 @@ HERE
 			  $ac .= '<option value="">-- Выберите --</option>';
 			  if (scalar(@splices)) {
 			      $ac .= '<option value="' . $splices[0]->strand2->id . '" SELECTED>' 
-				  . $splices[0]->strand2->name . '</option>';
+				  . Encode::encode_utf8($splices[0]->strand2->name) . '</option>';
 			  }
 			  $ac .= '<option value="">[null]</option>';
 			  $ac .= '</select>';
@@ -593,7 +593,7 @@ HERE
 			  $ac .= '<option value="">-- Выберите --</option>';
 			  if (scalar(@splices) == 2) {
 			      $ac .= '<option value="' . $splices[1]->strand2->id . '" SELECTED>' 
-				  . $splices[1]->strand2->name . '</option>';
+				  . Encode::encode_utf8($splices[1]->strand2->name) . '</option>';
 			  }
 			  $ac .= '<option value="">[ничего]</option>';
 			  $ac .= '</select>';
@@ -650,7 +650,7 @@ HERE
 	<select name="status">
         <option value="null" selected>Выберите статус</option>
 %       foreach my $st ( StrandStatus->retrieve_all() ){
-            <option value="<% $st %>"><% $st->name %></option>
+            <option value="<% $st %>"><% Encode::encode_utf8($st->name) %></option>
 %       }
         </select>
 	&nbsp;<input type="submit" name="edit_range" value="Сохранить" />&nbsp;

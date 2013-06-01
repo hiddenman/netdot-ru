@@ -109,7 +109,7 @@ if( !$showheader ) {
                     <option value="">-- Выберите --</option>
                     <%perl>
                     foreach my $site ( @bbsites ){
-                       printf("<option value=\"%s\">%s</option>\n", $site->id, $site->name);
+                       printf("<option value=\"%s\">%s</option>\n", $site->id, Encode::encode_utf8($site->name));
                     }
                     </%perl>
                </select>
@@ -179,7 +179,7 @@ if( !$showheader ) {
                     <option value="">-- Выберите --</option>
                     <%perl>
                     foreach my $site (@sites) {
-                        printf("<option value=\"%s\">%s</option>\n", $site->id, $site->name);
+                        printf("<option value=\"%s\">%s</option>\n", $site->id, Encode::encode_utf8($site->name));
                     }
                     </%perl>
                 </select>
@@ -283,7 +283,7 @@ if( !$showheader ) {
                     <option value="">-- Выберите --</option>
                     <%perl>
                     foreach my $site ( @closet_sites ) {
-                        printf("<option value=\"%s\">%s</option>\n", $site->id, $site->name);
+                        printf("<option value=\"%s\">%s</option>\n", $site->id, Encode::encode_utf8($site->name));
                     }
                     </%perl>
                 </select> <input name="submit_site" value="Просмотр по зданию" type="submit">

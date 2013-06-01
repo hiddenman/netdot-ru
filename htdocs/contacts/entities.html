@@ -107,7 +107,7 @@ my $manager = $ui->get_permission_manager($r);
                     <option value="">-- Select --</option>
 %                   my @roles = EntityType->retrieve_all;
 %                   foreach my $r (sort { $a->name cmp $b->name } @roles) {
-                        <option value="<% $r->id %>"><% $r->name %></option>
+                        <option value="<% $r->id %>"><% Encode::encode_utf8($r->name) %></option>
 %                   }
                     </select>
                 </div>
@@ -118,7 +118,7 @@ my $manager = $ui->get_permission_manager($r);
                     <option value="">-- Select --</option>
 %                   my @sites = Site->retrieve_all;
 %                   foreach my $s (sort { $a->name cmp $b->name } @sites) {
-                        <option value="<% $s->id %>"><% $s->name %></option>
+                        <option value="<% $s->id %>"><% Encode::encode_utf8($s->name) %></option>
 %                   }
                     </select>
                     <a href="#" onClick="toggleLayer('existingsite');toggleLayer('newsite');document.getElementById('sitelabel').innerHTML='New Site:';document.getElementById('sitestatus').value='new';">[new]</a>
@@ -135,7 +135,7 @@ my $manager = $ui->get_permission_manager($r);
                     <option value="">-- Select --</option>
 %                   my @clist = ContactList->retrieve_all;
 %                   foreach my $cl (@clist) {
-                        <option value="<% $cl->id %>"><% $cl->name %></option>
+                        <option value="<% $cl->id %>"><% Encode::encode_utf8($cl->name) %></option>
 %                   }
                     </select>
                     <a href="#" onClick="toggleLayer('existingcontactlist');toggleLayer('newcontactlist');document.getElementById('cllabel').innerHTML='New Contact List:';document.getElementById('clstatus').value='new';">[new]</a>

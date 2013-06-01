@@ -241,7 +241,7 @@ foreach my $i ( keys %linksfrom ){
               Select Scope type(s)
               <select name = "scope_type_box">
 %             foreach my $type (@all_types){                   
-                  <option value="<% $type->name %>"><% $type->name %></option>
+                  <option value="<% Encode::encode_utf8($type->name) %>"><% Encode::encode_utf8($type->name) %></option>
 %             }
                </select>
             keyword:  <input type="text" name="scope_text_filter"></input></td></tr>

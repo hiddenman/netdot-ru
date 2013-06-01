@@ -72,7 +72,7 @@ my @list;
 %              my @a_cols = qw(physaddr po_number);
 %              foreach my $mc ( @a_cols ){
 %                  my $tag = Asset->meta_data->get_column($mc)->tag;
-                   <option value='<% $mc %>'><% $tag %></option> 
+                   <option value='<% Encode::encode_utf8($mc) %>'><% Encode::encode_utf8($tag) %></option> 
 %              }
              </select>
              </p>

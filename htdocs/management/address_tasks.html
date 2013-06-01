@@ -120,7 +120,7 @@ my $manager = $ui->get_permission_manager($r);
 %               my @allents = Entity->retrieve_all; 
 %               @allents = sort { $a->name cmp $b->name } @allents;
 %               foreach my $ent ( @allents ){
-                    <option value="<% $ent->id %>"><% $ent->name %></option>                
+                    <option value="<% $ent->id %>"><% Encode::encode_utf8($ent->name) %></option>                
 %               }
                 </select>
                 <a class="hand" onClick="openinsertwindow('table=Entity&select_id=block_owner&selected=1&dowindow=1')">[new]</a>
@@ -130,7 +130,7 @@ my $manager = $ui->get_permission_manager($r);
                 <select name="block_used_by" id="block_used_by">
                 <option value="">-- Select --</option>
 %               foreach my $ent ( @allents ){
-                    <option value="<% $ent->id %>"><% $ent->name %></option>                
+                    <option value="<% $ent->id %>"><% Encode::encode_utf8($ent->name) %></option>                
 %               }
                 </select>
                 <a class="hand" onClick="openinsertwindow('table=Entity&select_id=block_used_by&selected=1&dowindow=1')">[new]</a>
@@ -141,7 +141,7 @@ my $manager = $ui->get_permission_manager($r);
                 <option value="">-- Select --</option>
 %               my @allstatus = qw( Subnet Container Static Reserved ); 
 %               foreach my $status ( @allstatus ){
-                    <option value="<% $status %>"><% $status %></option>                
+                    <option value="<% Encode::encode_utf8($status) %>"><% Encode::encode_utf8($status) %></option>                
 %               }
                 </select>
                 </p>

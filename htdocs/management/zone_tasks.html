@@ -79,9 +79,9 @@ my $manager = $ui->get_permission_manager($r);
                 <option value="">-- Select --</option>
 %               foreach my $zone ( @all_zones ){
 %                   if ( $zone->id eq $zone_id ){
-                        <option value="<% $zone->id %>" SELECTED><% $zone->get_label %></option>
+                        <option value="<% $zone->id %>" SELECTED><% Encode::encode_utf8($zone->get_label) %></option>
 %                   }else{
-                        <option value="<% $zone->id %>"><% $zone->get_label %></option>
+                        <option value="<% $zone->id %>"><% Encode::encode_utf8($zone->get_label) %></option>
 %                   }
 %               }
                 </select>
@@ -112,7 +112,7 @@ my $manager = $ui->get_permission_manager($r);
 	        <select name="template_zone">
                 <option value="">-- Select --</option>
 %	        foreach my $zone ( @all_zones ){
-                    <option value="<% $zone->id %>"><% $zone->get_label %></option>
+                    <option value="<% $zone->id %>"><% Encode::encode_utf8($zone->get_label) %></option>
 %	        }
                 </select>
 		</p>
