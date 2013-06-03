@@ -213,8 +213,8 @@ sub insert_strands {
     if ( $number <= 0 ) {
         $self->throw_user("Cannot insert $number strands.");
     }
-    $type   ||= FiberType->search(name=>'Multimode Fiber')->first;
-    $status ||= StrandStatus->search(name=>'Not Terminated')->first;
+    $type   ||= FiberType->search(name=>'Многомод')->first;
+    $status ||= StrandStatus->search(name=>'Тёмное волокно')->first;
     
     my $backbone_name = $self->name;
     my @cables = CableStrand->search_like(name=>$backbone_name . "%");

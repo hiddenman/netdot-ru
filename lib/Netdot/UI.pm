@@ -1,5 +1,6 @@
 package Netdot::UI;
 
+use utf8;
 use lib "<<Make:LIB>>";
 use base qw( Netdot );
 use Netdot::Model;
@@ -8,7 +9,6 @@ use Apache::Session::Lock::File;
 use GraphViz;
 use Apache2::SiteControl;
 use strict;
-use utf8;
 
 my $logger = Netdot->log->get_logger("Netdot::UI");
 
@@ -1531,8 +1531,8 @@ sub build_backbone_graph {
     
     my $g = GraphViz->new(layout=>'dot', truecolor=>1, bgcolor=>"#ffffff00",ranksep=>2.0, rankdir=>1, 
 			  node=>{shape=>"house", fillcolor=>'#ffffff88', style=>'filled', fontsize=>10},
-			  edge=>{dir=>'none', fontsize=>10, labelfontsize=>8, arrowhead=>'none', 
-				 arrowtail=>'none', color=>'black'});
+			  edge=>{dir=>'none', fontsize=>10, labelfontsize=>8, arrowhead=>'normal', 
+				 arrowtail=>'normal', color=>'black',decorateP=>1,arrowsize=>0.5});
     my %seen;
     my %site_closets;
     foreach my $bb ( BackboneCable->retrieve_all() ){
@@ -1546,7 +1546,7 @@ sub build_backbone_graph {
 	my @esites       = ($bb->start_closet->room->floor->site, $bb->end_closet->room->floor->site);
 	my @strands      = $bb->strands;
 	my $num_strands  = scalar @strands;
-	my $st           = StrandStatus->search(name=>'In Use')->first;
+	my $st           = StrandStatus->search(name=>'Используется')->first;
 	my $used_strands = CableStrand->search(status=>$st, cable=>$bb)->count;
 
 
@@ -1556,7 +1556,7 @@ sub build_backbone_graph {
 
 		# Create an array of closets to display per Site
 		# First element is the Site name
-		my @sclosets = ($site->get_label);
+		my @sclosets = $site->get_label;
 		map { push @sclosets, $_->name } sort { $a->name cmp $b->name } $site->closets;
                                          
 		for ( my $i=0; $i < scalar(@sclosets); $i++ ){
@@ -1567,10 +1567,10 @@ sub build_backbone_graph {
 		# per word in the name
 		my $name = $site->get_label;
 		$name =~ s/\s+/_/g;
-		
+
 		$g->add_node(
 		    name     => $name,
-		    label    => $site->get_label,
+		    label    => Encode::encode_utf8($site->get_label),
 		    URL      => "view.html?table=Site&id=".$site->id,
 		    );
 		$seen{$site->id} = 1;
@@ -1584,7 +1584,7 @@ sub build_backbone_graph {
 	    my $site2 = $esites[1]->get_label;
 	    $site1 =~ s/\s+/_/g;
 	    $site2 =~ s/\s+/_/g;
-	    
+
 	    $g->add_edge($site1 => $site2,
 			 label     => $bb->name." (".$used_strands."/".$num_strands.")",
 			 labelURL  => "cable_backbone.html?id=".$bb->id,
