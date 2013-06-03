@@ -19,6 +19,7 @@ $contact_id   => undef
 %
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 my $obj = ContactList->retrieve($id);
@@ -26,6 +27,7 @@ if ( $edit ) { $show_buttons = 0; }
 my $manager = $ui->get_permission_manager($r);
 # Unprivileged users cannot add new foreign objects
 my $new_button = 0;
+use utf8;
 if ( $manager && $manager->can($user, "access_section", 'contactlist.mhtml:new_button') ){
     $new_button = 1;
 }
@@ -93,7 +95,7 @@ $ui->add_to_fields(table=>'Contact', edit=>$edit, fields=>['contacttype', 'notif
                     <option value="">-- Select --</option>
 %                   my @people = Person->retrieve_all;
 %                   foreach my $p (sort { $a->lastname cmp $b->lastname } @people) {
-                        <option value="<% $p->id %>"><% Encode::encode_utf8($p->get_label) %></option>
+                        <option value="<% $p->id %>"><% $p->get_label %></option>
 %                   }
                  </select>
                  <a href="#" onClick="toggleLayer('existingperson');toggleLayer('newperson');document.getElementById('personstatus').value='new';">[new]</a>

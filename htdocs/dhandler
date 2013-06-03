@@ -3,6 +3,7 @@ Default Handler for nonexistent pages
 
 </%doc>
 <%init>
+use utf8;
 # Otherwise apache (by extension probably) determines the content type
 # which botches the error message if not html.
 $r->content_type(q{text/html; charset=utf-8});

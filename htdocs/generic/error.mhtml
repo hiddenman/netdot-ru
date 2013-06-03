@@ -12,6 +12,7 @@ $showplainerror => 0
 </%args>
 
 <%init>
+use utf8;
 my $caller = $m->caller->name;
 my $err_msg;
 my $trace;

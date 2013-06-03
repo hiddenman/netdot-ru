@@ -21,6 +21,7 @@ title   => 'View Object'
 </%attr>
 
 <%init>
+use utf8;
 my $table = 'DhcpScope';
 my $DEBUG = 0;
 my($o, $prevobj );
@@ -241,7 +242,7 @@ foreach my $i ( keys %linksfrom ){
               Select Scope type(s)
               <select name = "scope_type_box">
 %             foreach my $type (@all_types){                   
-                  <option value="<% Encode::encode_utf8($type->name) %>"><% Encode::encode_utf8($type->name) %></option>
+                  <option value="<% $type->name %>"><% $type->name %></option>
 %             }
                </select>
             keyword:  <input type="text" name="scope_text_filter"></input></td></tr>

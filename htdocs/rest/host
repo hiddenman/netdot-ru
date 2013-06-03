@@ -19,6 +19,7 @@ $os             => undef # OS string for HINFO
 $info           => undef # Informational text
 </%args>
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 

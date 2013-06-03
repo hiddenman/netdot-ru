@@ -34,6 +34,7 @@ $showheader      => 1
 %#######################################################################
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 
@@ -119,9 +120,9 @@ my %ipb_actions = (
             <option value="">- Select Block -</option>
 %       foreach my $o ( sort { $a->address_numeric <=> $b->address_numeric } values %ipblocks ){
 %           if ( $ipblock && $ipblock eq $o->id ){
-                <option value="<% $o %>" SELECTED><% Encode::encode_utf8($o->get_label) %></option>
+                <option value="<% $o %>" SELECTED><% $o->get_label %></option>
 %           }else{
-                <option value="<% $o %>"><% Encode::encode_utf8($o->get_label) %></option>
+                <option value="<% $o %>"><% $o->get_label %></option>
 %	    }
 %       }
         </select>
@@ -130,9 +131,9 @@ my %ipb_actions = (
             <option value="">- Select Action -</option>
 %	    foreach my $action ( sort keys %ipb_actions ){
 %		if ( $ipblock_action && $ipblock_action eq $action  ){
-		    <option value="<% $action %>" SELECTED><% Encode::encode_utf8($ipb_actions{$action}) %></option>
+		    <option value="<% $action %>" SELECTED><% $ipb_actions{$action} %></option>
 %		}else{
-		    <option value="<% $action %>"><% Encode::encode_utf8($ipb_actions{$action}) %></option>
+		    <option value="<% $action %>"><% $ipb_actions{$action} %></option>
 %	        }
 %	    }
         </select> 
@@ -150,7 +151,7 @@ my %ipb_actions = (
         <select name="id" onChange="document.zone_form.submit();">
             <option value="">- Select Zone -</option>
 %       foreach my $o ( sort { $a->name cmp $b->name } @zones ){
-            <option value="<% $o %>"><% Encode::encode_utf8($o->get_label) %></option>
+            <option value="<% $o %>"><% $o->get_label %></option>
 %       }
         </select>
         </form>

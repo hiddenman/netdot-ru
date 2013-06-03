@@ -48,6 +48,7 @@ $v6_assign     => undef
 %#######################################################################
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 my $manager = $ui->get_permission_manager($r);
@@ -318,9 +319,9 @@ function showIPv6Input(selectObj, Layer){
             <option value="">-- Select --</option>
 %           foreach my $z ( sort { $a->get_label cmp $b->get_label } values %zones ){
 %               if ( $default_zone && $default_zone->id == $z->id ){
-                    <option value="<% $z->id %>" SELECTED><% Encode::encode_utf8($z->get_label) %></option>
+                    <option value="<% $z->id %>" SELECTED><% $z->get_label %></option>
 %               }else{
-                    <option value="<% $z->id %>"><% Encode::encode_utf8($z->get_label) %></option>
+                    <option value="<% $z->id %>"><% $z->get_label %></option>
 %		}
 %           }
             </select>
@@ -401,7 +402,7 @@ function showIPv6Input(selectObj, Layer){
 %       }
         <option value="">-- Select --</option>
 %       foreach my $site ( sort { $a->get_label cmp $b->get_label } @sites ){
-            <option value="<% $site->id %>"><% Encode::encode_utf8($site->get_label) %></option>
+            <option value="<% $site->id %>"><% $site->get_label %></option>
 %       }
         </select>
         </p>

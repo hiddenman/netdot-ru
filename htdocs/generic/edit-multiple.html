@@ -39,7 +39,7 @@ $sid           => undef
 </%args>
 
 <%init>
-
+use utf8;
 if(! $table){
     $m->comp('/generic/error.mhtml', error=>"No database table provided to edit!");
 }

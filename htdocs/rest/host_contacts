@@ -11,6 +11,7 @@ $contacts => undef
 </%args>
 
 <%init>
+use utf8;
 use Netdot::REST;
 my $rest = Netdot::REST->new(user=>$user, manager=>$manager);
 $rest->request($r);

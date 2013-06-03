@@ -23,6 +23,7 @@ $search_type        => 'all'  # installed, not installed, all
 
 
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), $m->dhandler_arg,'</pre><br>' if $DEBUG;
 my $manager = $ui->get_permission_manager($r);
@@ -72,7 +73,7 @@ my @list;
 %              my @a_cols = qw(physaddr po_number);
 %              foreach my $mc ( @a_cols ){
 %                  my $tag = Asset->meta_data->get_column($mc)->tag;
-                   <option value='<% Encode::encode_utf8($mc) %>'><% Encode::encode_utf8($tag) %></option> 
+                   <option value='<% $mc %>'><% $tag %></option> 
 %              }
              </select>
              </p>

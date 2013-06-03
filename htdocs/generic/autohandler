@@ -21,6 +21,7 @@ $saved_queries => undef
 </%args>
 
 <%init>
+use utf8;
 my $user = $ui->get_current_user($r);
 
 my @t;
@@ -41,6 +42,7 @@ my $SECTION = "Advanced";
         Returns the meta data used to generate this sections header in section1.mhtml
     </%doc>
     <%init>
+    use utf8;
         return {  
 	    section => $SECTION,
 	    page => 'generic/',
@@ -78,7 +80,7 @@ my $SECTION = "Advanced";
             <select name="table" onChange="document.browse_form.submit()">
             <option>Select table</option>
 %           foreach my $t ( @t ) {
-                <option value="<% Encode::encode_utf8($t->name) %>"><% Encode::encode_utf8($t->db_name) %></option>
+                <option value="<% $t->name %>"><% $t->db_name %></option>
 %           }
             </select>
         </form>
@@ -92,7 +94,7 @@ my $SECTION = "Advanced";
             <select name="table" onChange="document.search_form.submit()">
             <option>Select table</option>
 %       foreach my $t ( @t ) {
-                <option value="<% Encode::encode_utf8($t->name) %>"><% Encode::encode_utf8($t->db_name) %></option>
+                <option value="<% $t->name %>"><% $t->db_name %></option>
 %       }
             </select>
         </form>
@@ -109,7 +111,7 @@ We do not want operators to insert any records
             <select name="table" onChange="document.add_form.submit()">
             <option>Select table</option>
 %       foreach my $t ( @t ) {
-                <option value="<% Encode::encode_utf8($t->name) %>"><% Encode::encode_utf8($t->db_name) %></option>
+                <option value="<% $t->name %>"><% $t->db_name %></option>
 %       }
             </select>
         </form>

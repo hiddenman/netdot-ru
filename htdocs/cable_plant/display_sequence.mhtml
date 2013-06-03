@@ -15,6 +15,7 @@ $user       => $ui->get_current_user($r)
 </%args>
 
 <%init>
+use utf8;
 my %cssitem   = ( 0 => "formtablec1", 1 => "formtablec2" );
 my %used      = ();
 my %sequences = ();
@@ -150,7 +151,7 @@ function getStrandList()
             <option value="">-- Выберите --</option>
 <%perl>
 	    foreach my $site (@sites) {
-	        printf("<option value=\"%s\">%s</option>\n", $site->id, Encode::encode_utf8($site->name));
+	        printf("<option value=\"%s\">%s</option>\n", $site->id, $site->name);
             }
 </%perl>
             </select> to
@@ -158,7 +159,7 @@ function getStrandList()
             <option value="">-- Выберите --</option>
 <%perl>
             foreach my $site (@sites) {
-                printf("<option value=\"%s\">%s</option>\n", $site->id, Encode::encode_utf8($site->name));
+                printf("<option value=\"%s\">%s</option>\n", $site->id, $site->name);
             }
 </%perl>
             </select>

@@ -62,6 +62,7 @@ $add_access_id     => undef
 %
 %
 <%init>
+use utf8;
 use integer;
 
 my $DEBUG = 0;
@@ -816,7 +817,7 @@ if (!$edit){
 	    <select name="new_a_zone">
             <option value=""> - select - </option>
 %	    foreach my $zone ( @zone_list ){
-                <option value="<% $zone->id %>"><% Encode::encode_utf8($zone->get_label) %></option>
+                <option value="<% $zone->id %>"><% $zone->get_label %></option>
 %	    }
             </select>
             <p><input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
@@ -1116,7 +1117,7 @@ if ( $edit ){
 	$x .= '<select name="range_owner" id="range_owner">';
 	$x .= '<option value="">-- Select --</option>';
 	foreach my $ent ( @allents ){
-	    $x .= '<option value="'. $ent->id .'">'. Encode::encode_utf8($ent->name) .'</option>';
+	    $x .= '<option value="'. $ent->id .'">'. $ent->name .'</option>';
 	}
 	$x .= '</select>';
 	$x .= '<a class="hand" onClick="openinsertwindow(\'table=Entity&select_id=range_owner&selected=1&dowindow=1\')">[new]</a>';
@@ -1129,7 +1130,7 @@ if ( $edit ){
 	$x .= '<select name="range_used_by" id="range_used_by">';
 	$x .= '<option value="">-- Select --</option>';
 	foreach my $ent ( @allents ){
-	    $x .= '<option value="'. $ent->id .'">'. Encode::encode_utf8($ent->name) .'</option>';
+	    $x .= '<option value="'. $ent->id .'">'. $ent->name .'</option>';
 	}
 	$x .= '</select>';
 	$x .= '<a class="hand" onClick="openinsertwindow(\'table=Entity&select_id=range_used_by&selected=1&dowindow=1\')">[new]</a>';
@@ -1155,12 +1156,12 @@ if ( $edit ){
 	$x .= '<select name="range_fw_zone" id="range_fw_zone">';
 	$x .= '<option value="">-- Select --</option>';
 	if ( $fwzone ){
-	    $x .= '<option value="'. $fwzone->id .'" SELECTED>'. Encode::encode_utf8($fwzone->name) .'</option>';
+	    $x .= '<option value="'. $fwzone->id .'" SELECTED>'. $fwzone->name .'</option>';
 	}
 	foreach my $z ( @allzones ){
 	    next unless defined $z;
 	    next if ( $z->name =~ /\.arpa$|\.int$/ );
-	    $x .= '<option value="'. $z->id .'">'. Encode::encode_utf8($z->name) .'</option>';
+	    $x .= '<option value="'. $z->id .'">'. $z->name .'</option>';
 	}
 	$x .= '</select>';
 	$x .= '<a class="hand" onClick="openinsertwindow(\'table=Zone&select_id=range_fw_zone&selected=1&dowindow=1\')">[new]</a>';
@@ -1190,7 +1191,7 @@ if ( $edit ){
 	$x .= '<select name="dhcp_global_scope" id="dhcp_global_scope">';
 	$x .= '<option value="">-- Select --</option>';
 	foreach my $ent ( DhcpScope->search(type=>'global', version=>$o->version) ){
-	    $x .= '<option value="'. $ent->id .'">'. Encode::encode_utf8($ent->name) .'</option>';
+	    $x .= '<option value="'. $ent->id .'">'. $ent->name .'</option>';
 	}
 	$x .= '</select>';
 	$x .= '<a class="hand" onClick="openinsertwindow(\'table=DhcpScope&select_id='.
@@ -1241,14 +1242,14 @@ if ( my $sn = $o->status->name ){
 	$status .= "<select name=\"Ipblock__".$o->id."__status\">";
 	foreach my $st ( @valid_block_status ){
 	    if ( $st eq $sn ){
-		$status .= "<option value=\"".Encode::encode_utf8($st)."\" SELECTED>".Encode::encode_utf8($st)."</option>";
+		$status .= "<option value=\"".$st."\" SELECTED>".$st."</option>";
 	    }else{
-		$status .= "<option value=\"".Encode::encode_utf8($st)."\">".Encode::encode_utf8($st)."</option>";
+		$status .= "<option value=\"".$st."\">".$st."</option>";
 	    }
 	}
 	$status .= "</select>";
     }else{
-	$status .= "<strong>".Encode::encode_utf8($sn)."</strong>";
+	$status .= "<strong>".$sn."</strong>";
     }
 }
 push( @cell_data, $status );
@@ -1569,7 +1570,7 @@ print $tmp{value};
             <option value=""> - select - </option>
 %	    foreach my $zone ( grep { $_->active == 1 && $_->name !~ /\.arpa$/ } @all_zones ){
 %               next if exists $cur_zones{$zone->id};
-                <option value="<% $zone->id %>"><% Encode::encode_utf8($zone->get_label) %></option>
+                <option value="<% $zone->id %>"><% $zone->get_label %></option>
 %	    }
             </select>
             <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">
@@ -1620,14 +1621,14 @@ print $tmp{value};
             <option value=""> - select - </option>
 %           foreach my $n ( $o->get_dot_arpa_names ){
 %               next if exists $reverse_zones{$n};
-                <option value="<% Encode::encode_utf8($n) %>"><% Encode::encode_utf8($n) %></option>
+                <option value="<% $n %>"><% $n %></option>
 %           }
 	    </select>
             <p>Use template zone (optional):
 	    <select name="template_zone_for_rev">
             <option value="">-- Select --</option>
 %	        foreach my $zone ( @all_zones ){
-                    <option value="<% $zone->id %>"><% Encode::encode_utf8($zone->get_label) %></option>
+                    <option value="<% $zone->id %>"><% $zone->get_label %></option>
 %	        }
             </select>
             <input type="button" name="cancel_button" value="cancel" onClick="history.go(-1);">

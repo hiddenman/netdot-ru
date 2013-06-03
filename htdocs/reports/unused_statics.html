@@ -17,6 +17,7 @@ $edit    => 0
 %
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print "<pre>", Dumper(%ARGS), "</pre><br>" if $DEBUG;
 my $sqldate = Netdot::Model->sqldate_days_ago($days);

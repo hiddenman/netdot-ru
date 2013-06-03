@@ -2,6 +2,7 @@ package Netdot;
 
 use strict;
 use warnings;
+use utf8;
 
 use Netdot::Meta;
 use Netdot::Config;

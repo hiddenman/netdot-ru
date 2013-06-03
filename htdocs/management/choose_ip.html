@@ -9,6 +9,7 @@ $select_id        # Caller select tag id
 </%args>
 
 <%init>
+use utf8;
 $m->clear_buffer;
 my $o = Ipblock->retrieve($subnet);
 </%init>

@@ -13,6 +13,7 @@ $caller       => $ARGS{self};
 </%args>
 
 <%init>
+use utf8;
 my @terms;
 my $DEBUG       = 0;
 my $MAX   = $ui->config->get('DEFAULT_SELECTMAX');

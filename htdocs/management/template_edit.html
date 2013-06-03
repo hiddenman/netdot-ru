@@ -21,6 +21,7 @@ $dowindow    => undef
 </%args>
 
 <%init>
+use utf8;
 if(!$id){
     return; #ugly hack so that when autohandler is calling all the pages in procession, this page dosnt get loaded
             #after we hit the [back] link
@@ -206,11 +207,11 @@ else{
             <select name = "<% $o %>template_select ">
 %               foreach my $t (@template_objs){
 %                   if($t == $cur_template){
-                        <option value="<% $t->id %>" selected="yes"> <% Encode::encode_utf8($t->name) %> </option>
+                        <option value="<% $t->id %>" selected="yes"> <% $t->name %> </option>
                         
 %                   }
 %                   else{
-                        <option value="<% $t->id %>"> <% Encode::encode_utf8($t->name) %> </option>
+                        <option value="<% $t->id %>"> <% $t->name %> </option>
 %                   }
 %               }
             </select>
@@ -231,7 +232,7 @@ else{
             <select name = "template_select">
                 <option value="-1">--SELECT TEMPLATE--</option>
 %               foreach my $t (@template_objs){
-                    <option value="<% $t->id %>"> <% Encode::encode_utf8($t->name) %> </option>
+                    <option value="<% $t->id %>"> <% $t->name %> </option>
 %              }
         </select></td></tr>
         <tr><td><input name="submit" type="submit" value="Insert"></td></tr>

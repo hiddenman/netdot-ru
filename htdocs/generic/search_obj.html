@@ -32,6 +32,7 @@ section => 'Generic'
 </%attr>
 
 <%init>
+use utf8;
 my $user = $ui->get_current_user($r);
 my $manager = $ui->get_permission_manager($r);
 unless ( $manager && $manager->can($user, "access_section", 'search_obj.html') ){

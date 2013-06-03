@@ -14,6 +14,7 @@ $user             => $ui->get_current_user($r)
 </%args>
 
 <%init>
+use utf8;
 my $DEBUG = 0;
 my (@field_headers, @cell_data, @headers, @rows);
 my $manager = $ui->get_permission_manager($r);

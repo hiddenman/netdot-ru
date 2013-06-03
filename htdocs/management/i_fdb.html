@@ -16,6 +16,7 @@ $tstamp
 %
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 my $obj = Interface->retrieve($id);

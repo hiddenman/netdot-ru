@@ -29,6 +29,7 @@ $datacolwidth   => "";
 </%args>
 
 <%init>
+use utf8;
 my $DEBUG = 0;
 my $headerwidthstr = "width=\"".$headercolwidth."\"" if ($headercolwidth ne "") ;
 my $datawidthstr   = "width=\"".$datacolwidth."\""   if ($datacolwidth   ne "");
@@ -46,7 +47,7 @@ my $colwidth = int(100/$width);
 	<table border="0" width="100%">
 %	    for ( my($r)=1; $r <= $nrows; $r++ ){
 		<tr>
-		    <td <% $headerwidthstr %> class="formtablec1"><% $field_headers[$pos] %></td>
+		    <td <% $headerwidthstr %> class="formtablec1"><% Encode::decode_utf8($field_headers[$pos]) %></td>
 		    <td <% $datawidthstr %> class="formtablec2"><% $data[$pos] %></td>
 
 %                   #append to the plaintext version using javascript

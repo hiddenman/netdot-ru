@@ -18,6 +18,7 @@ $Add      =>   undef
 %
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 my %state;
 my $intobj;
@@ -148,7 +149,7 @@ if ( $Add ){
     $ac .= '<select name="device_search" id="device_search" onChange="performSearch(neighbor);">';
     $ac .= '<option value="">-- Select --</option>';
     foreach my $dev ( sort keys %devs ){
-        $ac .= '<option value="'.Encode::encode_utf8($dev).'">'.Encode::encode_utf8($dev).'</option>';
+        $ac .= '<option value="'.$dev.'">'.$dev.'</option>';
     }
     $ac .= '</select>';
     $ac .= '<br>Or search:';

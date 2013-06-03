@@ -6,7 +6,7 @@ $user    => $ui->get_current_user($r);
 $manager => $ui->get_permission_manager($r);
 </%args>
 <%init>
-
+use utf8;
 # Remove unnecessary headers
 $m->clear_buffer;
 

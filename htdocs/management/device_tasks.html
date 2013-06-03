@@ -34,6 +34,7 @@ $showheader     => 1
 %#######################################################################
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 my $MAC  = Netdot->get_mac_regex();
@@ -52,7 +53,7 @@ $ARGS{show_tasks} = $show_tasks;
 
 <%perl>
 
-if ( $submit eq 'Find' ){
+if ( $submit eq 'Найти' ){
     # Get rid of spaces
     $device_search =~ s/\s+//g;
     if ( $device_search =~ /$MAC/ ){
@@ -118,6 +119,7 @@ $user
 </%args>
 
 <%init>
+use utf8;
 my @communities = @{Netdot->config->get('DEFAULT_SNMPCOMMUNITIES')};
 my @all_zones = Zone->retrieve_all();
 
@@ -157,9 +159,9 @@ my $manager = $ui->get_permission_manager($r);
 		<option value="0">Всех зон</option>
 %               foreach my $zone ( sort { $a->name cmp $b->name } @all_zones ){
 %                   if ( $zone->id eq $zone_id ){
-                        <option value="<% $zone->id %>" SELECTED><% Encode::encode_utf8($zone->get_label) %></option>
+                        <option value="<% $zone->id %>" SELECTED><% $zone->get_label %></option>
 %                   }else{
-                        <option value="<% $zone->id %>"><% Encode::encode_utf8($zone->get_label) %></option>
+                        <option value="<% $zone->id %>"><% $zone->get_label %></option>
 %                   }
 %               }
                 </select>

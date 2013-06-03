@@ -36,6 +36,7 @@ $bind_no_priv   => undef
 %#######################################################################
 %
 <%init>
+use utf8;
 use Netdot::Exporter;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
@@ -65,7 +66,7 @@ my $manager = $ui->get_permission_manager($r);
                 <label>Select one or more of:</label>
                 <select name="config_types" size="6" MULTIPLE>
 %               foreach my $type ( @types ){
-        	    <option value="<% Encode::encode_utf8($type) %>"><% Encode::encode_utf8($type) %></option> 
+        	    <option value="<% $type %>"><% $type %></option> 
 %               } 
                 </select>
                 </p>
@@ -76,7 +77,7 @@ my $manager = $ui->get_permission_manager($r);
                 <label>Select specific zones</strong> (default is ALL):</label>
                 <select name="zones" size="6" MULTIPLE>
 %               foreach my $zone ( Zone->retrieve_all ){
-        	    <option value="<% Encode::encode_utf8($zone) %>"><% Encode::encode_utf8($zone->name) %></option> 
+        	    <option value="<% $zone %>"><% $zone->name %></option> 
 %               } 
                 </select>
                 </p>
@@ -95,7 +96,7 @@ my $manager = $ui->get_permission_manager($r);
                 <label>Select specific scopes</strong> (default is ALL):</label>
                 <select name="scopes" size="6" MULTIPLE>
 %               foreach my $scope ( DhcpScope->search(type=>'global') ){
-        	    <option value="<% Encode::encode_utf8($scope->name) %>"><% Encode::encode_utf8($scope->name) %></option> 
+        	    <option value="<% $scope->name %>"><% $scope->name %></option> 
 %               } 
                 </select>
                 </p>

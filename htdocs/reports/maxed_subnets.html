@@ -15,6 +15,7 @@ $version => undef;
 %
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print "<pre>", Dumper(%ARGS), "</pre><br>" if $DEBUG;
 my $threshold = Netdot->config->get('SUBNET_USAGE_MINPERCENT');

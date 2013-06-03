@@ -69,7 +69,7 @@ my $make_cell = sub {
 </%once>
 
 <%init>
-
+use utf8;
 my $BLOCK_MAX = Netdot->config->get('SUBNET_BLOCK_VIEW_MAX_PREFIX');
 if ( $network->version == 4 && $network->prefix < $BLOCK_MAX ){
     print "This subnet is too big for the block view";

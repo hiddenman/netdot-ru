@@ -17,6 +17,7 @@ $title => undef
 </%args>
 
 <%init>
+use utf8;
 my @tbls;
 my $max;
 my $j = 0;

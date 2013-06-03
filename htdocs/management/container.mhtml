@@ -9,6 +9,7 @@ $dividefreespace => 'max'
 </%args>
 
 <%init>
+use utf8;
 my $BLOCK_MAX = Netdot->config->get('CONTAINER_BLOCK_VIEW_MAX_PREFIX');
 if ( $network->version == 4 && $network->prefix < $BLOCK_MAX ){
     print "This block is too big for the block view";

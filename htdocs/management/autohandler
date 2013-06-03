@@ -23,7 +23,7 @@ my $SECTION = "Management";
 </%shared>
 
 <%init>
-
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 
@@ -92,6 +92,7 @@ if ( my $next = $m->fetch_next ){
         Returns the meta data used to generate this section\'s header in menu_admin.mhtml
     </%doc>
     <%init>
+    use utf8;
         return {  
 	    section      => $SECTION,
 	    page         => 'management/', 

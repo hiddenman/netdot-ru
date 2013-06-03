@@ -18,10 +18,11 @@ $edit    => undef
 </%args>
 
 <%attr>
-title   => 'View Object' 
+title   => 'Просмотр объекта' 
 </%attr>
 
 <%init>
+use utf8;
 my $DEBUG = 0;
 my($obj, $prevobj );
 my %ftables;
@@ -58,13 +59,13 @@ if ( $DEBUG ){
                 <a href="edit.html?table=<% $table %>">[добавить]</a>
 %           }
 %	    if ( $manager && $manager->can($user, "edit", $obj) ){
-		<a href="edit.html?table=<% $table %>&id=<% $obj %>">[edit]</a>
+		<a href="edit.html?table=<% $table %>&id=<% $obj %>">[редактировать]</a>
 %	    }
 %	}
 %	if ( $manager && $manager->can($user, "delete", $obj) ){
-            <a href="delete.html?table=<% $table %>&id=<% $obj %>">[delete]</a>
+            <a href="delete.html?table=<% $table %>&id=<% $obj %>">[удалить]</a>
 %       }
-        <a href="#" onClick="opentextwindow(jspopoutstring,'js','');">[text]</a>
+        <a href="#" onClick="opentextwindow(jspopoutstring,'js','');">[текст]</a>
     </div>
     <div class="containerbodyoutside">
         <& form.mhtml, table=>$table, id=>$id, edit=>0 &>
@@ -76,12 +77,12 @@ if ( $DEBUG ){
 %  my $has_history_table = 1 if ( $table->meta_data->get_history_table_name() );
 %  if ( ! $table->meta_data->is_history() && ( keys %linksfrom ) ){
       <div class="container">
-	<div class="containerhead">View</div>
+	<div class="containerhead">Просмотр</div>
 	   <div class="containerbody">
 %	      if ( $view eq "all" ){
-		  [all]
+		  [все]
 %	      }elsif ( keys %linksfrom > 1 ){
-		  <a href="view.html?table=<% $table %>&id=<% $obj %>&view=all">[all]</a>
+		  <a href="view.html?table=<% $table %>&id=<% $obj %>&view=all">[все]</a>
 %             }
 %             foreach my $i ( sort keys %linksfrom ){
 %               next if $i =~ /^history_/;
@@ -92,7 +93,7 @@ if ( $DEBUG ){
 %               }   
 %             }
 %           if ( $has_history_table ){
-              <a href="view.html?table=<% $table %>&id=<% $obj %>&view=history">[history]</a>
+              <a href="view.html?table=<% $table %>&id=<% $obj %>&view=history">[история]</a>
 %	    }
 	   </div>
 	</div>
@@ -132,11 +133,11 @@ foreach my $i ( keys %linksfrom ){
 %         }else{
 %	      if ( $num ){
 %	          if ( $manager && $manager->can($user, 'edit', $obj) ){
-                      <a href="view.html?table=<% $table %>&id=<% $id %>&view=<% $view %>&edit=<% $i %>">[edit]</a>
+                      <a href="view.html?table=<% $table %>&id=<% $id %>&view=<% $view %>&edit=<% $i %>">[редактировать]</a>
 %                 }
 %	      }
 %	      if ( $manager && $manager->can($user, 'access_admin_section', 'view.html:add') ){
-	          <a href="edit.html?table=<% $ctbl %>&<% $ffield %>=<% $obj %>">[add]</a>
+	          <a href="edit.html?table=<% $ctbl %>&<% $ffield %>=<% $obj %>">[добавить]</a>
 %             }else{
                   &nbsp;
 %             }

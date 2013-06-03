@@ -23,7 +23,7 @@ my $SECTION = "Reports";
 %
 %
 <%init>
-
+use utf8;
 my $manager = $ui->get_permission_manager($r);
 unless ( $manager && $manager->can($user, "access_section", 'reports') ){
     $m->comp('/generic/error.mhtml', error=>"You don't have permission to access this section");
@@ -41,6 +41,7 @@ my $page = $user->getAttribute("$PAGE_ATTRIBUTE");
         Returns the meta data used to generate this sections header in section1.mhtml
     </%doc>
     <%init>
+    use utf8;
         return {  
 	    section      => $SECTION,
 	    page         => 'reports/',

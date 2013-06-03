@@ -22,6 +22,7 @@ $show_utilization => 1
 </%args>
 
 <%init>
+use utf8;
 my @text_headers;
 my $session;
 my $osession;

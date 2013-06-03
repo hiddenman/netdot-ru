@@ -20,6 +20,7 @@ $editipblock    => undef
 </%args>
 
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 my @rraddrs;
@@ -811,9 +812,9 @@ foreach my $o ( values %rrs ) {
 	    foreach my $z ( sort { $a->name cmp $b->name } Zone->retrieve_all ){
 		next unless $z->is_dot_arpa;
 		if ( $rzone && $rzone->id == $z->id ){
-		    $zone_select .= '<option value="'.$z.'" SELECTED>'.Encode::encode_utf8($z->get_label).'</option>';
+		    $zone_select .= '<option value="'.$z.'" SELECTED>'.$z->get_label.'</option>';
 		}else{
-		    $zone_select .= '<option value="'.$z.'">'.Encode::encode_utf8($z->get_label).'</option>';
+		    $zone_select .= '<option value="'.$z.'">'.$z->get_label.'</option>';
 		}
 	    }
 	    $zone_select .= "</select>";

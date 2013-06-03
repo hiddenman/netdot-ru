@@ -8,6 +8,7 @@ $title  => undef
 $user   => $ui->get_current_user($r)
 </%args>
 <%init>
+use utf8;
 my $default_page;
 
 if ( $user->getAttribute('USER_TYPE') eq 'Admin' || $user->getAttribute('USER_TYPE') eq 'Operator') {

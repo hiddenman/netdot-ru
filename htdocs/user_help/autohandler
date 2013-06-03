@@ -19,6 +19,7 @@ my $SECTION = "Help";
 </%shared>
 
 <%init>
+use utf8;
 my %caller_args = $m->caller_args(-1);
 
 if (exists($caller_args{page})){
@@ -33,6 +34,7 @@ my $page = $user->getAttribute("$PAGE_ATTRIBUTE");
         Returns the meta data used to generate this sections header in section1.mhtml
     </%doc>
     <%init>
+    use utf8;
         return {  
 	    section      => $SECTION,
 	    page         => 'user_help/',

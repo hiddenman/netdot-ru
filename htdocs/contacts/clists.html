@@ -31,6 +31,7 @@ $view             => 'search'
 %#######################################################################
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 
@@ -69,7 +70,7 @@ my $id;
             <legend>Поиск</legend>
             <form action="clists.html" method="POST">
                 <p>
-                <label for="Find">Список контактонв:</label>
+                <label for="Find">Список контактов:</label>
                 <input type="text" name="search_clist" class="txt" value="<% $search_clist %>"> 
                 <input name="submit_list" value="Найти" class="btn" type="submit">
                 </p>

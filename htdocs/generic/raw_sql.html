@@ -22,6 +22,7 @@ section => 'Generic'
 </%attr>
 
 <%init>
+use utf8;
 my $result;
 my $sql_err;
 my %objindex;
@@ -81,8 +82,8 @@ foreach (@saved_queries){
       <select name="saved_queries" id="saved_queries" onChange="document.forms['sql_form']['sql'].value=saved_queries.value; document.getElementById('forget_name').value=saved_queries.options[document.getElementById('saved_queries').selectedIndex].text">
         <option value="">Saved Queries</option>
 %           foreach (@saved_queries){
-%               my $qt = Encode::encode_utf8($_->querytext);
-%               my $qn = Encode::encode_utf8($_->name);
+%               my $qt = $_->querytext;
+%               my $qn = $_->name;
 %               $qt =~ s/"/&quot;/g;
 %               $qn =~ s/</&lt;/g;
 %               $qn =~ s/>/&gt;/g;

@@ -27,6 +27,7 @@ $showheader       => 1
 %#######################################################################
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 $show_tasks = $show_tasks || $user->getAttribute("SHOW_TASKS");
@@ -75,7 +76,7 @@ if ( exists $ao->{$objt} ){
         <select name="show_contactlist" onChange="document.contacts_form.submit()">
             <option value="">- Select List -</option>
 %       foreach my $obj ( sort { $a->get_label cmp $b->get_label } @objs ){
-            <option value="<% $obj %>"><% Encode::encode_utf8($obj->get_label) %></option>
+            <option value="<% $obj %>"><% $obj->get_label %></option>
 %       }
         </select>
         </form>

@@ -6,6 +6,7 @@ $user
 $manager 
 </%args>
 <%init>
+use utf8;
 use Netdot::REST;
 my $rest = Netdot::REST->new(user=>$user, manager=>$manager);
 print "Netdot/$Netdot::VERSION REST OK.  " if defined $rest;

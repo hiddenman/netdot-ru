@@ -28,6 +28,7 @@ section => 'Planet'
 </%attr>
 
 <%init>
+use utf8;
 my $DEBUG = 0;
 my %cssitem = (0 => "formtablec1", 1 => "formtablec2");
 my $editBackbone = 0;
@@ -568,7 +569,7 @@ HERE
 			  $ac .= '<option value="">-- Выберите --</option>';
 			  if (scalar(@splices)) {
 			      $ac .= '<option value="' . $splices[0]->strand2->id . '" SELECTED>' 
-				  . Encode::encode_utf8($splices[0]->strand2->name) . '</option>';
+				  . $splices[0]->strand2->name . '</option>';
 			  }
 			  $ac .= '<option value="">[null]</option>';
 			  $ac .= '</select>';
@@ -593,7 +594,7 @@ HERE
 			  $ac .= '<option value="">-- Выберите --</option>';
 			  if (scalar(@splices) == 2) {
 			      $ac .= '<option value="' . $splices[1]->strand2->id . '" SELECTED>' 
-				  . Encode::encode_utf8($splices[1]->strand2->name) . '</option>';
+				  . $splices[1]->strand2->name . '</option>';
 			  }
 			  $ac .= '<option value="">[ничего]</option>';
 			  $ac .= '</select>';
@@ -650,7 +651,7 @@ HERE
 	<select name="status">
         <option value="null" selected>Выберите статус</option>
 %       foreach my $st ( StrandStatus->retrieve_all() ){
-            <option value="<% $st %>"><% Encode::encode_utf8($st->name) %></option>
+            <option value="<% $st %>"><% $st->name %></option>
 %       }
         </select>
 	&nbsp;<input type="submit" name="edit_range" value="Сохранить" />&nbsp;

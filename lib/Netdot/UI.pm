@@ -8,6 +8,7 @@ use Apache::Session::Lock::File;
 use GraphViz;
 use Apache2::SiteControl;
 use strict;
+use utf8;
 
 my $logger = Netdot->log->get_logger("Netdot::UI");
 
@@ -585,7 +586,7 @@ sub select_lookup{
 		$output .= sprintf('<option value="" selected>-- Select --</option>');
                 if ( $o->$column ){
                     $output .= sprintf('<option value="%s" selected>%s</option>', 
-				       $o->$column->id, Encode::encode_utf8($o->$column->get_label));
+				       $o->$column->id, $o->$column->get_label);
                 }
             }
             # otherwise a couple of things my have happened:
@@ -608,7 +609,7 @@ sub select_lookup{
                 next if ( $o && $o->$column && ($fo->id == $o->$column->id) );
 		my $selected = ($fo->id == $args{default} ? 'selected' : '');
                 $output .= sprintf('<option value="%s" %s>%s</option>', 
-				   $fo->id, $selected, Encode::encode_utf8($fo->get_label));
+				   $fo->id, $selected, $fo->get_label);
             }
 	    $output .= sprintf('<option value="">[null]</option>');
             $output .= sprintf('</select>');
@@ -628,7 +629,7 @@ sub select_lookup{
             $output .= sprintf('<option value="" selected>-- Select --</option>');
             if ( $o && $o->$column ){
                 $output .= sprintf('<option value="%s" selected>%s</option>', 
-				   $o->$column->id, Encode::encode_utf8($o->$column->get_label));
+				   $o->$column->id, $o->$column->get_label);
             }
     	    $output .= sprintf('<option value="">[null]</option>');
             $output .= sprintf('</select>');
@@ -743,7 +744,7 @@ sub select_multiple {
 	foreach my $join ( @joins ){
 	    my $other  = $join->$other_field;
 	    my $lbl = $other->get_label;
-	    $output .= "<option value=" . $join->id . ">Encode::encode_utf8($lbl)</option>\n";
+	    $output .= "<option value=" . $join->id . ">$lbl</option>\n";
 	}
 	$output .= "</select>";
 	$output .= "<a onClick=\"openinsertwindow('table=$join_table&$this_field=";
@@ -944,14 +945,14 @@ sub text_field($@){
 			      keys %$defaults ){
 		my $v = $defaults->{$key};
 		if ( $value eq $key ){
- 		    $output .= "<option value=\"$key\" SELECTED>".Encode::encode_utf8($v)."</option>";
+ 		    $output .= "<option value=\"$key\" SELECTED>".$v."</option>";
 		    $value_found = 1;
 		}else{
-		    $output .= "<option value=\"$key\">".Encode::encode_utf8($v)."</option>";
+		    $output .= "<option value=\"$key\">".$v."</option>";
 		}
 	    }
 	    unless ( $value_found ){
-		$output .= "<option value=\"".Encode::encode_utf8($value)."\" SELECTED>".Encode::encode_utf8($value)."</option>";
+		$output .= "<option value=\"".$value."\" SELECTED>".$value."</option>";
 	    }
 	    $output .= '</select>';
 	}else{

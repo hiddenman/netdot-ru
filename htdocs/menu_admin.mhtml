@@ -13,6 +13,7 @@ $showheader
 %
 %
 <%init>
+use utf8;
 my %caller_args = $m->caller_args(-1);
 my $page = "";
 
@@ -67,6 +68,7 @@ push @$section_meta_data, $m->comp("/help/autohandler:.section_meta_data");
 %
 %
     <%init>
+    use utf8;
     my $sub_section_html = "";
     my $class_html = "";
     my $page = "";

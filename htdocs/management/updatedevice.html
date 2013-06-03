@@ -44,6 +44,7 @@ $user            => $ui->get_current_user($r)
 %# 
 %######################################################################
 <%init>
+use utf8;
 my $DEBUG = 0;
 
 my $manager = $ui->get_permission_manager($r);
@@ -297,9 +298,9 @@ else{
 %          @allents = sort { $a->name cmp $b->name } @allents;
 %          foreach my $ent (@allents){
 %                if ( $default_owner && ($ent->id == $default_owner->id) ){
-                   <option value="<% $ent->id %>" SELECTED><% Encode::encode_utf8($ent->name) %></option>                
+                   <option value="<% $ent->id %>" SELECTED><% $ent->name %></option>                
 %                }else{
-                   <option value="<% $ent->id %>"><% Encode::encode_utf8($ent->name) %></option>
+                   <option value="<% $ent->id %>"><% $ent->name %></option>
 %                }
 %          }
            </select>
@@ -315,9 +316,9 @@ else{
 %          @allents = sort { $a->name cmp $b->name } @allents;
 %          foreach my $ent (@allents){
 %                if ( $guessed_user_ent && ($ent->id == $guessed_user_ent->id) ){
-                   <option value="<% $ent->id %>" SELECTED><% Encode::encode_utf8($ent->name) %></option>                
+                   <option value="<% $ent->id %>" SELECTED><% $ent->name %></option>                
 %                }else{
-                   <option value="<% $ent->id %>"><% Encode::encode_utf8($ent->name) %></option>
+                   <option value="<% $ent->id %>"><% $ent->name %></option>
 %                }
 %          }
            </select>
@@ -333,9 +334,9 @@ else{
 %          @allsites = sort { $a->name cmp $b->name } @allsites;
 %          foreach my $site (@allsites){
 %                if ( $guessed_site && ($site->id == $guessed_site->id) ){
-                   <option value="<% $site->id %>" SELECTED><% Encode::encode_utf8($site->name) %></option>
+                   <option value="<% $site->id %>" SELECTED><% $site->name %></option>
 %                }else{
-                   <option value="<% $site->id %>"><% Encode::encode_utf8($site->name) %></option>
+                   <option value="<% $site->id %>"><% $site->name %></option>
 %                }
 %          }
            </select>
@@ -350,9 +351,9 @@ else{
 %          @allcls = sort { $a->name cmp $b->name } @allcls;
 %          foreach my $cl (@allcls){
 %                if ( $default_cl && ($cl->id == $default_cl->id) ){
-                   <option value="<% $cl->id %>" SELECTED><% Encode::encode_utf8($cl->name) %></option>
+                   <option value="<% $cl->id %>" SELECTED><% $cl->name %></option>
 %                }else{
-                   <option value="<% $cl->id %>"><% Encode::encode_utf8($cl->name) %></option>
+                   <option value="<% $cl->id %>"><% $cl->name %></option>
 %                }
 %          }
            </select>

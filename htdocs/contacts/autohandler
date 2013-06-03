@@ -21,6 +21,7 @@ my $SECTION = "Contacts";
 </%shared>
 
 <%init>
+use utf8;
 my $DEBUG = 0;
 my $manager = $ui->get_permission_manager($r);
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
@@ -80,6 +81,7 @@ if ( my $next = $m->fetch_next ){
         Returns the meta data used to generate this section\'s header in section1.mhtml
     </%doc>
     <%init>
+    use utf8;
         return {  
 	    section      => $SECTION,
 	    page         => 'contacts/', 

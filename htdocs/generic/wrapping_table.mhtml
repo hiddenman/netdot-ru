@@ -13,6 +13,7 @@ $cols   => 4;
 </%args>
 
 <%init>
+use utf8;
 my $nfields = scalar (@data);
 my $nrows   = ( $nfields % $cols == 0 ) ? $nfields/$cols : int($nfields/$cols)+1;
 my $pos     = 0;

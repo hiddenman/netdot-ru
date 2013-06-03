@@ -15,6 +15,7 @@ $id
 </%args>
 
 <%init>
+use utf8;
 my $binfile = $table->retrieve($id);
 $m->comp("/generic/error.mhtml", error=>"$table id $id could not be retrieved") unless ( $binfile );
 $m->comp("/generic/error.mhtml", error=>"$table id $id has no filetype")        unless ( $binfile->filetype );

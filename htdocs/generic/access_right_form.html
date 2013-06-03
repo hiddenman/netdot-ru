@@ -24,6 +24,7 @@ $return_view  => undef
 </%args>
 
 <%init>
+use utf8;
 my $DEBUG = 0;
 
 # Consolidate args variables
@@ -193,7 +194,7 @@ if ( $object_class ){
 	    "onChange=\"jsrsSendqueryRA(this.options[selectedIndex].text, 'object_id');setPerms()\">";
 	$out .= "<option value=\"0\">-- Select --</option SELECTED>";
 	foreach my $class ( sort keys %classes ){
-	    $out .= "<option name=\"".Encode::encode_utf8($class)."\" >".Encode::encode_utf8($class)."</option>";
+	    $out .= "<option name=\"".$class."\" >".$class."</option>";
 	}
 	$out .= "</select>";
       }};
@@ -233,7 +234,7 @@ if ( $object_class ){
     }
     push @values, 'none';
     foreach my $v ( @values ){
-	$txt .= '<option value="'.Encode::encode_utf8($v).'">'.Encode::encode_utf8($anames{$v}).'</option>';
+	$txt .= '<option value="'.$v.'">'.$anames{$v}.'</option>';
     }
 }
 $txt .= '</select>';

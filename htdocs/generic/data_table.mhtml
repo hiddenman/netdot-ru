@@ -20,6 +20,10 @@ Arguments:
     style          -  array of style parameters for columns (any css).  Overrides rowstyle.
 </%doc>
 
+<%init>
+use utf8;
+</%init>
+
 <%args>
 @field_headers => undef;
 @data          => ();

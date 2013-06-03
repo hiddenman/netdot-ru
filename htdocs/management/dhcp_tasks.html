@@ -38,6 +38,7 @@ $view            => 'search'
 %#######################################################################
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 
@@ -84,9 +85,9 @@ my $manager = $ui->get_permission_manager($r);
                 <option value="">-- Select --</option>
 %               foreach my $scope ( sort { $a->name cmp $b->name } @global_scopes ){
 %                   if ( $scope->id eq $scope_id ){
-                        <option value="<% $scope->id %>" SELECTED><% Encode::encode_utf8($scope->get_label) %></option>
+                        <option value="<% $scope->id %>" SELECTED><% $scope->get_label %></option>
 %                   }else{
-                        <option value="<% $scope->id %>"><% Encode::encode_utf8($scope->get_label) %></option>
+                        <option value="<% $scope->id %>"><% $scope->get_label %></option>
 %                   }
 %               }
                 </select>
@@ -115,7 +116,7 @@ my $manager = $ui->get_permission_manager($r);
                 <label for="Name">Type:</label>
                 <select name="scope_type">
 %               foreach my $type ( sort { $a->name cmp $b->name } DhcpScopeType->retrieve_all() ){
-      	            <option value="<% $type->id %>"><% Encode::encode_utf8($type->name) %></option>
+      	            <option value="<% $type->id %>"><% $type->name %></option>
 %               }
                 </select>
                 </p>
@@ -124,7 +125,7 @@ my $manager = $ui->get_permission_manager($r);
                 <select name="scope_container">
                     <option value="">-- Select --</option>
 %               foreach my $cont ( @containers ){
-      	            <option value="<% $cont->id %>"><% Encode::encode_utf8($cont->name) %></option>
+      	            <option value="<% $cont->id %>"><% $cont->name %></option>
 %               }
                 </select> (required unless global)
                 </p>

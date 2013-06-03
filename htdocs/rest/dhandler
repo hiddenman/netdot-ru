@@ -6,7 +6,7 @@ $user
 $manager
 </%args>
 <%init>
-
+use utf8;
 delete $ARGS{user};
 delete $ARGS{showheader};
 

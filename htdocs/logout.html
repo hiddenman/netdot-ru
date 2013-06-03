@@ -13,6 +13,7 @@ $user => $ui->get_current_user($r)
 </%args>
 
 <%init>
+use utf8;
 if(defined($user) && $user->isa("Apache2::SiteControl::User")) {
    $user->logout($r);
 }

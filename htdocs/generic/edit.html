@@ -45,6 +45,7 @@ $view         => 'all'
 </%args>
 
 <%init>
+use utf8;
 my %args;
 my $DEBUG = 0;
 my %reserved = (submit       => '',
@@ -233,6 +234,7 @@ $view       => 'all'
 </%args>
 
 <%init>
+use utf8;
 
 if ( !defined($dowindow) ){
      $dowindow = 0;
@@ -310,6 +312,7 @@ $showheader => undef
 $dowindow   => undef
 </%args>
 <%init>
+use utf8;
 use URI::Escape;
 
 my ( $obj, $lbl );

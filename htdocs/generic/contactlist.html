@@ -25,6 +25,7 @@ $newname    => undef
 %
 %
 <%init>
+use utf8;
 my $DEBUG = 0;
 print '%ARGS is  <pre>', Dumper(%ARGS), '</pre><br>' if $DEBUG;
 my $obj = ContactList->retrieve($id);
@@ -227,6 +228,7 @@ $contactlist_id
 $person_id
 </%args>
 <%init>
+use utf8;
 my $person = Person->retrieve($person_id);
 unless ( $person ){
     $m->comp('/generic/error.mhtml', error=>"Cannot retrieve Person id $person_id");
@@ -273,6 +275,7 @@ $contactlist_id
 $role_id
 </%args>
 <%init>
+use utf8;
 my $role = Contact->retrieve($role_id);
 unless ( $role ){
     $m->comp('/generic/error.mhtml', error=>"Cannot retrieve Role id $role_id");

@@ -15,6 +15,7 @@ $add => undef      # Show [add] button to add rights to each user or list. The v
 </%args>
 
 <%init>
+use utf8;
 my (@headers, @rows);
 push @headers, 'Type';
 push @headers, 'Name';
