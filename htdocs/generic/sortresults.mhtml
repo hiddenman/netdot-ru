@@ -249,7 +249,6 @@ $last_item = ( ($offset + $per_page) < $total )? $offset + $per_page : $total;
 % #####################################################################
 % # Begin the table for this instance of sortresults
 % #####################################################################
-
 % $numcols = scalar @orderbrief;
 % $numcols++ if $withedit;
 % $numcols++ if $withedit;  #again to accomodate [edit] buttons
@@ -269,7 +268,7 @@ $last_item = ( ($offset + $per_page) < $total )? $offset + $per_page : $total;
       <tr class="rowtitle2">
 %
 %     foreach my $c ( @orderbrief ) {
-%          my $tag = $table->meta_data->get_column($c)->tag;
+%          my $tag = Encode::decode_utf8($table->meta_data->get_column($c)->tag);
 %          if( defined($tag) ) {
                <th><a href="list.html?osid=<% $osession->{_session_id} %>&sort=<% $c %>&offset=<% $offset %>&withedit=<% $withedit %>"><% $tag %></a></th>
 %          } else {

@@ -5,7 +5,7 @@ Login Page
 </%doc>
 
 <%attr>
-title   => 'Netdot Login' 
+title   => 'Netdot вход' 
 </%attr>
 
 <%init>
@@ -54,22 +54,22 @@ translated to /netdot/ before AuthCookie takes over anyway).
 
 <div class="container">
     <div class="containerhead">
-        Please enter your login and password to authenticate.
+        Введите имя пользователя и пароль для входа.
     </div>
     <div class="containerbody">
       <fieldset class="medium" id="sectiontools" style="border: none">
 	<form method="post" action="<% $submit_target %>" name="login">
 	<input type="hidden" name="destination" value="<% $redirect_path %>" />
 	<p>
-	  <label for="credential_0">Login:</label>
+	  <label for="credential_0">Имя пользователя:</label>
 	  <input type="text" name="credential_0" size="15" />
 	</p>
 	<p>
-	  <label for="credential_1">Password:</label>
+	  <label for="credential_1">Пароль:</label>
 	  <input type="password" name="credential_1" size="15" />
 	</p>
         <p>
-	  <lable for="permanent_session">Remember me:</lable>
+	  <lable for="permanent_session">Запомнить:</lable>
 	  <input type="checkbox" name="permanent_session" value="1" />
         </p>
 	<p>

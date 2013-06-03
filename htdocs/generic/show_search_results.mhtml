@@ -4,6 +4,9 @@
 
 </%doc>
 
+<%once>
+use utf8;
+</%once>
 
 <%args>
 $list     => undef

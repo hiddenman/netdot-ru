@@ -53,7 +53,7 @@ $ARGS{show_tasks} = $show_tasks;
 
 <%perl>
 
-if ( $submit eq 'Найти' ){
+if ( $submit eq 'Find' ){
     # Get rid of spaces
     $device_search =~ s/\s+//g;
     if ( $device_search =~ /$MAC/ ){
@@ -165,7 +165,7 @@ my $manager = $ui->get_permission_manager($r);
 %                   }
 %               }
                 </select>
-                <input name="submit" value="Найти" class="btn" type="submit">
+		<button name="submit" value="Find" class="btn" type="submit">Найти</button>
                 </p>
             </form>
         </fieldset>

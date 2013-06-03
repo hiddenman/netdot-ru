@@ -82,21 +82,21 @@ my $manager = $ui->get_permission_manager($r);
                 <p>
                 <label for="Find">IP-адрес[/префикс]:</label>
                 <input type="text" name="search_address" class="longtxt" value=""> 
-                <input name="submit" value="Найти" class="btn" type="submit">
+                <button name="submit" value="Find" class="btn" type="submit">Найти</button>
                 </p>
             </form>
             <form action="address_tasks.html" method="POST">
                 <p>
                 <label for="Find">Регулярное выражение IP-адреса:</label>
                 <input type="text" name="search_regex" class="longtxt" value=""> 
-                <input name="submit" value="Найти" class="btn" type="submit">
+                <button name="submit" value="Find" class="btn" type="submit">Найти</button>
                 </p>
             </form>
             <form action="address_tasks.html" method="POST">
                 <p>
                 <label for="Find">Ключевые слова:</label>
                 <input type="text" name="search_other" class="longtxt" value=""> 
-                <input name="submit" value="Найти" class="btn" type="submit">
+                <button name="submit" value="Find" class="btn" type="submit">Найти</button>
                 </p>
             </form>
         </fieldset>

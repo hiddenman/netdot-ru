@@ -56,10 +56,10 @@ if ( $type eq "address" ){
 	push @headers, '[del]';
     }
     # @headers: header for html
-    push @headers, ( 'Address', 'Name', 'Device', 'Status', 'Used by', 'Description', 'Last Seen' );
+    push @headers, ( 'Адрес', 'Имя узла', 'Устройство', 'Статус', 'Используется', 'Описание', 'Last Seen' );
 
     # @text_headers: header for csv text
-    push @text_headers, ( 'Address', 'Name', 'Device', 'Status', 'Used by', 'Description', 'Last Seen' ); 
+    push @text_headers, ( 'Адрес', 'Имя узла', 'Устройство', 'Статус', 'Используется', 'Описание', 'Last Seen' ); 
 
     foreach my $header ( @headers ){
 	next if $header eq '[del]';
@@ -126,13 +126,13 @@ if ( $type eq "address" ){
 
     my @text_row = ();
     if ( $show_utilization ){
-	@headers = ( 'Address/Prefix', 'Status', 'Utilization', 'Owner', 'Used by', 'Description' );
-	@text_headers = ( 'Address/Prefix', 'Status', 'Utilization(Address Usage/Subnet Usage)', 'Owner', 'Used by', 'Description' );
+	@headers = ( 'Адрес/Префикс', 'Статус', 'Использовано', 'Собственник', 'Используется', 'Описание' );
+	@text_headers = ( 'Адрес/Префикс', 'Статус', 'Использовано(Адресов/Подсетей)', 'Собственник', 'Используется', 'Описание' );
     }else{
 	if ( $edit ){
-	    push @headers, '[del]';
+	    push @headers, '[удалить]';
 	}
-	push @headers, ( 'Address/Prefix', 'Status', 'Owner', 'Used by', 'Description' );
+	push @headers, ( 'Адрес/Префикс', 'Статус', 'Собственник', 'Используется', 'Описание' );
 	@text_headers = @headers;
     }
     foreach my $o ( @{ $objects } ) {
@@ -163,7 +163,7 @@ if ( $type eq "address" ){
 		my $percent1 = ($used1*100/$total);
 		my $percent2 = ($used2*100/$total);
 		
-		push( @row, $ui->percent_bar2( title1=>"Address Usage: ", title2=>"Subnet Usage: ", percent1=>$percent1, percent2=>$percent2 ) );
+		push( @row, $ui->percent_bar2( title1=>"Использовано адресов: ", title2=>"Использовано подсетей: ", percent1=>$percent1, percent2=>$percent2 ) );
 		$title1 = int($percent1*10)/10;
 		$title2 = int($percent2*10)/10;
 		

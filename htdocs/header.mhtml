@@ -47,7 +47,7 @@ $ui->get_allowed_objects($r, $user) if $user;
   <link rel="StyleSheet" href="<% $r->dir_config('NetdotPath') %>css/style.css" type="text/css" />
   <link rel="StyleSheet" href="<% $r->dir_config('NetdotPath') %>css/datechooser.css" type="text/css" />
   <link rel="Shortcut Icon" href="<% $r->dir_config('NetdotPath') %>img/favicon.ico" type="image/x-icon" />
-  <title>Netdot @ <% $servername %>: <% $title %></title>
+  <title>Netdot @ <% $servername %>: <% Encode::decode_utf8($title) %></title>
 %
 % if ( $meta_refresh ){
     <meta http-equiv="refresh" content="<% $meta_refresh %>">

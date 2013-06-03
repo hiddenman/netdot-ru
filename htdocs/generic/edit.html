@@ -133,7 +133,7 @@ if ( $table ){
 	    $m->comp('/generic/error.mhtml', error=>"You don't have permission to edit this object");
 	}
 	
-	if ( $submit eq "Обновить" ){
+	if ( $submit eq "Update" ){
 	    $ui->localize_newlines($table, \%args);
 	    my $new_digest = $obj->get_digest();
 	    eval {
@@ -156,7 +156,7 @@ if ( $table ){
 		     showheader=>$showheader, select_id=>$select_id, selected=>$selected, dowindow=>$dowindow );
         }
     }else{
-	if ( $submit eq "Добавить" ){
+	if ( $submit eq "Insert" ){
 	    $ui->localize_newlines($table, \%args);
 	    my $new;
 	    eval{
@@ -270,11 +270,11 @@ my $title = "$table " . $ui->table_descr_link($table, "[?]");
 %     if( $id ) {
 %         $m->comp('form.mhtml', table=>$table, id=>$id, view=>$view, dowindow=>$dowindow);
           <br>
-          <input name="submit" type="submit" value="Обновить">
+	  <button name="submit" type="submit" value="Update">Обновить</button>
 %     }else{
 %       $m->comp('form.mhtml', table=>$table, session=>\%args, dowindow=>$dowindow);
         <br>
-        <input name="submit" type="submit" value="Добавить">
+	<button name="submit" type="submit" value="Insert">Добавить</button>
 %     }
 %     if ( $dowindow ){
 	<input name="cancel" value="Отмена" onClick="window.close()" type="button">
